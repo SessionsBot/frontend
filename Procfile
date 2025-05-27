@@ -1,1 +1,1 @@
-npx serve -s dist -l 3000
+web: npx serve -s dist -l 3000
