@@ -1,12 +1,12 @@
 <script setup>
 
-import siteHeader from '../blocks/SiteHeader.vue'
+    import siteHeader from '../blocks/SiteHeader.vue'
 
-function signInUsingDiscord() {
-    const discordLoginLink = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fdashboard%2Flogin%2Fdiscord-redirect&scope=identify+guilds';
-    window.open(discordLoginLink, '_blank');
-    // window.location.href = discordLoginLink // <-- use after development!
-}
+    function signInUsingDiscord() {
+        const discordLoginLink = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fdashboard%2Flogin%2Fdiscord-redirect&scope=identify+guilds';
+        window.open(discordLoginLink, '_blank');
+        // window.location.href = discordLoginLink // <-- use after development!
+    }
 
 </script>
 
