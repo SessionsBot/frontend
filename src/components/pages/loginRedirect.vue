@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import siteHeader from '../blocks/SiteHeader.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -12,6 +13,7 @@ const homepage = () => {
 // On Page Load:
 onMounted(() => {
     const token = route.query.token
+    const redirect = true;
     const redirectTokenText = document.getElementById('redirectTokenText');
 
     if (token) {
@@ -20,21 +22,24 @@ onMounted(() => {
         localStorage.setItem('discord_token', token)
         // Redirect after delay:
         setTimeout(() => {
-            router.push('/dashboard')
+            if (redirect) { router.push('/dashboard') }
         }, 3000)
     } else {
         // NOT Logged in:
         redirectTokenText.innerText = `token: ?`
         // Redirect after delay:
         setTimeout(() => {
-            router.push('/')
+            if (redirect) { router.push('/') }
         }, 3000)
     }
 
 })
+
 </script>
 
-<template> <div class="text-white flex flex-col w-full h-full flex-1 items-center justify-center mb-10">
+<template> 
+<siteHeader> </siteHeader>
+<div class="text-white flex flex-col w-full h-full flex-1 items-center justify-center mb-10">
 
     <!-- Graidient Wrap -->
     <div class="w-[85%] sm:w-[75%] md:w-150 h-auto relative rounded-md p-[2px] bg-gradient-to-r from-purple-700 to-blue-700 animate-gradient-x">

@@ -1,9 +1,16 @@
 <script setup>
     // Imports:
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
+    import { useRoute } from 'vue-router'
 
     // Variables:
     const userLoggedIn = ref(false)
+
+    // Router Path Checks - Hides Buttons:
+    const route = useRoute()
+    const titleOnlyHeader = computed(() =>
+    ['/api/login-success'].includes(route.path)
+    );
 
     // Functions:
     function signInUsingDiscord() {
@@ -26,7 +33,7 @@
         </div>
 
         <!-- [LG SCREENS] Header Buttons: -->
-        <div class="flex-wrap flex-row gap-3 hidden sm:!flex">
+        <div v-if="!titleOnlyHeader" class="flex-wrap flex-row gap-3 hidden sm:!flex">
 
             <!-- Invite Discord Bot: -->
             <button v-if="!userLoggedIn" title="Invite Bot to Discord Server" class="bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
@@ -65,12 +72,12 @@
         </div>
 
         <!-- [SM SCREENS] Nav Button: -->
-        <button class="flex sm:!hidden bg-modern-green-default shadow-md shadow-black/35 hover:scale-115 active:scale-95 rounded-md p-2 material-symbols-rounded transition-all !cursor-pointer" title="Main Menu">
+        <button v-if="!titleOnlyHeader" class="flex sm:!hidden bg-modern-green-default shadow-md shadow-black/35 hover:scale-115 active:scale-95 rounded-md p-2 material-symbols-rounded transition-all !cursor-pointer" title="Main Menu">
             menu
         </button>
 
         <!-- [SM SCREENS] Nav Menu: -->
-        <nav class="hidden absolute left-0 bottom-0 w-full h-full flex-1 flex-wrap flex-row justify-center items-center overflow-clip">
+        <nav v-if="!titleOnlyHeader" class="hidden absolute left-0 bottom-0 w-full h-full flex-1 flex-wrap flex-row justify-center items-center overflow-clip">
             
             <!-- Dismiss Area: -->
             <span class="bg-black/40 flex flex-1 h-full w-full items-center"> </span>
