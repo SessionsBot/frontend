@@ -6,7 +6,7 @@
 
 <template> <div class="flex flex-col w-full h-full flex-1 items-center justify-start">
 
-    <siteHeader />
+    <siteHeader/>
 
     <main class=" flex flex-col w-full h-full flex-1 items-center justify-center">
         <p class=" text-lg m-2 p-2 text-white"> 🔓 - Dashboard Access </p>
