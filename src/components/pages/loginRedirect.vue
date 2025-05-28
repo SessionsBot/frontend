@@ -21,16 +21,16 @@ onMounted(() => {
         redirectTokenText.innerText = `token: ${token}`
         localStorage.setItem('discord_token', token)
         // Redirect after delay:
-        setTimeout(() => {
+        // setTimeout(() => {
             if (redirect) { router.push('/dashboard') }
-        }, 3000)
+        // }, 3000)
     } else {
         // NOT Logged in:
         redirectTokenText.innerText = `token: ?`
         // Redirect after delay:
-        setTimeout(() => {
+        // setTimeout(() => {
             if (redirect) { router.push('/') }
-        }, 3000)
+        // }, 3000)
     }
 
 })
