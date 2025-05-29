@@ -7,6 +7,8 @@ const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
+const redirect = true; // <-- DEVELOPMENT ENVIRONMENTS
+
 // Component Imports:
 import siteHeader from '../components/flex/siteHeader.vue'
 
@@ -19,7 +21,6 @@ onMounted(() => {
     // Get provided login token:
     const token = route.query.token
     const encodedUser = route.query.user
-    const redirect = false;
     const statusFooterText = document.getElementById('statusFooterText')
     
     let user;
