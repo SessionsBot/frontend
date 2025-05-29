@@ -1,7 +1,7 @@
 <script setup>
     import { ref } from 'vue'
     import { useRouter } from 'vue-router'
-    import AlertModal from '../blocks/alertModal.vue'
+    import AlertPopUp from '../components/flex/alertPopup.vue'
 
     // Router:
     const router = useRouter()
@@ -48,7 +48,7 @@
                 Click to Show
             </button>
 
-            <AlertModal 
+            <AlertPopUp 
                 :visible="showAlert" 
                 title="🚨 Attention"
                 description="Lorem ipsum dolor sit amet consectetur adipisicing elit..."

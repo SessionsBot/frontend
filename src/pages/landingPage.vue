@@ -1,6 +1,6 @@
 <script setup>
 
-    import siteHeader from '../blocks/SiteHeader.vue'
+    import siteHeader from '../components/flex/siteHeader.vue'
 
     function signInUsingDiscord() {
         const discordLoginLink = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fdashboard%2Flogin%2Fdiscord-redirect&scope=identify+guilds';
@@ -13,10 +13,6 @@
 
 <template> 
 <div class="text-white flex justify-start items-center flex-col w-full h-full flex-1 ">
-
-    <!-- Site Header: -->
-    <siteHeader />
-
     <!-- Homepage: -->
     <main class="p-5 gap-5 min-w-screen flex justify-center items-center text-center flex-col w-full h-full">
         
@@ -54,7 +50,7 @@
 
             <!-- Section 1 - Image: -->
             <div class=" flex px-0 py-2 sm:w-auto w-[90%] h-full justify-center items-center flex-wrap">
-                <img draggable="false" class="max-h-70 ring-2 ring-white/10 rounded-md" src="../../assets/signupEmbedExample.png">
+                <img draggable="false" class="max-h-70 ring-2 ring-white/10 rounded-md" src="../assets/signupEmbedExample.png">
             </div>
 
         </div>
@@ -106,7 +102,7 @@
 
             <!-- Section 3 - Image: -->
             <div class=" flex px-0 py-2 sm:w-auto lg:w-[45%] w-[90%] h-full justify-center items-center flex-wrap">
-                <img draggable="false" class="max-h-70 ring-2 ring-white/10 rounded-md" src="../../assets/availableCommands.png">
+                <img draggable="false" class="max-h-70 ring-2 ring-white/10 rounded-md" src="../assets/availableCommands.png">
             </div>
 
         </div>

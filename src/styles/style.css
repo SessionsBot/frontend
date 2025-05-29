@@ -1,3 +1,6 @@
+/* ---------------- Import Animations ---------------- */
+@import url(./animations.css);
+
 /* ---------------- Google Icons: ---------------- */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded');
 .material-symbols-rounded {
@@ -28,7 +31,6 @@
     width: 32px;
 }
 
-
 /* ---------------- Tailwind CSS ---------------- */
 @import "tailwindcss";
 
@@ -58,6 +60,10 @@
 
 }
 
+
+
+
+/* ---------------- DEFAULT STYLES ---------------- */
 .hidden{
     display: none !important;
 }
@@ -70,7 +76,6 @@ body{
     @apply min-h-full w-full flex flex-col flex-wrap flex-1 absolute;
 }
 
-/* [START] - Default Styles: */
 
 .default_button {
     cursor: pointer;
@@ -82,4 +87,6 @@ body{
     @apply flex flex-wrap flex-row justify-center items-center text-center;
 }
 
-/* [END] - Default Styles: */
+    
+
+/* ---------------- [END] DEFAULT STYLES ---------------- */
