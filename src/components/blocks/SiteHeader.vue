@@ -3,6 +3,9 @@
     import { ref, computed } from 'vue';
     import { useRoute } from 'vue-router'
 
+    // NAVIGATION:
+    const navMenuVisible = ref(false)
+
     // Variables:
     const userLoggedIn = ref(false)
 
@@ -15,14 +18,13 @@
     // Functions:
     function signInUsingDiscord() {
         const discordLoginLink = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fdashboard%2Flogin%2Fdiscord-redirect&scope=identify+guilds';
-        window.open(discordLoginLink, '_blank'); // <-- can be changed to '_self' after development!
+        window.open(discordLoginLink, '_self'); // <-- can be changed to '_self' after development!
     }
 
 </script>
 
 
 <template>
-
 
     <header class="bg-modern-yellow-default text-white w-full p-2 pr-3 flex flex-wrap flex-row justify-between items-center text-center overflow-clip">
 
@@ -72,23 +74,26 @@
         </div>
 
         <!-- [SM SCREENS] Nav Button: -->
-        <button v-if="!titleOnlyHeader" class="flex sm:!hidden bg-modern-green-default shadow-md shadow-black/35 hover:scale-115 active:scale-95 rounded-md p-2 material-symbols-rounded transition-all !cursor-pointer" title="Main Menu">
+        <button @click="navMenuVisible = true" v-if="!titleOnlyHeader" class="flex sm:!hidden bg-modern-green-default shadow-md shadow-black/35 hover:scale-115 active:scale-95 rounded-md p-2 material-symbols-rounded transition-all !cursor-pointer" title="Main Menu">
             menu
         </button>
 
         <!-- [SM SCREENS] Nav Menu: -->
-        <nav v-if="!titleOnlyHeader" class="hidden absolute left-0 bottom-0 w-full h-full flex-1 flex-wrap flex-row justify-center items-center overflow-clip">
+         <Transition name="navMenu">
+        <nav v-if="navMenuVisible" class="flex fixed z-50 left-0 bottom-0 w-screen h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center overflow-clip">
+            
             
             <!-- Dismiss Area: -->
-            <span class="bg-black/40 flex flex-1 h-full w-full items-center"> </span>
+            <span @click="navMenuVisible = false" class="bg-black/40 flex flex-1 h-full w-full items-center"> </span>
 
             <!-- Navigaion Menu: -->
             <div class="absolute flex justify-start flex-col right-0 w-65 max-w-[90%] h-full bg-modern-dark-blue-default transition-all">
                 
+                <!-- Nav Header: -->
                 <header class="bg-modern-yellow-default h-14 flex justify-center items-center text-center flex-nowrap">
                     <!-- Close Button: -->
                     <h1 class="pl-2.5 flex-1 flex text-2xl sm:text-3xl font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Main Menu </h1>
-                    <button class="hover:bg-modern-red-default/50 w-12.5 h-14 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">
+                    <button @click="navMenuVisible = false" class="hover:bg-modern-red-default/50 w-12.5 h-14 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">
                         <svg class="m-2 p-0.5" xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 24 24" width="30px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                     </button>
                     
@@ -96,6 +101,7 @@
 
                 <main class="flex flex-wrap flex-col justify-between items-center content-center flex-1">
                      
+                    <!-- Top Nav Links: -->
                     <ol class="flex flex-wrap justify-center items-center p-2 gap-2">
                         <li class="w-full flex flex-nowrap justify-center content-center items-center">
                             <div class="h-[1.5px] w-[95%] bg-gray-500/50"> </div>
@@ -121,7 +127,7 @@
                         </li>
                     </ol>
 
-
+                    <!-- Bottom Nav Links: -->
                     <ol class="flex flex-wrap justify-center items-center p-2 gap-2">
                         
                         <li class="w-full flex flex-nowrap justify-center content-center items-center">
@@ -153,6 +159,7 @@
             </div>
 
         </nav>
+         </Transition>
 
     </header>
 
@@ -178,4 +185,22 @@
     z-index: -1;
 }
 
+/* ---- NEW ---- */
+
+.navMenu-enter-from,
+.navMenu-leave-to {
+  opacity: 0;
+  transform: translateX(2rem) scale(0.95);
+}
+
+.navMenu-enter-to,
+.navMenu-leave-from {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+}
+
+.navMenu-enter-active,
+.navMenu-leave-active {
+  transition: all 0.4s ease;
+}
 </style>

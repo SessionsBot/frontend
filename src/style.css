@@ -73,6 +73,7 @@ body{
 /* [START] - Default Styles: */
 
 .default_button {
+    cursor: pointer;
     @apply bg-white/75 text-black/90 font-semibold;
     @apply ring-1 ring-white/30;
     @apply px-3 py-1 rounded-sm shadow-md shadow-black/50;
