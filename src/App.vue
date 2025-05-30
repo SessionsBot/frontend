@@ -7,7 +7,7 @@
   import siteFooter from './components/siteFooter.vue';
 
   // Vairables:
-  const siteVersion = ref("0.2.3a")
+  const siteVersion = ref("0.2.3b")
 </script>
 
 

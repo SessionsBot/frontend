@@ -104,14 +104,14 @@
     
      <!-- Nav Menu Screen: -->
     <Transition name="navMenu">
-     <nav v-if="navMenuVisible" class="text-white flex fixed z-50 w-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center text-center overflow-scroll">
+     <nav v-if="navMenuVisible" class="text-white flex fixed z-50 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
         
         
         <!-- Dismiss Area: -->
-        <span @click="closeNav" class="relative bg-black/40 flex flex-1 h-full w-full items-center"> </span>
+        <span @click="closeNav" class="relative bg-black/50 flex flex-1 h-full w-full items-center overflow-visible"> </span>
 
         <!-- Navigaion Menu: -->
-        <div class="relative flex justify-start flex-col right-0 h-full w-65 max-w-[90%] bg-modern-dark-blue-default transition-all">
+        <div class="relative flex justify-start flex-col right-0 h-full w-65 max-w-[90%] bg-modern-dark-blue-default transition-all overflow-scroll">
             
             <!-- Nav Header: -->
             <header class="bg-modern-yellow-default h-14 flex justify-center items-center text-center flex-nowrap">
