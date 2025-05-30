@@ -18,7 +18,31 @@ onMounted(() => {
     // Get provided login token:
     const encodedUser = route.query.user
     const statusFooterText = document.getElementById('statusFooterText')
+
+
+    // JSON WEB TOKEN -- SECURE AUTH ATTEMPTS:
+    const jwtToken = route.query.token;
+    if (jwtToken) {
+        try {
+        // Save token to sessionStorage for debugging:
+        sessionStorage.setItem('discord_jwt_DIRECTSAVE', jwtToken);
+
+        // Decode the JWT (this doesn't verify it, just extracts info):
+        const base64Payload = jwtToken.split('.')[1];
+        const decodedPayload = JSON.parse(atob(base64Payload));
+
+        // Debug:
+        console.log('decodedPayload >> AUTH: ', decodedPayload);
+
+        // Store in Pinia
+        auth.loginWithAuthToken(decodedPayload);
+        } catch (e) {
+        console.error('JWT decoding failed:', e);
+        }
+    } else {console.warn(`jwtToken was NOT provided!`);}
     
+
+    // Encoded UserData String - Decoding:
     let user;
     if(encodedUser) {
         // User Data Received:
@@ -29,7 +53,6 @@ onMounted(() => {
             console.error('Failed to decode user:', e);
         }
     }
-
     if(user) {
         // Token provided:
         statusMessage.value = `User Id: ${user.id}`
@@ -46,6 +69,8 @@ onMounted(() => {
         statusFooterText.classList.add('text-rose-600', 'font-black')
         if(redirect) {setTimeout(()=>{router.push('/')},3_000)}
     }
+
+
 
 })
 
