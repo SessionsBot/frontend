@@ -22,8 +22,9 @@
     // Router Path Checks - Hides Buttons:
     const route = useRoute()
     const titleOnlyHeader = computed(() =>
-        route.path.startsWith('/api/login-redirect')
-    );
+        // If API Page - Hide Header Buttons:
+        route.path.startsWith('/api')
+    );  
 
 
     // Functions:
@@ -95,7 +96,7 @@
 
         <!-- Nav Menu Screen: -->
          <Transition name="navMenu">
-        <nav v-if="navMenuVisible" class="flex fixed z-50 w-screen min-h-full h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center overflow-visible">
+        <nav v-if="navMenuVisible" class="flex fixed z-50 w-screen min-h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center overflow-visible">
             
             
             <!-- Dismiss Area: -->
@@ -220,6 +221,11 @@
          </Transition>
 
     </header>
+
+    <!-- Relativly Positioned Screen Exander for Mobile Phones w/ Nav Open: -->
+    <div v-if="navMenuVisible" class="flex w-screen h-screen absolute flex-1 bg-pink-300">
+
+    </div>
 
 
 </template>

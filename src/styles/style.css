@@ -69,7 +69,6 @@
 }
 
 body{
-    @apply min-h-screen;
     background: var(--color-modern-dark-blue-default);
 }
 
