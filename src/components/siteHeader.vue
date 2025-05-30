@@ -99,9 +99,10 @@
     </header>
 
     <!-- Relativly Positioned Screen Exander for Mobile Phones w/ Nav Open: -->
+     <div v-if="navMenuVisible" class="flex absolute z-30 w-screen h-screen max-h-screen inset-0 flex-1 overflow-scroll"></div>
     <!-- Nav Menu Screen: -->
     <Transition name="navMenu">
-     <nav v-if="navMenuVisible" class="text-white flex absolute z-50 w-screen h-screen max-h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center text-center overflow-scroll">
+     <nav v-if="navMenuVisible" class="text-white flex fixed z-50 w-screen h-screen max-h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center text-center overflow-scroll">
         
         
         <!-- Dismiss Area: -->
