@@ -111,7 +111,7 @@
         <span @click="closeNav" class="relative min-h-screen bg-black/40 flex flex-1 h-full w-full items-center"> </span>
 
         <!-- Navigaion Menu: -->
-        <div class="relative flex justify-start flex-col right-0 w-65 max-w-[90%] h-full bg-modern-dark-blue-default transition-all">
+        <div class="relative flex justify-start flex-col right-0 w-65 max-w-[90%] h-screen bg-modern-dark-blue-default transition-all">
             
             <!-- Nav Header: -->
             <header class="bg-modern-yellow-default h-14 flex justify-center items-center text-center flex-nowrap">
