@@ -37,7 +37,7 @@
 
 <template>
 
-    <header class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full p-2 pr-3 flex flex-wrap flex-row justify-between items-center text-center overflow-clip">
+    <header class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full gap-3 p-2 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
 
         <!-- Site Icon & Title: -->
         <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">

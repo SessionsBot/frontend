@@ -1,17 +1,25 @@
 <script setup>
- import siteHeader from './components/siteHeader.vue';
- import siteFooter from './components/siteFooter.vue';
+  // Imports:
+  import { ref } from 'vue';
+
+  // Components:
+  import siteHeader from './components/siteHeader.vue';
+  import siteFooter from './components/siteFooter.vue';
+
+  // Vairables:
+  const siteVersion = ref("0.2.1b")
 </script>
 
 
 <template>
-  <siteHeader />
-  <div class="h-12 sm:h-14 w-full"> <!-- Header Padding  --> </div>
-  
+
+  <siteHeader :siteVersion="siteVersion" />
+  <!-- ↓ Header Padding ↓ -->
+  <div class="h-12 sm:h-14 w-full"></div>
+
   <router-view />
 
-  <siteFooter siteVersion="0.2.1a" />
+  <siteFooter :siteVersion="siteVersion" />
 
-  
 </template>
 
