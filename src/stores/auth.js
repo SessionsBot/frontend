@@ -27,6 +27,20 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem('discordUserAuth', userData?.id)
             localStorage.setItem('discordUserData', JSON.stringify(userData))
         },
+
+        // Decoding/Reading User Auth Token:
+        decodeUserToken(authToken){
+            try {
+                const base64Payload = authToken.split('.')[1];
+                const decodedPayload = JSON.parse(atob(base64Payload));
+                return decodedPayload;
+            } catch (e) {
+                console.error('User Auth Token failed:', e);
+                return null
+            }
+        },
+
+
         logout() {
             this.userAuthId = null
             this.userData = null

@@ -21,26 +21,17 @@ onMounted(() => {
 
 
     // JSON WEB TOKEN -- SECURE AUTH ATTEMPTS:
-    const jwtToken = route.query.token;
-    if (jwtToken) {
-        try {
-        // Save token to sessionStorage for debugging:
-        sessionStorage.setItem('discord_jwt_DIRECTSAVE', jwtToken);
-
-        // Decode the JWT (this doesn't verify it, just extracts info):
-        const base64Payload = jwtToken.split('.')[1];
-        const decodedPayload = JSON.parse(atob(base64Payload));
-
+    const userAuthToken = route.query.token;
+    if (userAuthToken) {
+  
         // Debug:
-        console.log('decodedPayload >> AUTH: ', decodedPayload);
+        console.log('Web Token --> AUTH : ', userAuthToken);
 
         // Store in Pinia
-        auth.loginWithAuthToken(decodedPayload);
-        } catch (e) {
-        console.error('JWT decoding failed:', e);
-        }
-    } else {console.warn(`jwtToken was NOT provided!`);}
-    
+        auth.loginWithAuthToken(userAuthToken);
+        
+    } else {console.warn(`userAuthToken was NOT provided!`);}
+
 
     // Encoded UserData String - Decoding:
     let user;
