@@ -6,10 +6,10 @@
 
     // Auth:
     const auth = useAuthStore()
-    const userLoggedIn = computed(() => !!auth.loggedIn)
-    const userData = computed(() => auth.userData)
+    const userLoggedIn = computed(() => auth.isAuthenticated)
+
     const alertUserData = () => {
-        let string = JSON.stringify(userData.value)
+        let string = JSON.stringify(auth.userData)
         alert(string);
     } 
 
@@ -113,9 +113,6 @@
         </div>
 
     </main>
-
-
-
 
 </div> </template>
 

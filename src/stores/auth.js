@@ -4,8 +4,10 @@ import { defineStore } from "pinia";
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         userAuthId: localStorage.getItem('discordUserAuth') || null,
+        userData: localStorage.getItem('discordUserData') 
+            ? JSON.parse(localStorage.getItem('discordUserData')) 
+            : null,
         isAuthenticated: !!localStorage.getItem('discordUserAuth'),
-        userData: null,
     }),
     getters: {
         loggedIn: (state) => state.isAuthenticated, // returns true or false
@@ -16,12 +18,14 @@ export const useAuthStore = defineStore('auth', {
             this.userData = userData
             this.isAuthenticated = true
             localStorage.setItem('discordUserAuth', userData?.id)
+            localStorage.setItem('discordUserData', JSON.stringify(userData))
         },
         logout() {
             this.userAuthId = null
             this.userData = null
             this.isAuthenticated = false
             localStorage.removeItem('discordUserAuth')
+            localStorage.removeItem('discordUserData')
         },
         signInUsingDiscord() {
             const discordLoginLink =
