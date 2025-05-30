@@ -7,13 +7,13 @@
   import siteFooter from './components/siteFooter.vue';
 
   // Vairables:
-  const siteVersion = ref("0.2.3b")
+  const siteVersion = ref("0.2.4b")
 </script>
 
 
 <template>
 
-  <siteHeader :siteVersion="siteVersion" />
+  <siteHeader />
   <!-- ↓ Header Padding ↓ -->
   <div class="h-12 sm:h-14 w-full"></div>
 

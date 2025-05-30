@@ -2,15 +2,12 @@
 // App Imports:
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '../stores/auth'
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 
 const redirect = true; // <-- DEVELOPMENT ENVIRONMENTS
-
-// Component Imports:
-import siteHeader from '../components/siteHeader.vue'
 
 // Element Variables:
 const statusMessage = ref('{ ! }')
@@ -19,7 +16,6 @@ const titleSubHeading = ref('Loading')
 // On Page Load Event:
 onMounted(() => {
     // Get provided login token:
-    const token = route.query.token
     const encodedUser = route.query.user
     const statusFooterText = document.getElementById('statusFooterText')
     
@@ -37,7 +33,7 @@ onMounted(() => {
     if(user) {
         // Token provided:
         statusMessage.value = `User Id: ${user.id}`
-        auth.loginWithToken(user.id)
+        auth.loginWithUserData(user)
         const stringUserData = JSON.stringify(user)
         alert(`User Found:
         ${stringUserData}`)
@@ -46,6 +42,7 @@ onMounted(() => {
     } else {
         // Token NOT provided:
         statusMessage.value = `Login Failed!`
+        auth.logout()
         statusFooterText.classList.add('text-rose-600', 'font-black')
         if(redirect) {setTimeout(()=>{router.push('/')},3_000)}
     }
