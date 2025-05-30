@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../pages/landingPage.vue'
-import Dashboard from '../pages/dashboard.vue'
-import LoginRedirect from '../pages/loginRedirect.vue'
-import ApiTesting from '../pages/apiTesting.vue'
+import Home from '../landingPage.vue'
+import Dashboard from '../dashboard.vue'
+import LoginRedirect from '../loginRedirect.vue'
+import ApiTesting from '../apiTesting.vue'
 
 const routes = [
   {

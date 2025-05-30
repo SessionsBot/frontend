@@ -2,7 +2,7 @@
     // Imports:
     import { ref, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
-    import { useAuthStore } from '../../stores/auth'
+    import { useAuthStore } from '../stores/auth'
     
     // Auth:
     const auth = useAuthStore()
@@ -41,7 +41,7 @@
 
         <!-- Site Icon & Title: -->
         <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
-            <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../../assets/sessionsBot.png">
+            <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../assets/sessionsBot.png">
             <h1 class="text-2xl sm:text-3xl font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
         </div>
 
@@ -95,20 +95,20 @@
 
         <!-- Nav Menu Screen: -->
          <Transition name="navMenu">
-        <nav v-if="navMenuVisible" class="flex fixed z-50 left-0 bottom-0 w-screen h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center overflow-clip">
+        <nav v-if="navMenuVisible" class="flex fixed z-50 w-screen min-h-full h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center overflow-visible">
             
             
             <!-- Dismiss Area: -->
             <span @click="closeNav" class="bg-black/40 flex flex-1 h-full w-full items-center"> </span>
 
             <!-- Navigaion Menu: -->
-            <div class="absolute flex justify-start flex-col right-0 w-65 max-w-[90%] h-full bg-modern-dark-blue-default transition-all">
+            <div class="relative flex justify-start flex-col right-0 w-65 max-w-[90%] h-full bg-modern-dark-blue-default transition-all">
                 
                 <!-- Nav Header: -->
                 <header class="bg-modern-yellow-default h-14 flex justify-center items-center text-center flex-nowrap">
                     <!-- Close Button: -->
                     <div class=" pl-2.5 flex flex-1 gap-1.5 justify-start items-center content-center flex-row">
-                        <img class="w-9 h-9 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../../assets/sessionsBot.png">
+                        <img class="w-9 h-9 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../assets/sessionsBot.png">
                         <h1 class="text-xl font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
                     </div>
                     <button @click="navMenuVisible = false" class="hover:bg-modern-red-default/50 w-12.5 h-14 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">

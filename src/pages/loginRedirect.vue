@@ -10,7 +10,7 @@ const auth = useAuthStore()
 const redirect = true; // <-- DEVELOPMENT ENVIRONMENTS
 
 // Component Imports:
-import siteHeader from '../components/flex/siteHeader.vue'
+import siteHeader from '../components/siteHeader.vue'
 
 // Element Variables:
 const statusMessage = ref('{ ! }')

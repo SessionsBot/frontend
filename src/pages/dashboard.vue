@@ -1,6 +1,6 @@
 <script setup> 
 
-    import siteHeader from '../components/flex/siteHeader.vue'
+    import siteHeader from '../components/siteHeader.vue'
 
 </script>
 

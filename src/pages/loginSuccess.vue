@@ -8,7 +8,7 @@ const router = useRouter()
 const auth = useAuthStore()
 
 // Component Imports:
-import siteHeader from '../components/flex/siteHeader.vue'
+import siteHeader from '../components/siteHeader.vue'
 
 // On Page Load Event:
 onMounted(() => {
