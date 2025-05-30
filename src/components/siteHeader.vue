@@ -99,14 +99,16 @@
     </header>
 
     <!-- Relativly Positioned Screen Exander for Mobile Phones w/ Nav Open: -->
-     <div v-if="navMenuVisible" class="flex absolute z-30 w-screen h-screen max-h-screen inset-0 flex-1 overflow-scroll"></div>
-    <!-- Nav Menu Screen: -->
+     <!-- <div v-if="navMenuVisible" class="flex absolute z-30 w-screen h-screen max-h-screen inset-0 flex-1 overflow-scroll"></div> -->
+    
+    
+     <!-- Nav Menu Screen: -->
     <Transition name="navMenu">
      <nav v-if="navMenuVisible" class="text-white flex fixed z-50 w-screen h-screen max-h-screen inset-0 flex-1 flex-wrap flex-row justify-center items-center text-center overflow-scroll">
         
         
         <!-- Dismiss Area: -->
-        <span @click="closeNav" class="bg-black/40 flex flex-1 h-full w-full items-center"> </span>
+        <span @click="closeNav" class="relative min-h-screen bg-black/40 flex flex-1 h-full w-full items-center"> </span>
 
         <!-- Navigaion Menu: -->
         <div class="relative flex justify-start flex-col right-0 w-65 max-w-[90%] h-full bg-modern-dark-blue-default transition-all">
