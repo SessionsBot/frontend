@@ -15,53 +15,28 @@ const titleSubHeading = ref('Loading')
 
 // On Page Load Event:
 onMounted(() => {
-    // Get provided login token:
-    const encodedUser = route.query.user
+    
+    // JSON WEB TOKEN -- AUTH ATTEMPTS:
+    const userAuthToken = route.query.token;
     const statusFooterText = document.getElementById('statusFooterText')
 
-
-    // JSON WEB TOKEN -- SECURE AUTH ATTEMPTS:
-    const userAuthToken = route.query.token;
     if (userAuthToken) {
-  
-        // Debug:
-        console.log('Web Token --> AUTH : ', userAuthToken);
-
-        // Store in Pinia
-        auth.loginWithAuthToken(userAuthToken);
-        
-    } else {console.warn(`userAuthToken was NOT provided!`);}
-
-
-    // Encoded UserData String - Decoding:
-    let user;
-    if(encodedUser) {
-        // User Data Received:
-        try {
-            const decoded = atob(decodeURIComponent(encodedUser));
-            user = JSON.parse(decoded);
-        } catch (e) {
-            console.error('Failed to decode user:', e);
-        }
-    }
-    if(user) {
         // Token provided:
-        statusMessage.value = `User Id: ${user.id}`
-        auth.loginWithUserData(user)
-        const stringUserData = JSON.stringify(user)
-        alert(`User Found:
-        ${stringUserData}`)
+        statusMessage.value = 'Token Received'
+        // Login user:
+        auth.loginWithAuthToken(userAuthToken);
+        // Redirect:
         if(redirect) {router.push('/dashboard')}
-
-    } else {
+    }
+    else {
         // Token NOT provided:
         statusMessage.value = `Login Failed!`
-        auth.logout()
         statusFooterText.classList.add('text-rose-600', 'font-black')
+        // Logout any user:
+        auth.logout()
+        // Redirect:
         if(redirect) {setTimeout(()=>{router.push('/')},3_000)}
     }
-
-
 
 })
 

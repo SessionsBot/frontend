@@ -9,10 +9,8 @@
     const userLoggedIn = computed(() => auth.isAuthenticated)
 
     const alertUserData = () => {
-        let string = JSON.stringify(auth.decodeUserToken(auth.webToken), '*', 2)
-        alert(string);
-        let string2 = JSON.stringify(auth.userData, '*', 2)
-        alert(string2);
+        let prettyUserData = JSON.stringify(auth.getUserData(), '*', 2)
+        alert('Your account information : \n' + prettyUserData);
     } 
 
 
