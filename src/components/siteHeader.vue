@@ -81,7 +81,12 @@
             </div>
 
             <!-- Nav TOGGLE Button: -->
-            <button @click="navMenuVisible = true" v-if="!titleOnlyHeader" class="flex bg-modern-green-default shadow-md shadow-black/35 hover:scale-115 active:scale-95 rounded-md p-2 transition-all !cursor-pointer" title="Main Menu">
+            <button 
+                v-if="!titleOnlyHeader"
+                @click="navMenuVisible = true"
+                class="flex bg-modern-green-default shadow-md shadow-black/35 hover:scale-105 active:scale-95 rounded-md p-2 transition-all !cursor-pointer" 
+                title="Main Menu"
+            >
                 <svg class="w-[20px] h-[20px] sm:w-[23px] sm:h-[23px]" xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="2 2 20 20" width="22px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"/></svg>
             </button>
 
@@ -90,12 +95,9 @@
         
 
     </header>
-
-    <!-- Relativly Positioned Screen Exander for Mobile Phones w/ Nav Open: -->
-     <!-- <div v-if="navMenuVisible" class="flex absolute z-30 w-screen h-screen max-h-screen inset-0 flex-1 overflow-scroll"></div> -->
     
     
-     <!-- Nav Menu Screen: -->
+    <!-- Nav Menu Screen: -->
     <Transition name="navMenu">
      <nav v-if="navMenuVisible" class="text-white flex fixed z-50 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
         

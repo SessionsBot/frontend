@@ -70,6 +70,10 @@
 
 body{
     background: var(--color-modern-dark-blue-default);
+    
+    /* Mobile Tap/Mouse - Fixes: */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 #app {
