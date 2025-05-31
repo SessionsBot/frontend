@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
             : null,
         isAuthenticated: !!localStorage.getItem('discordUserAuth'),
         webToken: localStorage.getItem('authWebToken') 
-            ? JSON.parse(localStorage.getItem('authWebToken')) 
+            ? localStorage.getItem('authWebToken') 
             : null,
     }),
     getters: {
@@ -28,7 +28,6 @@ export const useAuthStore = defineStore('auth', {
             localStorage.setItem('discordUserData', JSON.stringify(userData))
         },
 
-        // Decoding/Reading User Auth Token:
         decodeUserToken(authToken){
             try {
                 const base64Payload = authToken.split('.')[1];
