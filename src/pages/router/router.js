@@ -3,6 +3,7 @@ import Home from '../landingPage.vue'
 import Dashboard from '../dashboard.vue'
 import LoginRedirect from '../loginRedirect.vue'
 import ApiTesting from '../apiTesting.vue'
+import NotFound from '../notFound.vue'
 
 const routes = [
   {
@@ -10,7 +11,11 @@ const routes = [
     name: 'homepage',
     component: Home
   },
-
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound
+  },
   {
     path: '/api/login-redirect',
     name: 'login-redirect',
