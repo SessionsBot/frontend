@@ -3,6 +3,7 @@
     import { ref, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
     import { useAuthStore } from '../stores/auth'
+    import { global } from '../stores/global'
     
     // Auth:
     const auth = useAuthStore()
@@ -18,6 +19,7 @@
     const router = useRouter()
     const homepage = () => router.push('/')
     const dashboard = () => router.push('/dashboard')
+    const pricingPlans = () => router.push('/pricing-plans')
     const myAccount = () => router.push('/user/profile')
 
     // Router Path Checks - Hides Buttons:
@@ -46,7 +48,7 @@
             <div v-if="!titleOnlyHeader" class="flex-wrap flex-row gap-3 hidden sm:!flex">
 
                 <!-- Invite Discord Bot: -->
-                <button v-if="!userLoggedIn" title="Invite Bot to Discord Server" class="bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
+                <button v-if="!userLoggedIn" @click="global.inviteBotUsingDiscord" title="Invite Bot to Discord Server" class="bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
                     <span class="material-symbols-rounded !h-6 !w-6 select-none !cursor-pointer">
                         add
                     </span>
@@ -145,13 +147,13 @@
                     </li>
 
                     <!-- Invite Bot -->
-                    <li class="w-full h-fit p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="global.inviteBotUsingDiscord" class="w-full h-fit p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V8c0-.55-.45-1-1-1s-1 .45-1 1v2H2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1H6zm9 4c-2.67 0-8 1.34-8 4v1c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-1c0-2.66-5.33-4-8-4z"/></svg>
                         <p> Invite Bot to Server </p>
                     </li>
 
                     <!-- Invite Bot -->
-                    <li class="w-full h-fit p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="()=>{pricingPlans(), closeNav()}" class="w-full h-fit p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg class="ml-0.5" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><rect fill="none" height="24" width="24"/><path d="M19.41,7.41l-4.83-4.83C14.21,2.21,13.7,2,13.17,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V8.83 C20,8.3,19.79,7.79,19.41,7.41z M14,12c0.55,0,1,0.45,1,1v3c0,0.55-0.45,1-1,1h-1c0,0.55-0.45,1-1,1s-1-0.45-1-1h-1 c-0.55,0-1-0.45-1-1c0-0.55,0.45-1,1-1h3v-1h-3c-0.55,0-1-0.45-1-1v-3c0-0.55,0.45-1,1-1h1c0-0.55,0.45-1,1-1s1,0.45,1,1h1 c0.55,0,1,0.45,1,1c0,0.55-0.45,1-1,1h-3v1H14z"/></svg>
                         <p> Pricing Plans </p>
                     </li>

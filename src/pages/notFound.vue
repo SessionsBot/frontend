@@ -14,7 +14,7 @@
         // Breif wait:
         setTimeout(() => {
             // Redirct home:
-            // homepage()
+            homepage()
         }, 10_000);
     })
 
