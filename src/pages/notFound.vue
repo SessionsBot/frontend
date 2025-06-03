@@ -1,8 +1,5 @@
 <script setup>
     // Imports
-    import siteHeader from '../components/siteHeader.vue';
-    import siteFooter from '../components/siteFooter.vue';
-
     import { onMounted } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
     const router = useRouter()
