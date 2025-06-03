@@ -3,6 +3,7 @@ import Home from '../homepage.vue'
 import Dashboard from '../dashboard.vue'
 import LoginRedirect from '../loginRedirect.vue'
 import ApiTesting from '../apiTesting.vue'
+import GuildSetup from '../guildSetup.vue'
 import NotFound from '../notFound.vue'
 
 const routes = [
@@ -29,9 +30,9 @@ const routes = [
   },
 
   {
-    path: '/api/internal-testing',
+    path: '/api/guild-setup',
     name: 'internal-testing',
-    component: ApiTesting
+    component: GuildSetup
   },
   
 ]

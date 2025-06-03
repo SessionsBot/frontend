@@ -26,7 +26,8 @@
     const route = useRoute()
     const titleOnlyHeader = computed(() =>
         // If API Page - Hide Header Buttons:
-        route.path.startsWith('/api')
+        // route.path.startsWith('/api')
+        false
     );  
 
 </script>
