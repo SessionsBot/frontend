@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../landingPage.vue'
+import Home from '../homepage.vue'
 import Dashboard from '../dashboard.vue'
 import LoginRedirect from '../loginRedirect.vue'
 import ApiTesting from '../apiTesting.vue'

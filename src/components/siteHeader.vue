@@ -41,7 +41,7 @@
         </div>
 
         <!-- Side Buttons: -->
-        <div class="flex flex-wrap justify-center items-center content-center gap-3">
+        <div class="flex flex-nowrap justify-center items-center content-center gap-3">
             <!-- [LG SCREENS] Buttons: -->
             <div v-if="!titleOnlyHeader" class="flex-wrap flex-row gap-3 hidden sm:!flex">
 
@@ -70,10 +70,8 @@
                 </button>
 
                 <!-- View Dashboard: -->
-                <Transition name="fade"> <button v-if="userLoggedIn && route.name !== 'dashboard'" @click="dashboard" title="Invite Bot to Discord Server" class="bg-modern-purple-discord pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
-                    <span class="material-symbols-rounded !h-6 !w-6 select-none !cursor-pointer">
-                        build
-                    </span>
+                <Transition name="fade"> <button v-if="userLoggedIn && route.name !== 'dashboard'" @click="dashboard" title="Invite Bot to Discord Server" class="bg-modern-purple-discord pl-1 pr-2 py-1.75 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z"/></svg>
                     <p>
                         Dashboard
                     </p>

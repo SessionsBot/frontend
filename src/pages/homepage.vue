@@ -1,6 +1,5 @@
 <script setup>
 
-    import siteHeader from '../components/siteHeader.vue'
 
 </script>
 
