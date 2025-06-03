@@ -39,13 +39,13 @@
         <!-- Site Icon & Title: -->
         <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
             <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../assets/sessionsBot.png">
-            <h1 class="text-2xl sm:text-3xl font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
+            <h1 class="text-2xl sm:text-3xl text-nowrap font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
         </div>
 
         <!-- Side Buttons: -->
         <div class="flex flex-nowrap justify-center items-center content-center gap-3">
             <!-- [LG SCREENS] Buttons: -->
-            <div v-if="!titleOnlyHeader" class="flex-wrap flex-row gap-3 hidden sm:!flex">
+            <div v-if="!titleOnlyHeader" class="flex-wrap justify-end flex-row gap-3 hidden sm:!flex">
 
                 <!-- Invite Discord Bot: -->
                 <button v-if="!userLoggedIn" @click="global.inviteBotUsingDiscord" title="Invite Bot to Discord Server" class="bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
