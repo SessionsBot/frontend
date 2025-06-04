@@ -8,9 +8,10 @@ onMounted(() => {
     const query = useRoute().query
     const guildId = query.guildId
 
-    console.log('Query', query)
-    console.log('Guild ID', guildId)
-})
+
+    console.log('Guild ID', guildId);
+
+});
 
 </script>
 
