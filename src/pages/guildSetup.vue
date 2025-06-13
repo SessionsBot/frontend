@@ -8,10 +8,31 @@ onMounted(() => {
     const query = useRoute().query
     const guildId = query.guildId
 
+    console.log('Query', query)
+    console.log('Guild ID', guildId)
 
-    console.log('Guild ID', guildId);
-
-});
+    const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/discord/guild?guildId=' + guildId;
+    
+    fetch(requestUrl, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Guild Data:', data);
+        // You can now use the guild data as needed
+    })
+    .catch(error => {
+        console.error('Error fetching guild data:', error);
+    });
+})
 
 </script>
 
