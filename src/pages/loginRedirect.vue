@@ -2,7 +2,7 @@
 // App Imports:
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../utils/stores/auth'
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -17,23 +17,24 @@ const titleSubHeading = ref('Loading')
 onMounted(() => {
     
     // JSON WEB TOKEN -- AUTH ATTEMPTS:
-    const userAuthToken = route.query.token;
+    const userAuthToken = route.query?.token;
     const statusFooterText = document.getElementById('statusFooterText')
 
     if (userAuthToken) {
         // Token provided:
         statusMessage.value = 'Token Received'
         // Login user:
-        auth.loginWithAuthToken(userAuthToken);
+        auth.signInWithToken(userAuthToken);
         // Redirect:
         if(redirect) {router.push('/dashboard')}
     }
     else {
         // Token NOT provided:
+        console.warn('{!} Missing required auth token for login redirect!')
         statusMessage.value = `Login Failed!`
         statusFooterText.classList.add('text-rose-600', 'font-black')
-        // Logout any user:
-        auth.logout()
+        // SignOut any user:
+        auth.signOut()
         // Redirect:
         if(redirect) {setTimeout(()=>{router.push('/')},3_000)}
     }

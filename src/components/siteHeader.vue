@@ -2,13 +2,13 @@
     // Imports:
     import { ref, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
-    import { useAuthStore } from '../stores/auth'
-    import { global } from '../stores/global'
+    import { useAuthStore } from '../utils/stores/auth'
+    import { global } from '../utils/stores/global'
     
     // Auth:
     const auth = useAuthStore()
     const userLoggedIn = computed(() => auth.isAuthenticated)
-    const logoutUser = () => auth.logout()
+    const logoutUser = () => auth.signOut()
 
     // NAVIGATION:
     const navMenuVisible = ref(false)
