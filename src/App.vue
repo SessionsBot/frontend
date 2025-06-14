@@ -7,7 +7,7 @@ import siteHeader from './components/siteHeader.vue';
 import siteFooter from './components/siteFooter.vue';
 
 // Vairables:
-const siteVersion = ref("0.3.0b")
+const siteVersion = ref("0.3.0c")
 </script>
 
 
