@@ -1,6 +1,6 @@
 <script setup>
     // Imports:
-    import { ref, computed } from 'vue';
+    import { ref, computed, onMounted } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
     import { useAuthStore } from '../utils/stores/auth'
     import { global } from '../utils/stores/global'
@@ -17,25 +17,23 @@
 
     // Redirect Fns:
     const router = useRouter()
-    const homepage = () => router.push('/')
-    const dashboard = () => router.push('/dashboard')
-    const pricingPlans = () => router.push('/pricing-plans')
-    const myAccount = () => router.push('/user/account')
+    const homepage = () => router.push('/');
+    const dashboard = () => router.push('/user/dashboard');
+    const pricingPlans = () => router.push('/pricing-plans');
+    const myAccount = () => router.push('/user/account');
 
-    // Router Path Checks - Hides Buttons:
+    // Router Path Checks - Hides Elments if Requested:
     const route = useRoute()
-    const titleOnlyHeader = computed(() =>
-        // If API Page - Hide Header Buttons:
-        // route.path.startsWith('/api')
-        false
-    );  
+    const q = route.query
+    const titleOnlyHeader = computed(() => q?.titleOnlyHeader ? true : false);  
+    const hideHeader = computed(() => q?.hideHeader ? true : false);  
 
 </script>
 
 
 <template>
 
-    <header class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full gap-3 p-2 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
+    <header v-if="!hideHeader" class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full gap-3 p-2 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
 
         <!-- Site Icon & Title: -->
         <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
@@ -49,7 +47,7 @@
             <div v-if="!titleOnlyHeader" class="flex-wrap justify-end flex-row gap-3 hidden sm:!flex">
 
                 <!-- Invite Discord Bot: -->
-                <button v-if="!userLoggedIn" @click="global.inviteBotUsingDiscord" title="Invite Bot to Discord Server" class="bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
+                <button v-if="!userLoggedIn" @click="global.inviteBotUsingDiscord" title="Invite Bot to Discord Server" class="hidden bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
                     <span class="material-symbols-rounded !h-6 !w-6 select-none !cursor-pointer">
                         add
                     </span>
@@ -101,7 +99,7 @@
     
     <!-- Nav Menu Screen: -->
     <Transition name="navMenu">
-     <nav v-if="navMenuVisible" class="text-white flex fixed z-50 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
+     <nav v-if="navMenuVisible" class="text-white flex fixed z-20 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
         
         
         <!-- Dismiss Area: -->
@@ -199,7 +197,7 @@
                                     </path>
                                 </g>
                             </svg>
-                            <p class="text-nowrap"> Log In with Discord </p>
+                            <p class="text-nowrap"> Sign In with Discord </p>
                         </li>
 
                     </div>

@@ -1,10 +1,25 @@
 <script setup>
-import { useAuthStore } from '../utils/stores/auth';
-
+    import { ref, computed, onMounted } from 'vue';
+    import { useAuthStore } from '../../utils/stores/auth';
+    import { useRoute } from 'vue-router'
+    
+    const route = useRoute()
+    
+    const customSubHeading = computed(() => route.query.message || 'Sign In using Discord to continue...')
+    const customDetailsString = ref('In order to access this page you must be signed in to an account! To procced, sign in using your Discord account by clicking on the button below.')
 
     const auth = useAuthStore()
     const authWithDiscord = () => auth.authWithDiscord()
     const discordIntegrationInfoRedirect = () => window.open('https://discord.com/developers/docs/topics/oauth2', '_blank')
+
+    // Check for query data/messages:
+    onMounted(() => {
+        const q = route.query;
+        // Discord Auth Error:
+        if(q?.discordAuthError){
+            customDetailsString.value = 'An error occured when attempting to authenticate with your Discord Account! Please start over and try again, if this issue persists please contact our support team.'
+        }
+    })
 
 </script>
 
@@ -18,7 +33,7 @@ import { useAuthStore } from '../utils/stores/auth';
     <!-- My Account Wrap: -->
     <div class="
         bg-neutral-900/50 text-white
-        rounded-md ring-offset-4 ring-offset-gray-200/30
+        rounded-md ring-offset-4 ring-offset-neutral-200/30
         shadow-sm shadow-black/50 text-shadow-xs text-shadow-black/40
         flex flex-nowrap justify-center items-center content-center flex-col
         w-[80%] sm:w-[65%] md:w-155 h-fit
@@ -28,20 +43,20 @@ import { useAuthStore } from '../utils/stores/auth';
         <!-- Header / Welcome Msg: -->
         <div class="
             flex flex-nowrap items-start text-start flex-col
-            w-full
+            w-full mt-1
         ">
             <h1 class="ml-0.5 text-3xl font-extrabold text-shadow-sm text-shadow-black/40">
                 👋 Welcome Back!
             </h1>
             <p class="text-neutral-300/70 text-sm font-semibold ml-5.5 text-shadow-sm text-shadow-black/30">
-                Sign In using Discord to continue...
+                {{ customSubHeading }}
             </p>
             
         </div>
 
 
         <!-- Divider Line: -->
-        <div class=" h-[2.5px] w-[92%] bg-gray-400/35 rounded-xs"> </div>
+        <div class=" h-[2px] w-[90%] my-1 bg-gray-400/25 rounded-xs"> </div>
 
 
         <!-- More Information: -->
@@ -58,12 +73,12 @@ import { useAuthStore } from '../utils/stores/auth';
             </div>
 
 
-            <p class="font-stretch-semi-condensed flex flex-1 pl-0 p-1.5 flex-wrap text-sm"> In order to access this page you must be signed in to an account! To procced, sign in using your Discord account by clicking on the button below.</p>
+            <p class="font-stretch-semi-condensed flex flex-1 pl-0 p-1.5 flex-wrap text-sm"> {{ customDetailsString }} </p>
 
         </div>
 
         <!-- Divider Line: -->
-        <div class=" h-[2.5px] w-[92%] bg-gray-400/35 rounded-xs"> </div>
+        <div class=" h-[2px] w-[90%] my-1 bg-gray-400/25 rounded-xs"> </div>
 
 
         <!-- Login w/ Discord Button: -->

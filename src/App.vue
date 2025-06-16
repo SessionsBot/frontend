@@ -7,12 +7,13 @@ import siteHeader from './components/siteHeader.vue';
 import siteFooter from './components/siteFooter.vue';
 
 // Vairables:
-const siteVersion = ref("0.3.1a")
+const siteVersion = ref("0.3.1b")
+
 </script>
 
 
-<template>
 
+<template>
   
   <siteHeader />
   <!-- ↓ Header Padding ↓ -->

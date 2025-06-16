@@ -1,0 +1,88 @@
+// App Imports:
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from './stores/auth'
+
+
+// Top Page Imports:
+import homepage from '../pages/homepage.vue'
+import notFound from '../pages/notFound.vue'
+
+// User Page Imports:
+import signIntoAccount from '../pages/user/signIntoAccount.vue'
+import dashboard from '../pages/user/dashboard.vue'
+
+// API Page Imports:
+import signInRedirect from '../pages/api/signInRedirect.vue'
+import guildSetup from '../pages/api/guildSetup.vue'
+
+
+
+
+const routes = [
+
+  // Page Routes:
+  {
+    path: '/',
+    name: 'homepage',
+    component: homepage
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    component: notFound
+  },
+  
+  
+
+  // User Routes
+  {
+    path: '/user/sign-in',
+    name: 'sign-in',
+    component: signIntoAccount
+  },
+  {
+    path: '/user/dashboard',
+    name: 'dashboard',
+    component: dashboard,
+    meta: {requiresAuth: true}
+
+  },
+  // {
+  //   path: '/user/account',
+  //   name: 'user-account',
+  //   component: MyAccount
+  // },
+
+
+  // API Routes:
+  {
+    path: '/api/sign-in/discord-redirect',
+    name: 'sign-in-redirect',
+    component: signInRedirect
+  },
+  {
+    path: '/api/guild-setup',
+    name: 'guild-setup',
+    component: guildSetup
+  },
+  
+]
+
+// Create Router:
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+// Create 'Account Restricted' navigation guard:
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    // Not authenticated, redirect to sign-in
+    next({ path: '/user/sign-in', query: { message: `Please sign in to access ${to.name}` } })
+  } else {
+    next()
+  }
+})
+
+export default router

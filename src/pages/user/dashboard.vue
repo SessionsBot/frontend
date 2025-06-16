@@ -3,7 +3,7 @@
     import { ref, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
 
-    import { useAuthStore } from '../utils/stores/auth'
+    import { useAuthStore } from '../../utils/stores/auth.js'
 
     // Auth:
     const auth = useAuthStore()

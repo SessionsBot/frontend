@@ -2,7 +2,7 @@
 // App Imports:
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../utils/stores/auth'
+import { useAuthStore } from '../../utils/stores/auth'
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -25,7 +25,7 @@ onMounted(() => {
         // Login user:
         auth.signInWithToken(userAuthToken);
         // Redirect:
-        if(redirect) {router.push('/my-account')}
+        if(redirect) {router.push('/user/dashboard')}
     }
     else {
         // Token NOT provided:
@@ -36,7 +36,7 @@ onMounted(() => {
         auth.signOut()
         // Redirect:
         if(redirect) {router.push({
-            path: '/my-account',
+            path: '/user/sign-in',
             query: { discordAuthError: 'true' }
         })}
     }
