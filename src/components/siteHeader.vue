@@ -20,7 +20,7 @@
     const homepage = () => router.push('/')
     const dashboard = () => router.push('/dashboard')
     const pricingPlans = () => router.push('/pricing-plans')
-    const myAccount = () => router.push('/user/profile')
+    const myAccount = () => router.push('/user/account')
 
     // Router Path Checks - Hides Buttons:
     const route = useRoute()

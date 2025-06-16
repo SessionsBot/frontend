@@ -21,8 +21,9 @@ router.afterEach((to) => {
 });
 
 // ---------------------------------[ Initialize App ]--------------------------------- \\
+// Init Config:
 app.use(router)
 app.use(createPinia())
-
 useAuthStore().initializeAuth()
+// Mount App:
 app.mount('#app')

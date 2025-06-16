@@ -1,9 +1,12 @@
+// Imports:
 import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth as firebaseAuth } from "../firebase";
-
 import { DateTime } from "luxon";
 
+const debug = true;
+
+// Exports:
 export const useAuthStore = defineStore('auth', {
    
     // States:
@@ -22,7 +25,7 @@ export const useAuthStore = defineStore('auth', {
     // Actions:
     actions: {
         // Check/Initialize Auth on Page Load:
-        async initializeAuth(debug = true) {
+        async initializeAuth() {
             if(debug) console.group('Authentication Initialization')
 
             // Validate custom JWT
@@ -74,7 +77,10 @@ export const useAuthStore = defineStore('auth', {
             const userData = JSON.parse(atob(base64Payload));
             const firebaseToken = userData?.firebaseToken
             console.log('userData', userData);
-            if(!base64Payload || !userData || !firebaseToken) return console.log(`{!} Cannot Login - Missing Firebase Token`)
+            if(!base64Payload || !userData || !firebaseToken) return console.log(`{!} Cannot Sign In! - Missing Firebase Token`)
+
+            // Debug:
+            if(debug) console.log(`[Auth]: User Signing In...`);
 
             // Signin/Update - Pina:
             this.authToken = authToken;
@@ -87,15 +93,20 @@ export const useAuthStore = defineStore('auth', {
             await signInWithCustomToken(firebaseAuth, firebaseToken).catch((e) => {
                 // Error Logging in to Firebase:
                 this.signOut()
-                console.log(`'[Firebase]: Failed to login using custom token! \n Error:  ${e}`)
+                console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
             })
+
+            if(debug) console.log(`[Auth]: User Signed In!`);
         } catch (e) {
             this.signOut()
-            console.log(`'[Firebase]: Failed to login using custom token! \n Error:  ${e}`)
+            console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
         }},
 
         // Logut of Account:
-        async signOut() {
+        async signOut() { try {
+            // Debug:
+            if(debug) console.log(`[Auth]: User Signing Out...`);
+
             // Signout/Reset - Pina:
             this.authToken = null;
             this.isAuthenticated = false;
@@ -107,30 +118,34 @@ export const useAuthStore = defineStore('auth', {
             await firebaseSignOut(firebaseAuth).catch((e) => { 
                 console.log(`Failed to signout of Firebase Auth: \n Code:`, e?.code, + '\n' + `Message:`, e?.message)
             });
-        },
+
+            // Debug:
+            if(debug) console.log(`[Auth]: User Signed Out!`);
+        } catch(e) {
+            // Error Occured:
+            console.warn(`'[Firebase]: Failed to sign out of account! \n Error:  ${e}`)
+        }},
 
         // User Data - Returns Object:
-        async getUserData() {
-            try {
-                if (!this.authToken) return 'Missing authentication token!';
+        async getUserData() { try {
+            if (!this.authToken) return 'Missing authentication token!';
 
-                // JSON Web Token:
-                const base64Payload = this.authToken.split('.')[1];
-                const pinaAuthData = JSON.parse(atob(base64Payload));
+            // JSON Web Token:
+            const base64Payload = this.authToken.split('.')[1];
+            const pinaAuthData = JSON.parse(atob(base64Payload));
 
-                // Firebase User Token:
-                const user = firebaseAuth.currentUser
-                const tokenResult = await user.getIdTokenResult()
-                const firebaseAuthData = user ? {uid: user?.uid, ...tokenResult} : null;
+            // Firebase User Token:
+            const user = firebaseAuth.currentUser
+            const tokenResult = await user.getIdTokenResult()
+            const firebaseAuthData = user ? {uid: user?.uid, ...tokenResult} : null;
 
-                // Return Result:
-                const userData = {Pina: pinaAuthData, Firebase: firebaseAuthData}
-                console.log('All User Data:', userData)
-                return userData
+            // Return Result:
+            const userData = {Pina: pinaAuthData, Firebase: firebaseAuthData}
+            console.log('All User Data:', userData)
+            return userData
 
-            } catch {
-                return null;
-            }
-        },
+        } catch {
+            return null;
+        }},
     }
 });
