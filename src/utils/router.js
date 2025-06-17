@@ -77,10 +77,17 @@ const router = createRouter({
 // Create 'Account Restricted' navigation guard:
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
+  // Account Restricted Pages:
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    // Not authenticated, redirect to sign-in
+    // Not authenticated, redirect to Sign-In
     next({ path: '/user/sign-in', query: { message: `Please sign in to access ${to.name}` } })
+
+  } else if(to.path === '/user/sign-in' && auth.isAuthenticated){
+    // Already Signed In, redirect to User Dashbaord
+    next({path: '/user/dashboard'})
+
   } else {
+    // No restriction:
     next()
   }
 })

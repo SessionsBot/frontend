@@ -1,6 +1,6 @@
 <script setup>
 // Props from Parent Page:
-defineProps({
+const props = defineProps({
     visible: Boolean,
     title: String,
     description: String,
@@ -21,7 +21,7 @@ defineEmits(['close', 'closed'])
     <div v-if="visible" class="modal-overlay">
       <!-- Your modal card -->
       <section
-        class="modal-card w-[80%] sm:max-w-150 bg-modern-purple-discord text-white font-semibold ring-1 rounded-lg flex flex-wrap justify-center items-center content-center"
+        class="modal-card w-[80%] sm:max-w-150 bg-neutral-700 text-white font-semibold ring-1 rounded-lg flex flex-wrap justify-center items-center content-center"
       >
         <header
           class="bg-black/30 rounded-t-md w-full p-2 pr-3 gap-1 flex justify-between items-center"

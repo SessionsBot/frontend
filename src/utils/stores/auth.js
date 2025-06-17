@@ -4,7 +4,7 @@ import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut }
 import { auth as firebaseAuth } from "../firebase";
 import { DateTime } from "luxon";
 
-const debug = true;
+const debugAuth = false;
 
 // Exports:
 export const useAuthStore = defineStore('auth', {
@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
     actions: {
         // Check/Initialize Auth on Page Load:
         async initializeAuth() {
-            if(debug) console.group('Authentication Initialization')
+            if(debugAuth) console.group('Authentication Initialization')
 
             // Validate custom JWT
             if (this.authToken) {
@@ -34,27 +34,27 @@ export const useAuthStore = defineStore('auth', {
                     // Check Token Expiration:
                     const payload = JSON.parse(atob(this.authToken.split('.')[1]));
                     if (!payload.exp || DateTime.fromSeconds(payload.exp).diffNow().valueOf() <= 0) {
-                        if(debug) console.log('Token EXPIRED! - Signed Out!')
+                        if(debugAuth) console.log('Token EXPIRED! - Signed Out!')
                         this.signOut();
                         return;
                     }
                     // Confirm Login:
-                    if(debug) console.log('Token VALID! - Signed In')
+                    if(debugAuth) console.log('Token VALID! - Signed In')
                     this.isAuthenticated = true;
                 } catch {
                     this.signOut();
                     return;
                 }
             } else {
-                if(debug) console.log('Token NOT FOUND?! - Signed Out!')
+                if(debugAuth) console.log('Token NOT FOUND?! - Signed Out!')
                 return;
             }
 
             // Validate Firebase Auth
             onAuthStateChanged(firebaseAuth, async (user) => {
                 
-                if(debug) console.group(`--- FIREBASE AUTH CHANGE ---`)
-                if(debug) console.log('Logged In:', !!user)
+                if(debugAuth) console.group(`--- FIREBASE AUTH CHANGE ---`)
+                if(debugAuth) console.log('Logged In:', !!user)
                 if(!user){
                     console.warn('Firebase - Logged out user from auth state change...');
                     this.signOut()
@@ -76,11 +76,10 @@ export const useAuthStore = defineStore('auth', {
             const base64Payload = authToken.split('.')[1];
             const userData = JSON.parse(atob(base64Payload));
             const firebaseToken = userData?.firebaseToken
-            console.log('userData', userData);
             if(!base64Payload || !userData || !firebaseToken) return console.log(`{!} Cannot Sign In! - Missing Firebase Token`)
 
-            // Debug:
-            if(debug) console.log(`[Auth]: User Signing In...`);
+            // debugAuth:
+            if(debugAuth) console.log(`[Auth]: User Signing In...`);
 
             // Signin/Update - Pina:
             this.authToken = authToken;
@@ -96,7 +95,7 @@ export const useAuthStore = defineStore('auth', {
                 console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
             })
 
-            if(debug) console.log(`[Auth]: User Signed In!`);
+            if(debugAuth) console.log(`[Auth]: User Signed In!`);
         } catch (e) {
             this.signOut()
             console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
@@ -104,8 +103,8 @@ export const useAuthStore = defineStore('auth', {
 
         // Logut of Account:
         async signOut() { try {
-            // Debug:
-            if(debug) console.log(`[Auth]: User Signing Out...`);
+            // debugAuth:
+            if(debugAuth) console.log(`[Auth]: User Signing Out...`);
 
             // Signout/Reset - Pina:
             this.authToken = null;
@@ -119,8 +118,8 @@ export const useAuthStore = defineStore('auth', {
                 console.log(`Failed to signout of Firebase Auth: \n Code:`, e?.code, + '\n' + `Message:`, e?.message)
             });
 
-            // Debug:
-            if(debug) console.log(`[Auth]: User Signed Out!`);
+            // debugAuth:
+            if(debugAuth) console.log(`[Auth]: User Signed Out!`);
         } catch(e) {
             // Error Occured:
             console.warn(`'[Firebase]: Failed to sign out of account! \n Error:  ${e}`)
