@@ -8,16 +8,16 @@
   import siteFooter from './components/siteFooter.vue';
 
   import alertPopup from './components/alertPopup.vue'
+  import { motion } from 'motion-v';
 
   // Vairables:
-  const siteVersion = ref("0.3.1c")
+  const siteVersion = ref("0.3.2a")
 
 </script>
 
 
 
 <template>
-  
   <siteHeader />
 
   <router-view v-slot="{ Component }" class="pt-12 sm:pt-14">
