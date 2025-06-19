@@ -11,7 +11,7 @@
   import { motion } from 'motion-v';
 
   // Vairables:
-  const siteVersion = ref("0.3.2a")
+  const siteVersion = ref("0.3.2c")
 
 </script>
 
