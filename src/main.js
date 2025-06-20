@@ -17,25 +17,7 @@ const app = createApp(App)
 
 // ---------------------------------[ Prime Vue - Theme Config ]--------------------------------- \\
 
-Aura.semantic.colorScheme.dark.formField.background = 'var(--muted)'
-Aura.components.button.colorScheme.dark.root.danger.background = 'var(--color-rose-700)'
-Aura.components.button.colorScheme.dark.root.danger ={
-
-  background: "var(--color-destructive)",
-  hoverBackground: "{red.800}",
-  activeBackground: "{red.600}",
-
-  borderColor: "{rose.400}",
-  hoverBorderColor: "{rose.400}",
-  activeBorderColor: "{rose.400}",
-
-  focusRing: {color: "{rose.500}", shadow: "none"},
-
-  activeColor: "var(--black-50)",
-  hoverColor: "{white}",
-  color: "{white}",
-
-}
+Aura.semantic.colorScheme.dark.formField.background = 'var(--muted)';
 
 const Custom = definePreset(Aura, {
   semantic: {

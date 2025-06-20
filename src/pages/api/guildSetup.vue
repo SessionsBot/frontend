@@ -6,7 +6,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useNavStore } from '@/utils/stores/nav';
 
 // UI:
-import { EyeOff, FilePlus2, Trash2, TriangleAlert } from 'lucide-vue-next';
+import { EyeOff, FilePlus2, SettingsIcon, Trash2, TriangleAlert } from 'lucide-vue-next';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Step from 'primevue/step';
@@ -16,6 +16,8 @@ import Stepper from 'primevue/stepper';
 import { AutoComplete, useConfirm } from 'primevue';
 import IftaLabel from 'primevue/iftalabel';
 import ConfirmDialog from 'primevue/confirmdialog';
+import DatePicker from 'primevue/datepicker';
+import ProgressSpinner from 'primevue/progressspinner';
 
 // Variables:
 const router = useRouter()
@@ -26,6 +28,7 @@ const guildName = ref('GUILD_NAME');
 
 // Guild Setup STEPS:
 const currentStep = ref(1)
+const submitting = ref(false)
 
 function onStepChange(val) {
   currentStep.value = val
@@ -112,16 +115,18 @@ onMounted(() => {
     <main
         class="text-white text-center flex gap-2 flex-1 flex-col flex-wrap justify-start items-center content-center">
 
-        <header class="bg-accent ring-2 ring-zinc-700/70 w-full flex justify-between">
+        <header class="bg-zinc-900 ring-2 ring-zinc-700/70 w-full flex justify-between">
+            <!-- Site Title -->
             <section class="w-fit p-2 px-4 flex flex-row gap-2 justify-start items-center content-center">
                 <img class="h-8 w-8 rounded-full ring-zinc-700 ring-2" :src="guildIconImg">
                 <h1 class="text-3xl font-semibold text-left">
-                    Guild Setup:
+                    Guild Setup
                 </h1>
+                <SettingsIcon/>
             </section>
 
             
-
+            <!-- Abort Setup PopUp: -->
             <ConfirmDialog group="headless" class="max-w-[90%]">
             <template #container="{ message, acceptCallback, rejectCallback }">
                 <div class="flex flex-col items-center p-8 bg-surface-0 rounded">
@@ -131,15 +136,17 @@ onMounted(() => {
                     <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
                     <p class="mb-0 px-5">{{ message.message }}</p>
                     <div class="flex items-center gap-2 mt-6">
-                        <Button size="small" label="Continue Setup" severity="success" outlined @click="rejectCallback" class="w-fit"></Button>
-                        <Button size="small" label="Leave & Discard" severity="danger" raised @click="acceptCallback" class="w-fit"></Button>
+                        <Button size="small" label="Continue Setup" severity="success" raised @click="rejectCallback" class="w-fit"></Button>
+                        <Button size="small" label="Leave & Discard" severity="danger" outlined @click="acceptCallback" class="w-fit"></Button>
                     </div>
                 </div>
             </template>
             </ConfirmDialog>
 
+            <!-- Abort Setup Button: -->
             <Button @click="requireConfirmation()" variant="text" severity="danger"
-            size='small' class="flex justify-center items-center content-center flex-row flex-nowrap">
+                size='small' class="flex justify-center items-center content-center flex-row flex-nowrap w-fit h-fit my-auto mr-2.5"
+            >
                 <Trash2 class="w-4 h-4"/>
                 <p>Abort Setup</p>
             </Button>
@@ -149,10 +156,10 @@ onMounted(() => {
 
         <div class="w-full p-3">
 
-            <Stepper :readonly="true" :value="currentStep" @update:value="onStepChange">
+            <Stepper class="!rounded-2xl overflow-clip border-2 border-zinc-700" :value="currentStep" @update:value="onStepChange">
 
                 <StepItem value="1">
-                    <Step> <p :class="currentStep > 1 ? '!text-emerald-500' : ''"> Set Guild Timezone </p> </Step>
+                    <Step class="!ring-2 ring-zinc-700"> <p :class="currentStep > 1 ? '!text-emerald-500' : ''"> Set Guild Timezone </p> </Step>
                     <StepPanel v-slot="{ activateCallback }">
 
 
@@ -160,7 +167,7 @@ onMounted(() => {
                             <IftaLabel class="inline w-fit h-auto">
                                 <AutoComplete v-model="timezoneInputVal" inputId="timezoneSelect"
                                     :suggestions="timezoneSuggestions" @complete="search" variant="filled" />
-                                <label for="timezoneSelect">Timezone</label>
+                                <label for="timezoneSelect">Timezone:</label>
                             </IftaLabel>
 
                             <Button class="w-fit" label="Next" @click="activateCallback('2')" />
@@ -170,7 +177,7 @@ onMounted(() => {
                 </StepItem>
 
                 <StepItem value="2">
-                    <Step> Configure Daily Singup </Step>
+                    <Step class="!ring-2 ring-zinc-700"> Configure Daily Singup </Step>
                     <StepPanel v-slot="{ activateCallback }">
 
 
@@ -213,6 +220,12 @@ onMounted(() => {
 
 
                             </Card>
+
+                            <IftaLabel class="inline w-fit h-auto">
+                                <DatePicker input-id="postTimeSelect" class="w-fit"/>
+                                <label for="postTimeSelect">Post Time:</label>
+                            </IftaLabel>
+                            
                             
 
                             <div class="flex flex-row gap-3 flex-wrap">
@@ -228,7 +241,7 @@ onMounted(() => {
                 </StepItem>
 
                 <StepItem value="3">
-                    <Step> Create Daily Schedules </Step>
+                    <Step class="!ring-2 ring-zinc-700"> Create Daily Schedules </Step>
                     <StepPanel v-slot="{ activateCallback }">
 
 
@@ -239,7 +252,8 @@ onMounted(() => {
                             <div class="flex flex-row gap-3 flex-wrap">
                                 <Button class="w-fit" label="Back" severity="secondary"
                                     @click="activateCallback('2')" />
-                                <Button class="w-fit" label="Next" @click="activateCallback('4')" />
+                                <Button class="w-fit text-shadow-2xs text-accent" raised label="Submit" severity="success" @click="activateCallback('4'); submitting = true" >
+                                </Button>
                             </div>
 
 
@@ -248,6 +262,22 @@ onMounted(() => {
                     </StepPanel>
                 </StepItem>
 
+                <!-- HIDDEN - COMPLETE -->
+                <StepItem value="4" v-show="submitting">
+                    <Step> COMPLETE! </Step>
+                    <StepPanel class="w-full" v-slot="{ activateCallback }">
+
+
+                        <div class="w-full flex flex-col justify-center items-center content-center">
+                            
+                            <p class="text-zinc-300/50 w-full"> Please Wait </p>
+
+                            <ProgressSpinner class="!h-5 !w-5 m-0 p-0"/>
+
+                        </div>
+
+                    </StepPanel>
+                </StepItem>
 
             </Stepper>
         </div>
@@ -326,11 +356,18 @@ onMounted(() => {
 <style>
 .p-steppanel {
     background: rgba(0, 0, 0, 0.25) !important;
-    border-radius: var(--radius-md);
 }
+
+/* .p-step{
+  border-bottom: 2px solid var(--color-zinc-700);
+} */
 
 /* Make completed steps a different color if you want */
 .p-step-header[data-p*="completed"], .p-step-number[data-p*="completed"], .p-step-title[data-p*="completed"] {
   color: var(--color-emerald-500) !important;
+}
+
+.p-step{
+    background: var(--color-zinc-900);
 }
 </style>
