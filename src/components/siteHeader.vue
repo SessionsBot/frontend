@@ -3,7 +3,8 @@
     import { ref, computed, onMounted } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
     import { useAuthStore } from '../utils/stores/auth'
-    import { global } from '../utils/stores/global'
+    import { PlusCircle } from 'lucide-vue-next';
+    import { useNavStore } from '@/utils/stores/nav';
     
     // Auth:
     const auth = useAuthStore()
@@ -11,13 +12,14 @@
     const logoutUser = () => auth.signOut()
 
     // NAVIGATION:
-    const navMenuVisible = ref(false)
-    const closeNav = () => navMenuVisible.value = false
-    const openNav = () => navMenuVisible.value = true
+    const nav =  useNavStore()
+    const navMenuVisible = computed(() => nav.navVisible)
+    const closeNav = () => nav.closeNav()
+    const openNav = () => nav.openNav()
 
     // Redirect Fns:
     const router = useRouter()
-    const homepage = () => router.push('/');
+    const homepage = () => router.push('/')
     const dashboard = () => router.push('/user/dashboard');
     const pricingPlans = () => router.push('/pricing-plans');
     const myAccount = () => router.push('/user/account');
@@ -26,14 +28,13 @@
     const route = useRoute()
     const q = route.query
     const titleOnlyHeader = computed(() => q?.titleOnlyHeader ? true : false);  
-    const hideHeader = computed(() => q?.hideHeader ? true : false);  
 
 </script>
 
 
 <template>
 
-    <header v-if="!hideHeader" class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full gap-3 p-2 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
+    <header v-if="nav.headerVisible" class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full gap-3 p-2 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
 
         <!-- Site Icon & Title: -->
         <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
@@ -47,10 +48,8 @@
             <div v-if="!titleOnlyHeader" class="flex-wrap justify-end flex-row gap-3 hidden sm:!flex">
 
                 <!-- Invite Discord Bot: -->
-                <button v-if="!userLoggedIn" @click="global.inviteBotUsingDiscord" title="Invite Bot to Discord Server" class="hidden bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
-                    <span class="material-symbols-rounded !h-6 !w-6 select-none !cursor-pointer">
-                        add
-                    </span>
+                <button @click="nav.externalPaths().inviteBotUsingDiscord()" title="Invite Bot to Discord Server" class=" bg-modern-green-default pl-1 pr-2 py-2 rounded-md !cursor-pointer font-semibold flex flex-row items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-md shadow-black/35">
+                    <PlusCircle class="h-6 w-6 mr-0.5" />
                     <p>
                         Invite Bot
                     </p>
@@ -83,7 +82,7 @@
             <!-- Nav TOGGLE Button: -->
             <button 
                 v-if="!titleOnlyHeader"
-                @click="navMenuVisible = true"
+                @click="openNav"
                 class="flex bg-modern-green-default shadow-md shadow-black/35 hover:scale-105 active:scale-95 rounded-md p-2 transition-all !cursor-pointer" 
                 title="Main Menu"
             >
@@ -115,7 +114,7 @@
                     <img class="w-9 h-9 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../assets/sessionsBot.png">
                     <h1 class="text-xl font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
                 </div>
-                <button @click="navMenuVisible = false" class="hover:bg-modern-red-default/50 w-12.5 h-14 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">
+                <button @click="closeNav" class="hover:bg-modern-red-default/50 w-12.5 h-14 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">
                     <svg class="m-2 p-0.5" xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 24 24" width="30px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </button>
                 
@@ -146,7 +145,7 @@
                     </li>
 
                     <!-- Invite Bot -->
-                    <li @click="global.inviteBotUsingDiscord" class="w-full h-fit p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="nav.externalPaths().inviteBotUsingDiscord()" class="w-full h-fit p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V8c0-.55-.45-1-1-1s-1 .45-1 1v2H2c-.55 0-1 .45-1 1s.45 1 1 1h2v2c0 .55.45 1 1 1s1-.45 1-1v-2h2c.55 0 1-.45 1-1s-.45-1-1-1H6zm9 4c-2.67 0-8 1.34-8 4v1c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-1c0-2.66-5.33-4-8-4z"/></svg>
                         <p> Invite Bot to Server </p>
                     </li>
@@ -211,7 +210,7 @@
                         <div class="h-[1.5px] w-[95%] bg-gray-500/50"> </div>
                     </li>
 
-                    <li class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="nav.headerVisible = !nav.headerVisible" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 2.21c-.13 0-.26.05-.35.15l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.8-.8c-.2-.2-.51-.2-.71 0l-.79.8c-.2.2-.51.2-.71 0l-.79-.8c-.2-.2-.51-.2-.71 0l-.79.8c-.2.2-.51.2-.71 0l-.79-.8c-.09-.09-.22-.14-.35-.14V21.8c.13 0 .26-.05.35-.15l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.1.1.23.15.35.15V2.21zM17 17H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>
                         <p> Credits & About </p>
                     </li>

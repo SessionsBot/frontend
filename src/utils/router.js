@@ -1,6 +1,7 @@
 // App Imports:
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from './stores/auth'
+import { useNavStore } from './stores/nav'
 
 
 // Top Page Imports:
@@ -14,6 +15,8 @@ import dashboard from '../pages/user/dashboard.vue'
 // API Page Imports:
 import signInRedirect from '../pages/api/signInRedirect.vue'
 import guildSetup from '../pages/api/guildSetup.vue'
+
+
 
 
 
@@ -90,6 +93,9 @@ router.beforeEach((to, from, next) => {
     // No restriction:
     next()
   }
+  // Reenable Header if/was hidden:
+  const nav = useNavStore()
+  nav.headerVisible = true;
 })
 
 export default router

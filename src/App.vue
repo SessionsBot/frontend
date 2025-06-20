@@ -8,10 +8,12 @@
   import siteFooter from './components/siteFooter.vue';
 
   import alertPopup from './components/alertPopup.vue'
-  import { motion } from 'motion-v';
+  import { useNavStore } from './utils/stores/nav';
 
   // Vairables:
-  const siteVersion = ref("0.3.2c")
+  const siteVersion = ref("0.3.3b")
+  const nav = useNavStore()
+
 
 </script>
 
@@ -20,7 +22,7 @@
 <template>
   <siteHeader />
 
-  <router-view v-slot="{ Component }" class="pt-12 sm:pt-14">
+  <router-view v-slot="{ Component }" :class="nav.headerVisible ? 'pt-12 sm:pt-24': ''">
     <transition name="fade" mode="out-in">
       <component :is="Component" :key="$route.fullPath" />
     </transition>
