@@ -8,6 +8,9 @@ import { useNavStore } from './stores/nav'
 import homepage from '../pages/homepage.vue'
 import notFound from '../pages/notFound.vue'
 
+// Info Page Imports:
+import pricingPlans from '@/pages/info/pricing.vue'
+
 // User Page Imports:
 import signIntoAccount from '../pages/user/signIntoAccount.vue'
 import dashboard from '../pages/user/dashboard.vue'
@@ -15,6 +18,7 @@ import dashboard from '../pages/user/dashboard.vue'
 // API Page Imports:
 import signInRedirect from '../pages/api/signInRedirect.vue'
 import guildSetup from '../pages/api/guildSetup.vue'
+
 
 
 
@@ -35,6 +39,13 @@ const routes = [
     component: notFound
   },
   
+
+  // Info Routes:
+  {
+    path: '/info/pricing-plans',
+    name: 'pricing-plans',
+    component: pricingPlans
+  },
   
 
   // User Routes

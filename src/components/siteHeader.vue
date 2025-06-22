@@ -21,7 +21,7 @@
     const router = useRouter()
     const homepage = () => router.push('/')
     const dashboard = () => router.push('/user/dashboard');
-    const pricingPlans = () => router.push('/pricing-plans');
+    const pricingPlans = () => router.push('/info/pricing-plans');
     const myAccount = () => router.push('/user/account');
 
     // Router Path Checks - Hides Elments if Requested:

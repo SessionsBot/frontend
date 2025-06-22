@@ -34,9 +34,7 @@
 }
 
 /* ---------------- DEFAULT STYLES ---------------- */
-.hidden{
-    display: none !important;
-}
+
 
 body{
     background: var(--color-modern-dark-blue-default);
@@ -48,6 +46,10 @@ body{
 
 #app {
     @apply min-h-full w-full flex flex-col flex-wrap flex-1 absolute;
+}
+
+.p-button {
+    @apply font-semibold
 }
 
 

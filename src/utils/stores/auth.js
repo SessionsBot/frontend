@@ -66,7 +66,8 @@ export const useAuthStore = defineStore('auth', {
         },
 
         // Redirect to Discord for Sign in:
-        async authWithDiscord(){
+        async authWithDiscord(stickyRoute){
+            if(stickyRoute){ localStorage.setItem('stickySignIn', stickyRoute) }
             location.href = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fapi%2Flogin%2Fdiscord-redirect&scope=identify+guilds'
         },
 

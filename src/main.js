@@ -19,8 +19,6 @@ const app = createApp(App)
 
 Aura.semantic.colorScheme.dark.formField.background = 'var(--muted)';
 
-console.log(Aura.components.button)
-
 const PrimeVue_CustomTheme = definePreset(Aura, {
   semantic: {
     primary: {
@@ -44,6 +42,7 @@ const PrimeVue_CustomTheme = definePreset(Aura, {
       colorScheme: {
         dark: {
           root: {
+
             danger: {
               background: '#d12626',
               hoverBackground: '#e83f3f',

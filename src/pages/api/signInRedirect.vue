@@ -19,13 +19,23 @@ onMounted(() => {
     const userAuthToken = route.query?.token;
     const statusFooterText = document.getElementById('statusFooterText')
 
+    
+
     if (userAuthToken) {
         // Token provided:
         statusMessage.value = 'Validating Token'
         // Login user:
         auth.signInWithToken(userAuthToken);
         // Redirect:
-        if(redirect) {router.push('/user/dashboard')}
+        const stickyReRoute = localStorage.getItem('stickySignIn')
+        if(redirect) {
+            if (stickyReRoute) {
+                router.push(stickyReRoute)
+                localStorage.removeItem('stickySignIn')
+            }
+            else {router.push('/user/dashboard')}
+        }
+
     }
     else {
         // Token NOT provided:
