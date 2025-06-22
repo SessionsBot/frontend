@@ -19,33 +19,68 @@ const app = createApp(App)
 
 Aura.semantic.colorScheme.dark.formField.background = 'var(--muted)';
 
-const Custom = definePreset(Aura, {
+console.log(Aura.components.button)
+
+const PrimeVue_CustomTheme = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '{blue.50}',
-      100: '{blue.100}',
-      200: '{blue.200}',
-      300: '{blue.300}',
-      400: '{blue.400}',
-      500: '{blue.500}',
-      600: '{blue.600}',
-      700: '{blue.700}',
-      800: '{blue.800}',
-      900: '{blue.900}',
-      950: '{blue.950}'
+      50: '{indigo.50}',
+      100: '{indigo.100}',
+      200: '{indigo.200}',
+      300: '{indigo.300}',
+      400: '{indigo.400}',
+      500: '{indigo.500}',
+      600: '{indigo.600}',
+      700: '{indigo.700}',
+      800: '{indigo.800}',
+      900: '{indigo.900}',
+      950: '{indigo.950}'
     },
-    colorScheme: {
-      light: Aura.semantic.colorScheme.dark,
-      dark: Aura.semantic.colorScheme.dark,
-    }
   },
+
+  components: {
+    
+    button: {
+      colorScheme: {
+        dark: {
+          root: {
+            danger: {
+              background: '#d12626',
+              hoverBackground: '#e83f3f',
+              activeBackground: '#eb5757',
+              borderColor: '#940c0c',
+              hoverBorderColor: '#940c0c',
+              activeBorderColor: '#940c0c',
+              color: '#ffffff',
+              hoverColor: '#ffffff',
+              activeColor: '#ffffff',
+            },
+
+          },
+          outlined: {
+            danger: {
+              borderColor: '#db0909',
+              color: '#ed2626',
+              hoverBackground: "color-mix(in srgb, #db0909, transparent 92%)",
+            }
+          }
+        }
+      }
+    },
+
+  }
   
 });
 
+// Init Prime Vue:
 app.use(PrimeVue, {
-  theme: {
-    preset: Custom,
-  }
+  theme: { // theme customization
+    preset: PrimeVue_CustomTheme,
+    options: {
+      darkModeSelector: '.dark', // force dark mode via class
+    }
+  },
+  ripple: true, // ripple effect on buttons
 });
 
 
