@@ -1,7 +1,6 @@
-/* ---------------- Import Animations ---------------- */
+/* ---------------- Imports: ---------------- */
 @import url(./animations.css);
 
-/* ---------------- Tailwind CSS ---------------- */
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -33,30 +32,7 @@
 
 }
 
-/* ---------------- DEFAULT STYLES ---------------- */
-
-
-body{
-    background: var(--color-modern-dark-blue-default);
-
-    /* Mobile Tap/Mouse - Fixes: */
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
-}
-
-#app {
-    @apply min-h-full w-full flex flex-col flex-wrap flex-1 absolute;
-}
-
-.p-button {
-    @apply font-semibold
-}
-
-
-/* ---------------- [END] DEFAULT STYLES ---------------- */
-
-
-
+/* ---------------- Themes/Variables: ---------------- */
 
 @theme inline {
     --color-background: var(--background);
@@ -158,4 +134,24 @@ body{
   body {
     @apply bg-background text-foreground;
     }
+}
+
+
+/* ---------------- Global Styles: ---------------- */
+
+
+body{
+    background: var(--color-modern-dark-blue-default);
+
+    /* Mobile Tap/Mouse - Fixes: */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+#app {
+    @apply min-h-full w-full flex flex-col flex-wrap flex-1 absolute;
+}
+
+.p-button {
+    @apply font-semibold
 }

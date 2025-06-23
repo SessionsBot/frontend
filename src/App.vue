@@ -11,7 +11,7 @@
   import { useNavStore } from './utils/stores/nav';
 
   // Vairables:
-  const siteVersion = ref("0.3.3e")
+  const siteVersion = ref("0.3.3ea")
   const nav = useNavStore()
 
 
