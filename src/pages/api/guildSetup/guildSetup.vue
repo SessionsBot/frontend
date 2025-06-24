@@ -1,35 +1,48 @@
 <script setup>
 
     // ------------------------- [ App Imports ] ------------------------- \\
-    import { onMounted, ref } from 'vue';
+    import { onMounted, ref, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { useNavStore } from '@/utils/stores/nav';
     import { useAuthStore } from '@/utils/stores/auth';
 
+    import { Form } from '@primevue/forms';
+    import { zodResolver } from '@primevue/forms/resolvers/zod';
+    import { z } from 'zod';
+
     // UI:
-    import { CableIcon, CalendarCog, EyeOff, FilePlus2, Info, Link2Icon, LockIcon, PlayCircleIcon, PlaySquareIcon, SparklesIcon, Trash2, TriangleAlert } from 'lucide-vue-next';
+    import { CableIcon, CalendarCog, EarthIcon, EyeOff, FilePlus2, Info, Link2Icon, LockIcon, PlayCircleIcon, PlaySquareIcon, SparklesIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
     import Button from 'primevue/button';
     import Card from 'primevue/card';
     import Step from 'primevue/step';
+    import Select from 'primevue/select';
     import StepItem from 'primevue/stepitem';
     import StepPanel from 'primevue/steppanel';
     import Stepper from 'primevue/stepper';
-    import { AutoComplete, useConfirm } from 'primevue';
+    import { AutoComplete, Message, useConfirm } from 'primevue';
     import IftaLabel from 'primevue/iftalabel';
-    import IconField from 'primevue/iconfield';
-    import InputIcon from 'primevue/inputicon';
-    import FloatLabel from 'primevue/floatlabel';
     import ConfirmDialog from 'primevue/confirmdialog';
     import DatePicker from 'primevue/datepicker';
 
     import ProgressSpinner from 'primevue/progressspinner';
-    import { motion, animate } from 'motion-v';
+    import { motion } from 'motion-v';
+
+
+    // Setup Step Components:
+    import TimezoneSetup from './steps/timezone.vue'
+    import DailySignupSetup from './steps/dailySignup.vue'
 
     // ------------------------- [ Variables ] ------------------------- \\
     const router = useRouter()
     const route = useRoute()
     const auth = useAuthStore()
-    const userLoggedIn = ref(auth.$state.isAuthenticated);
+    const userLoggedIn = computed(() => auth.isAuthenticated)
+    // Watch Authentication:
+    watch(userLoggedIn, (newVal, oldVal) => {
+        if(!newVal){ // Signed out - force sign in...
+            currentCard.value = 'signIn';
+        }
+    })
 
 
     // ------------------------- [ Guild Data ] ------------------------- \\
@@ -46,25 +59,32 @@
     });
 
 
-    // ------------------------- [ Setup Steps ] ------------------------- \\
-    const activeComponent = ref(null) // used for tranistion within page
+    // ------------------------- [ Guild Setup Steps: ] ------------------------- \\
+    
+    const currentCard = ref('null') // Controls active visible content
+    const deferSetupContent = ref(true) // Hides all contents
+    const currentStep = ref("0") // Control current 'setup step'
 
-
-    const deferSetupContent = ref(true)
-    const currentStep = ref("0")
-    const setupStarted = computed(()=>{return Number(currentStep.value) > 0})
-    const submitting = ref(false)
     function onStepChange(val) {
         currentStep.value = val
         // do other stuff
     }
 
+    // Full Response Draft:
+    const guildSetupDraft = ref({})
 
-    // ------------------------- [ Timezone / Autocomplete ] ------------------------- \\
-    const timezoneInputVal = ref(null);
-    const timezoneSuggestions = ref(['US - Chicago','US - New York','US - Chicago',]);
-    const search = (event) => {
-        timezoneSuggestions.value = ['US - Chicago','US - New York','US - Chicago',];
+    // Timezone:
+    const submitTimezone = (f) => {
+
+        if(f?.valid){
+            // Valid - Proceed:
+            currentStep.value = '2';
+            // Save Response to Draft:
+            guildSetupDraft.value.timezone = f?.values?.timezone
+        } else { 
+            // Invalid - Don't Proceed:
+            currentStep.value = '1';
+        }
     }
 
 
@@ -86,7 +106,7 @@
 
 
     // ------------------------- [ Page Load / Mounted ] ------------------------- \\
-    onMounted(() => {
+    onMounted(async () => {
         // Hide Standard Header:
         const nav = useNavStore()
         nav.headerVisible = false;
@@ -97,7 +117,7 @@
 
         // Fetch Guild Data:
         const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/discord/guild?guildId=' + guildId;
-        fetch(requestUrl, {
+        await fetch(requestUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -110,25 +130,41 @@
             return response.json();
         })
         .then(data => {
+            // Update varaibles & page:
             guildData.value = data
             deferSetupContent.value = false
+            currentCard.value = 'wait'
         })
         .catch(error => {
             console.error('FAILED TO FETCH GUILD DATA: ', error);
         });
 
-        console.log('setupStarted', setupStarted.value)
+        // Check authetication:
+        if(!auth.isAuthenticated){
+            currentCard.value = 'signIn';
+        }else{
+            currentCard.value = 'startSetup';
+        }
 
     })
 
+
+    // Form Validation:
+    const guildSetupResolver = zodResolver(
+        z.object({
+            timezone: z.union([
+                z.string().min(1, {message: 'Timezone is required'}),
+                z.any().refine((val) => false, { message: 'Timezone is required' })
+            ])
+        })
+    );
 
 </script>
 
 <template> <main class="text-white w-full bg-black/30 text-center flex gap-2 flex-1 flex-col flex-wrap justify-start items-center content-center">
 
     <!-- Custom Header: -->
-    <Transition name="fade" duration="1">
-    <header v-show="!deferSetupContent" class="bg-zinc-900 ring-2 h-15 ring-zinc-700/70 w-full flex justify-between">
+    <Transition name="fade" duration="1"> <header v-show="!deferSetupContent" class="bg-zinc-900 ring-2 h-15 ring-zinc-700/70 w-full flex justify-between">
         <!-- Site Title -->
         <section class="w-fit p-2 px-4 flex flex-row gap-2.5 justify-start items-center content-center">
             <img class="h-8 w-8 rounded-full ring-border ring-2" :src="guildIconImg">
@@ -166,30 +202,32 @@
             <p>Abort Setup</p>
         </Button>
 
-    </header>
-    </Transition>
+    </header> </Transition>
 
-    <!-- <Transition name="fade" mode="out-in">
-        <component :is="activeComponent"></component>
-    </Transition> --> UTILIZE THIS!
-
-    <!-- Full Not Ready Wrap -->
-    <section v-show="deferSetupContent" class="w-full flex-1 gap-4 md:w-full p-3 flex justify-center items-center content-center flex-col">
+    <!-- Full Body Wrap -->
+    <section class="flex flex-1 flex-col flex-wrap gap-3 p-5 w-full text-center justify-center items-center content-center">
+    <Transition name="fade-slide" mode="out-in">
 
         <!-- Please Wait - Card -->
-        <Card v-show="userLoggedIn" class="px-10 py-2">
+        <Card v-if="currentCard === 'wait'"
+            id="loadingCard"
+            class="px-10 py-2"
+        >
             <template #content>
                 <ProgressSpinner/>
                 <p class="opacity-50 mt-5"> Please wait </p>
-                
             </template>
         </Card>
 
+
         <!-- Sign In - Card -->
-        <Card v-show="!userLoggedIn" class="p-4 md:w-[60%] m-10">
+        <Card v-else-if="currentCard === 'signIn'"
+            id="signInCard"
+            class="!p-0 md:w-[60%] m-10 !ring-2 ring-ring !overflow-clip"
+        >
             
             <template #header>
-                <div class="bg-indigo-500/30 rounded-md gap-2 p-2 flex-col flex justify-center items-center content-center">
+                <div class="bg-zinc-800/50 rounded-md border-b-2 ring-ring rounded-br-none rounded-bl-none gap-2.5 px-3 py-4 flex-col flex justify-center items-center content-center">
                     
                     <p class="text-3xl font-semibold w-full text-left p-0 m-0"> 👋 Hey There! </p>
                     <p class="text-lg ml-4 w-full text-left"> Welcome to Sessions Bot </p> 
@@ -197,10 +235,29 @@
                 </div>
             </template>
 
-            <template #content >
-                <div class="gap-1.5 p-2 flex-col flex justify-center items-center content-center">
-                    
-                    <p class="mt-5 text-md font-light w-full text-left p-0 m-0"> To start the configuration setup for this Guild, you must be signed into an account! Please simply sign in using Discord below. </p> 
+            <template #content>
+                <div class="gap-2.5 !w-full flex-col flex justify-center items-center content-center">
+
+
+                    <!-- Guild info -->
+                    <div class="flex w-full rounded-md flex-row items-center content-center justify-start">
+
+                        <p class="inline-flex text-zinc-300 bg-zinc-800 p-1 rounded-md rounded-tr-none rounded-br-none border-inset border-2 ring-ring font-semibold content-center items-center w-fit h-fit">
+                            <EarthIcon size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
+                            Guild:
+                        </p>
+
+                        <p class="p-1 px-1.5 font-semibold ring-2 ring-ring ring-offset rounded-md rounded-tl-none rounded-bl-none inline-flex justify-center items-center gap-1 flex-nowrap">
+                            {{ guildName.toUpperCase() }}
+                            <img :src="guildIconImg" class="h-4 inline-flex rounded-full" >
+                        </p>
+
+                    </div>
+
+                    <!-- Information Text -->
+                    <p class=" text-md font-light w-full text-left p-0 m-0"> 
+                        To start the configuration setup for this Guild, you must be signed into an account! Please simply sign in using Discord below. 
+                    </p> 
 
                     <Button @click="auth.authWithDiscord($route.fullPath)" class="mt-10 !bg-modern-purple-discord hover:!bg-indigo-600 !text-white !border-0 font-semibold">
                         <svg class="h-5 w-5 brightness-0 invert" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="0 -28.5 256 256" version="1.1" preserveAspectRatio="xMidYMid"> <g><path d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z" fill="#5865F2" fill-rule="nonzero"></path></g> </svg>
@@ -217,44 +274,38 @@
         </Card>
 
 
-    </section>
-
-    <!-- Full Setup Wrap: -->
-    <Transition name="fade" duration="1">
-    <section
-        v-show="!deferSetupContent" 
-        class="w-full gap-4 md:w-[80%] p-3 flex justify-center flex-1 flex-wrap items-center content-center flex-col"
-    >
-
         <!-- Start Setup Card: -->
-        <Card 
-            v-show="!setupStarted" 
-            id="beginSetupWrap"  
+        <Card v-else-if="currentCard === 'startSetup'" 
+            id="beginSetupCard"
             class="
-                w-[85%]
+                w-[90%] sm:w-[80%]
                 border-2 border-ring
                 overflow-clip
-                !bg-black/40
-            "
+                !bg-black/40"
         >
 
             <template #header>
-                <div class="bg-zinc-900 border-b-2 border-b-ring !w-full !flex !flex-wrap !justify-start !items-center !content-center flex-row !text-nowrap">
+                <div class="bg-zinc-900 border-b-2 border-b-ring p-2 !w-full !flex !flex-wrap !justify-between !items-center !content-center flex-row !text-nowrap">
                     
-                    <p class="inline-flex font-bold content-center items-center w-fit h-fit p-2 pr-1">
-                        <Info class="bg-ring w-fit rounded-md p-0.75 mr-1 inline h-fit m-0" />
-                        You're setting up:
+                    <!-- Card Title -->
+                    <p class="inline-flex font-bold content-center items-center w-fit h-fit">
+                        <WrenchIcon class="bg-ring w-fit rounded-md p-0.75 mr-1.5 inline h-fit" />
+                        Guild Setup
                     </p>
 
-                    <p class=" 
-                        bg-accent/50 
-                        py-0.25 px-1.5 ml-0.5 rounded-md 
-                        border-ring cursor-pointer
-                        hover:border-modern-purple-discord border-1
-                        inline w-fit h-fit p-0 m-0
-                        font-bold text-sm ">
-                        {{ guildName.toUpperCase() }}
-                    </p>
+                    <!-- Guild info -->
+                    <div class="flex w-fit rounded-md flex-row items-center content-center justify-center" title="Guild">
+
+                        <div class="inline-flex text-zinc-300 bg-zinc-800 p-1 rounded-md rounded-tr-none rounded-br-none border-2 ring-ring font-semibold justify-center content-center items-center w-fit h-fit">
+                            <EarthIcon size="20" stroke-width="2.5" class=" rounded-md p-0.75 m-0 inline" />
+                        </div>
+
+                        <p class="p-1 text-sm px-1.5 font-semibold ring-2 ring-ring ring-offset rounded-md rounded-tl-none rounded-bl-none inline-flex justify-center items-center gap-1 flex-nowrap">
+                            {{ guildName.toUpperCase() }}
+
+                        </p>
+
+                    </div>
 
                 </div>
             </template>
@@ -263,11 +314,13 @@
 
                 <div class="flex flex-col justify-center items-center gap-5 ">
 
-                    <p class="font-semibold text-xl"> Welcome to Sessions Bot! </p>
+                    <!-- Heading -->
+                    <p class="font-semibold text-2xl"> Welcome to Sessions Bot! </p>
 
-                    <div class="flex h-full justify-center gap-2.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
+                    <!-- Guild/Sessions Icons -->
+                    <div class="flex h-full justify-center gap-1.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
                         
-                        <img src="../../assets/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
+                        <img src="../../../assets/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
 
                         <span class="bg-zinc-700 scale-75 w-fit px-1.5 rounded-2xl">
                             <Link2Icon class="scale-90" />
@@ -288,7 +341,7 @@
             <div class="flex flex-col justify-center items-center gap-5 mt-5 ">
 
                 <Button
-                    @click="() => { if(Number(currentStep) <= 0) currentStep='1' } "
+                    @click="() => { if(Number(currentStep) <= 0) currentStep='1'; currentCard='guildSetup' } "
                     class="!gap-1"
                     severity=""
                 >
@@ -301,113 +354,61 @@
 
         </Card>
 
+
         <!-- Guild Setup Steps: -->
-        <Stepper 
-            v-show="setupStarted" 
+        <Stepper v-else-if="currentCard === 'guildSetup'"
+            id="guildSetupCard"
             :value="currentStep" 
             @update:value="onStepChange" 
             linear
-            class="w-[85%] !rounded-2xl overflow-clip border-2 border-zinc-700"
+            class="
+                w-[90%] sm:w-[80%] 
+                !rounded-2xl overflow-clip 
+                border-2 border-zinc-700"
         >
 
             <!-- Timezone: -->
             <StepItem value="1">
 
                 <Step class="!ring-2 !ring-offset ring-zinc-700">
-                    <p :class="currentStep > 1 ? '!text-emerald-500' : ''"> Set Guild Timezone </p>
+                    <p :class="{'!text-emerald-500': currentStep > 1}">
+                         Set Guild Timezone
+                    </p>
                 </Step>
+
                 <StepPanel v-slot="{ activateCallback }">
-                    <div class="flex text-left pr-7 flex-col gap-2.5 py-6 w-full">
+                    <Form v-slot="$form" :resolver="guildSetupResolver" @submit="submitTimezone" class="flex text-left pr-7 flex-col gap-2.5 py-6 w-full">
 
-                        <p class="font-light text-primary"> Choose the preferred timezone within your guild: </p>
+                        <!-- OLD COMPONENT -->
+                        <TimezoneSetup 
+                            :form="$form" 
+                            
+                        />
 
-                        <IftaLabel class="inline w-fit h-auto">
-                            <AutoComplete forceSelection dropdown dropdown-mode="blank" v-model="timezoneInputVal"
-                                inputId="timezoneSelect" :suggestions="timezoneSuggestions" @complete="search"
-                                variant="filled" />
-                            <label for="timezoneSelect" class="flex items-center">
-                                <CalendarCog class="opacity-80 m-0 p-0 mr-0.75 w-3.5 h-3.5" /> Timezone
-                            </label>
-                        </IftaLabel>
+                    </Form>
 
-                        <Button class="w-fit" label="Next" @click="activateCallback('2')" />
-                    </div>
                 </StepPanel>
 
             </StepItem>
+
 
             <!-- Daily Signup: -->
             <StepItem value="2">
-                <Step class="!ring-2 !ring-offset ring-zinc-700"> Configure Daily Singup </Step>
+
+                <Step class="!ring-2 !ring-offset ring-zinc-700"> 
+                    Configure Daily Singup 
+                </Step>
+
                 <StepPanel v-slot="{ activateCallback }">
-
-
-                    <div class="flex flex-col gap-2.5 pr-20 py-6 overflow-scroll flex-wrap max-w-full">
-
-
-                        <Card class="inline-flex text-left w-fit !bg-blue-400/30 mr-4 shadow-md">
-
-                            <template #title>
-                                <p class="bg-accent w-fit p-0.5 rounded-sm shadow-sm">
-                                    ✨ Automatic Signup Channel ✨
-                                </p>
-                            </template>
-
-                            <template #content>
-                                <div class="flex flex-col">
-                                    <ol class="list-inside list-disc text-sm">
-                                        <li> Have Sessions Bot create a pre-configured 'Signup Channel' for your
-                                            guild!</li>
-                                        <li> By default, it creates a private text channel with only read access for
-                                            all members.</li>
-                                        <li> All you have to do is modify access permissions later! </li>
-                                    </ol>
-                                </div>
-                            </template>
-
-                            <template #footer>
-                                <div class="flex justify-start gap-2 mt-1">
-
-
-
-                                    <Button
-                                        class="!text-foreground/80 !bg-accent/50 hover:bg-accent! w-fit flex flex-nowrap"
-                                        size="small" variant="text" raised>
-                                        <EyeOff class="w-4 h-4" />
-                                        <p class="text-sm">Dismiss</p>
-                                    </Button>
-
-                                    <Button severity="success"
-                                        class="!bg-accent/50 hover:bg-accent! w-fit flex flex-nowrap" size="small"
-                                        variant="text" raised>
-                                        <FilePlus2 class="w-4 h-4" />
-                                        <p class="text-sm">Create</p>
-                                    </Button>
-
-                                </div>
-                            </template>
-
-
-                        </Card>
-
-                        <IftaLabel class="inline w-fit h-auto">
-                            <DatePicker input-id="postTimeSelect" class="w-fit" />
-                            <label for="postTimeSelect">Post Time:</label>
-                        </IftaLabel>
-
-
-
-                        <div class="flex flex-row gap-3 flex-wrap">
-                            <Button class="w-fit" label="Back" severity="secondary"
-                                @click="activateCallback('1')" />
-                            <Button class="w-fit" label="Next" @click="activateCallback('3')" />
-                        </div>
-
-
-                    </div>
+                    
+                    <DailySignupSetup 
+                        :changeStep="activateCallback" 
+                        @updateDraft="(data) => { guildSetupDraft.dailySignUp = data}"
+                    />
 
                 </StepPanel>
             </StepItem>
+
 
             <!-- Daily Schedules: -->
             <StepItem value="3">
@@ -423,7 +424,7 @@
                             <Button class="w-fit" label="Back" severity="secondary"
                                 @click="activateCallback('2')" />
                             <Button class="w-fit text-shadow-2xs text-accent" raised label="Submit"
-                                severity="success" @click="activateCallback('4'); submitting = true">
+                                severity="success" @click="activateCallback('4')">
                             </Button>
                         </div>
 
@@ -433,8 +434,9 @@
                 </StepPanel>
             </StepItem>
 
+
             <!-- HIDDEN - COMPLETE -->
-            <StepItem value="4" v-show="submitting">
+            <StepItem value="4" v-show="Number(currentStep) >= 4">
 
                 <Step class="! ring-offset ring-2 ring-zinc-700"
                     pt:number:class="relative overflow-clip before:flex before:items-center before:justify-center before:content-center before:text-center before:content-['✓'] before:z-100 before:absolute before:w-full before:h-full before:bg-zinc-900">
@@ -460,8 +462,11 @@
 
         </Stepper>
 
-    </section>
+
     </Transition>
+    </section>
+    
+
 
 </main> </template>
 
@@ -481,6 +486,30 @@
         background: var(--color-zinc-900);
         opacity: .8 !important;
         
+    }
+
+
+    /* Card animations: */
+    /* Fade-slide transition for Vue <Transition name="fade-slide"> */
+    .fade-slide-enter-from {
+    opacity: 0;
+    transform: translateY(20px);
+    }
+    .fade-slide-enter-to {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    .fade-slide-leave-from {
+    opacity: 1;
+    transform: translateY(0);
+    }
+    .fade-slide-leave-to {
+    opacity: 0;
+    transform: translateY(-16px);
+    }
+    .fade-slide-enter-active,
+    .fade-slide-leave-active {
+    transition: opacity 0.35s cubic-bezier(.4,2,.6,1), transform 0.35s cubic-bezier(.4,2,.6,1);
     }
 
 </style>

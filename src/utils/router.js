@@ -17,7 +17,7 @@ import dashboard from '../pages/user/dashboard.vue'
 
 // API Page Imports:
 import signInRedirect from '../pages/api/signInRedirect.vue'
-import guildSetup from '../pages/api/guildSetup.vue'
+import guildSetup from '../pages/api/guildSetup/guildSetup.vue'
 
 
 
