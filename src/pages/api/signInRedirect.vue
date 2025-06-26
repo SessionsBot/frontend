@@ -17,6 +17,7 @@ const titleSubHeading = ref('Loading')
 onMounted(() => {
     // JSON WEB TOKEN -- AUTH ATTEMPTS:
     const userAuthToken = route.query?.token;
+    const signInFailed = route.query?.failed;
     const statusFooterText = document.getElementById('statusFooterText')
 
     
@@ -36,8 +37,7 @@ onMounted(() => {
             else {router.push('/user/dashboard')}
         }
 
-    }
-    else {
+    } else {
         // Token NOT provided:
         console.warn('{!} Missing required auth token for login redirect!')
         statusMessage.value = `Login Failed!`

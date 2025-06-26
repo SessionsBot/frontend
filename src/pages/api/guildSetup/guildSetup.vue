@@ -6,23 +6,18 @@
     import { useNavStore } from '@/utils/stores/nav';
     import { useAuthStore } from '@/utils/stores/auth';
 
-    import { Form } from '@primevue/forms';
-    import { zodResolver } from '@primevue/forms/resolvers/zod';
-    import { z } from 'zod';
+    
 
     // UI:
-    import { CableIcon, CalendarCog, EarthIcon, EyeOff, FilePlus2, Info, Link2Icon, LockIcon, PlayCircleIcon, PlaySquareIcon, SparklesIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
-    import Button from 'primevue/button';
+    import { CableIcon, EarthIcon, Link2Icon, LockIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
+    // import Button from 'primevue/button';
     import Card from 'primevue/card';
     import Step from 'primevue/step';
-    import Select from 'primevue/select';
     import StepItem from 'primevue/stepitem';
     import StepPanel from 'primevue/steppanel';
     import Stepper from 'primevue/stepper';
-    import { AutoComplete, Message, useConfirm } from 'primevue';
-    import IftaLabel from 'primevue/iftalabel';
+    import { useConfirm, Button } from 'primevue';
     import ConfirmDialog from 'primevue/confirmdialog';
-    import DatePicker from 'primevue/datepicker';
 
     import ProgressSpinner from 'primevue/progressspinner';
     import { motion } from 'motion-v';
@@ -31,6 +26,9 @@
     // Setup Step Components:
     import TimezoneSetup from './steps/timezone.vue'
     import DailySignupSetup from './steps/dailySignup.vue'
+
+
+    // toast.add({severity: 'success', detail: 'detail', summary:'summary'})
 
     // ------------------------- [ Variables ] ------------------------- \\
     const router = useRouter()
@@ -44,7 +42,6 @@
         }
     })
 
-
     // ------------------------- [ Guild Data ] ------------------------- \\
     const guildData = ref(null)
     const guildIconImg = computed(() => {
@@ -53,11 +50,10 @@
         : 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'
     });
     const guildName = computed(() => {
-        return guildData.value?.data.name 
-        ? guildData.value?.data.name 
+        return guildData.value?.guildGeneral.name 
+        ? guildData.value.guildGeneral.name 
         : 'GUILD'
     });
-
 
     // ------------------------- [ Guild Setup Steps: ] ------------------------- \\
     
@@ -72,20 +68,6 @@
 
     // Full Response Draft:
     const guildSetupDraft = ref({})
-
-    // Timezone:
-    const submitTimezone = (f) => {
-
-        if(f?.valid){
-            // Valid - Proceed:
-            currentStep.value = '2';
-            // Save Response to Draft:
-            guildSetupDraft.value.timezone = f?.values?.timezone
-        } else { 
-            // Invalid - Don't Proceed:
-            currentStep.value = '1';
-        }
-    }
 
 
     // ------------------------- [ ABORT SETUP / Confirmation ] ------------------------- \\
@@ -130,10 +112,15 @@
             return response.json();
         })
         .then(data => {
-            // Update varaibles & page:
-            guildData.value = data
-            deferSetupContent.value = false
-            currentCard.value = 'wait'
+            if(data.success){
+                // Update varaibles & page:
+                guildData.value = data.data
+                deferSetupContent.value = false
+                currentCard.value = 'wait'
+            } else {
+                // Error:
+                throw new Error("Response did not return success!");
+            }
         })
         .catch(error => {
             console.error('FAILED TO FETCH GUILD DATA: ', error);
@@ -148,16 +135,6 @@
 
     })
 
-
-    // Form Validation:
-    const guildSetupResolver = zodResolver(
-        z.object({
-            timezone: z.union([
-                z.string().min(1, {message: 'Timezone is required'}),
-                z.any().refine((val) => false, { message: 'Timezone is required' })
-            ])
-        })
-    );
 
 </script>
 
@@ -361,10 +338,7 @@
             :value="currentStep" 
             @update:value="onStepChange" 
             linear
-            class="
-                w-[90%] sm:w-[80%] 
-                !rounded-2xl overflow-clip 
-                border-2 border-zinc-700"
+            class="w-[90%] sm:w-[80%] !rounded-2xl overflow-clip border-2 border-zinc-700"
         >
 
             <!-- Timezone: -->
@@ -377,15 +351,11 @@
                 </Step>
 
                 <StepPanel v-slot="{ activateCallback }">
-                    <Form v-slot="$form" :resolver="guildSetupResolver" @submit="submitTimezone" class="flex text-left pr-7 flex-col gap-2.5 py-6 w-full">
-
-                        <!-- OLD COMPONENT -->
-                        <TimezoneSetup 
-                            :form="$form" 
-                            
+                    
+                        <TimezoneSetup
+                            :changeStep="activateCallback" 
+                            @updateDraft="(data) => { guildSetupDraft.timezone = data }"
                         />
-
-                    </Form>
 
                 </StepPanel>
 
@@ -400,13 +370,16 @@
                 </Step>
 
                 <StepPanel v-slot="{ activateCallback }">
-                    
-                    <DailySignupSetup 
+
+                    <DailySignupSetup
+                        v-if="guildData" 
+                        :guildData="guildData"
                         :changeStep="activateCallback" 
                         @updateDraft="(data) => { guildSetupDraft.dailySignUp = data}"
                     />
 
                 </StepPanel>
+                
             </StepItem>
 
 
@@ -459,6 +432,7 @@
 
                 </StepPanel>
             </StepItem>
+
 
         </Stepper>
 

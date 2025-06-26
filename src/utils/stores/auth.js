@@ -132,15 +132,16 @@ export const useAuthStore = defineStore('auth', {
 
             // JSON Web Token:
             const base64Payload = this.authToken.split('.')[1];
-            const pinaAuthData = JSON.parse(atob(base64Payload));
+            const piniaAuthData = JSON.parse(atob(base64Payload));
 
             // Firebase User Token:
             const user = firebaseAuth.currentUser
             const tokenResult = await user.getIdTokenResult()
             const firebaseAuthData = user ? {uid: user?.uid, ...tokenResult} : null;
 
+            
             // Return Result:
-            const userData = {Pina: pinaAuthData, Firebase: firebaseAuthData}
+            const userData = {Pinia: piniaAuthData, Firebase: firebaseAuthData}
             console.log('All User Data:', userData)
             return userData
 

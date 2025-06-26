@@ -1,17 +1,49 @@
 <script setup>
     // Imports:
+    import { Form } from '@primevue/forms';
+    import { zodResolver } from '@primevue/forms/resolvers/zod';
+    import { z } from 'zod';
     import { CalendarCogIcon } from 'lucide-vue-next';
     import { Button } from 'primevue';
 
     
-    // Props:
-    defineProps({
-        form: Object,
-        timezoneInputModel: String
+    // Incomming Props:
+    const props = defineProps({
+        changeStep: Function
     })
 
+    // Outgoing Emits
+    const emits = defineEmits(
+        ['updateDraft']
+    )
 
-    // ------------------------- [ Timezone / Autocomplete ] ------------------------- \\
+    // Form Validation:
+    const resolver = zodResolver(
+        z.object({
+            timezone: z.union([
+                z.string().min(1, {message: 'Timezone is required'}),
+                z.any().refine((val) => false, { message: 'Timezone is required' })
+            ])
+        })
+    );
+
+    // Form Submission:
+    const submitTimezone = (f) => {
+
+        if(f?.valid){
+            // Valid - Proceed:
+            props.changeStep('2');
+            // Save Response to Draft:
+            emits('updateDraft', f?.values?.timezone)
+
+        } else { 
+            // Invalid - Don't Proceed:
+            props.changeStep('1');
+        }
+    }
+
+
+    // Timezone Autocomplete:
     const timezoneSuggestions = ref([])
     const allTimezones = Intl.supportedValuesOf
         ? Intl.supportedValuesOf('timeZone')
@@ -26,6 +58,7 @@
 
 
 <template>
+<Form v-slot="$form" :resolver @submit="submitTimezone" class="flex text-left pr-7 flex-col gap-2.5 py-6 w-full">
 
     <p class="font-light text-primary"> Choose the preferred timezone within your guild: </p>
 
@@ -41,9 +74,9 @@
     </IftaLabel>
 
     <!-- Input Messages:  -->
-    <Message v-if="form.timezone?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+    <Message v-if="$form.timezone?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
         <ul class="flex flex-col gap-1">
-            <li v-for="(error, index) of form.timezone.errors" class="text-red-300" :key="index"> {{ error.message }}
+            <li v-for="(error, index) of $form.timezone.errors" class="text-red-300" :key="index"> {{ error.message }}
             </li>
         </ul>
     </Message>
@@ -51,4 +84,5 @@
     <!-- Submit Card/Timezone:  -->
     <Button type="submit" class="w-fit mt-4" label="Next" />
 
+</Form>
 </template>
