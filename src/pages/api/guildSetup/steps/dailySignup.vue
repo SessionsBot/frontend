@@ -104,7 +104,7 @@
 
         // Add text channels to their categories
         guildChannels.value.forEach(guild => {
-            if (guild?.type === 0) { // is text channel
+            if (guild?.type === 0 || guild?.type === 5) { // is text channel
                 const parentId = guild?.parent_id; // category id
                 const thisCat = catMap[parentId];
                 if (thisCat) {

@@ -60,18 +60,24 @@
 <template>
 <Form v-slot="$form" :resolver @submit="submitTimezone" class="flex text-left pr-7 flex-col gap-2.5 py-6 w-full">
 
-    <p class="font-light text-primary"> Choose the preferred timezone within your guild: </p>
+    <p class="font-light text-primary"> 
+        Choose the preferred timezone within your guild: 
+    </p>
 
     <!-- Timezone Input -->
     <IftaLabel class="inline w-fit h-auto">
         <AutoComplete name="timezone" force-selection dropdown dropdown-mode="current"
             :suggestions="timezoneSuggestions" @complete="searchTimezone"
-            :form-control="{ validateOnValueUpdate: false, validateOnBlur: false }" />
+            :form-control="{ validateOnValueUpdate: false, validateOnBlur: false }" 
+            placeholder="Hint: Country/Name"
+            
+        />
         <label for="timezone" class="inline-flex items-center">
-            <CalendarCogIcon class="opacity-80 m-0 p-0 mr-0.75 w-3.5 h-3.5" />
+            <CalendarCogIcon class="opacity-80 m-0 p-0 mr-0.75 w-3.5 h-3.5"/>
             Timezone
         </label>
     </IftaLabel>
+
 
     <!-- Input Messages:  -->
     <Message v-if="$form.timezone?.invalid" severity="error" class="opacity-75" size="small" variant="simple">

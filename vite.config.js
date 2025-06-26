@@ -15,7 +15,8 @@ export default defineConfig({
     Components({
       resolvers: [
         PrimeVueResolver()
-      ]
+      ],
+      dts: './private/components.d.ts',
     }),
     tailwindcss(),
     createHtmlPlugin({
@@ -23,7 +24,7 @@ export default defineConfig({
     }),
     AutoImport({
       imports: ['vue', 'vue-router', 'pinia'], // Auto-import things like ref, onMounted, etc.
-      dts: 'private/auto-imports.d.ts',   // optional, good for TS/IDE help
+      dts: './private/auto-imports.d.ts',   // optional, good for TS/IDE help
     }),
   ],
   resolve: {
