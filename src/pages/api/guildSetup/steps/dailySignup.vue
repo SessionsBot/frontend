@@ -2,10 +2,13 @@
     // Imports:
     import { zodResolver } from '@primevue/forms/resolvers/zod';
     import { z } from 'zod';
-    import { ArrowBigDownDash, Clock4Icon, EyeOffIcon, FilePlus2, InfoIcon, LayersIcon, LockKeyholeIcon, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
+    import { ArrowBigDownDash, ChevronDown, ChevronDownCircle, Clock4Icon, EyeOffIcon, FileCheck, FilePlus2, FileWarning, InfoIcon, LayersIcon, ListStartIcon, Loader2, LockKeyholeIcon, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
     import { computed, onMounted, warn, watch } from 'vue';
     import { useAuthStore } from '@/utils/stores/auth';
     import { Select } from 'primevue';
+
+    const auth = useAuthStore()
+    const userWebToken = computed(() => auth.authToken)
 
 
     // Incomming Props:
@@ -19,11 +22,27 @@
         ['updateDraft']
     )
 
-    // TEST SECURE ACTION:
-    const auth = useAuthStore()
-    const userWebToken = computed(() => auth.authToken)
+    // Auto Channel Creation:
+    const channelCreationStatus = ref(0)
+    const createChannelLabel = computed(() => {
+        if(channelCreationStatus.value >= 300){
+            // Creation Error:
+            return 'Failed!'
+        }else if(channelCreationStatus.value >= 200){
+            // Creation Success:
+            return 'Created!'
+        }else if(channelCreationStatus.value >= 1){
+            // Loading:
+            return 'Loading'
+        }else{
+            // Default
+            return 'Create Channel'
+        }
+    })
+    const createAutoSignupChannel = async () => {
 
-    const testSecureAction = async () => {
+        // Set viewable status:
+        channelCreationStatus.value = 100
 
         // Attempt request:
         const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/secure-action`;
@@ -61,6 +80,9 @@
                     errorMessage: body?.message,
                     errorData: body?.data
                 }
+                // Set viewable status:
+                channelCreationStatus.value = 400
+                // Debug:
                 console.warn('Error!', 'Secure Action', body)
             } else{
                 // Success from Backend:
@@ -69,10 +91,15 @@
                     statusMessage: body?.message,
                     errorData: body?.data
                 }
+                // Set viewable status:
+                channelCreationStatus.value = 200
+                // Debug:
                 console.info('Success!', 'Secure Action', body)
             }
 
         } catch (error) {
+            // Set viewable status:
+            channelCreationStatus.value = 400
             // Debug error:
             console.error('Error!', 'Secure Action', {error, response})
         }
@@ -81,10 +108,10 @@
 
     }
 
-    // Guild Channels Selections:
+    // Existing Guild Channels Selection:
+    const channelSelectType = ref('select')
     const guildChannels = computed(() => props.guildData?.guildChannels || []) // Raw guild channels data
     const channelOptions = ref([]) // Channel/Category options sent to selector
-
 
     const guildCategories = ref([])
     function fetchChannelOptions() {
@@ -122,7 +149,7 @@
             }));
     }
 
-//exaxaxa
+
     // Form Validation:
     const resolver = zodResolver(
         z.object({
@@ -146,15 +173,20 @@
         if(f?.valid){
             // Valid Submission:
             console.info('Daily Signup Submmited:', 'VALID', f)
+            // Procced:
+            props.changeStep('3')
         }else {
             // Invalid Submission:
             console.info('Daily Signup Submmited:', 'INVALID', f)
+            // Dont Procced:
+            props.changeStep('2')
         }
     }
 
 
     // On Mount:
     onMounted(() => {
+        // Load existing guild channels:
         fetchChannelOptions()
     })
 
@@ -167,73 +199,172 @@
 
     <!-- Signup Channel Input -->
     <p class="text-primary/80"> 
-        Determine the Text Channel used for Daily Session Signup 'Panels' 
+        Assign the Text Channel used for Daily Session Signup Panels
     </p>
 
-    <!-- Automatic Signup Channel Info -->
-    <Panel :collapsed="true" legend='Auto Create Signup Channel' toggleable class="!max-w-125">
+    <!-- Create Automatic Signup Channel -->
+    <Panel :collapsed="channelSelectType != 'create'" class="!max-w-125">
         <template #header>
-            <div class="flex gap-1.5 flex-row items-center justify-center">
-                <SparklesIcon size="17" />
-                <p class="text-sm font-semibold"> Auto Create Signup Channel </p>
+            <div 
+             @click="()=>{channelSelectType = 'create'}" 
+             class="flex w-full gap-1.5 flex-row items-center justify-between p-0"
+            >
+                <!-- Panel Title -->
+                <div 
+                 class="flex flex-wrap flex-row gap-1.5 items-center justify-center"
+                >
+                    <SparklesIcon size="17" />
+                    <p class="text-sm font-semibold"> Auto Create Signup Channel </p>
+                </div>
+
+
+                <!-- View Icon -->
+                <div
+                    class="relative h-full w-5.5"
+                >
+                    <ChevronDown
+                     class="p-0.5 m-auto cursor-pointer transition-all "
+                     :class="[channelSelectType === 'create' ? '!opacity-0' : 'animate-pulse']"
+                    />
+                </div>
+                
             </div>
         </template>
 
         <template #default>
 
-            <p>
-                Test a secure action below
-            </p>
-
-            <Button
-             severity="warn"
-             size="small"
-             class=" !my-2"
-             :loading="false"
-             @click="testSecureAction"
-             :disabled="false"
-             label="Test Secure Action"
-             
+            <div
+             class="gap-2.5 font-light flex flex-col flex-wrap justify-center items-start"
             >
-                <template #icon> <LockKeyholeIcon/> </template>
+
+                <div class="w-full mb-0.5 h-[1.5px] bg-zinc-700 rounded-full" />
+
+                <p>
+                    Sessions Bot can create a <i> brand new </i> text channel to be used for Signup Panels within your Guild.
+                </p>
+
+                <p class="text-sm bg-zinc-800 px-2 py-1 rounded-md">
+                    <b><u>Keep in mind:</u></b> you must configure access control permissions after creation such as who can view the channel itself.
+                </p>
+
+                <Button
+                severity="warn"
+                size="small"
+                class=" !my-2 !gap-1"
+                :class="[
+                    channelCreationStatus>=200 ? '!bg-emerald-400 !border-transparent' : '',
+                    channelCreationStatus>=300 ? '!bg-red-500 !border-transparent' : '',
+                ]"
+                :loading="false"
+                @click="createAutoSignupChannel"
+                :disabled="channelCreationStatus >= 1"
+                :label="createChannelLabel"
+                showIcon="loading"
                 
-            </Button>
+                >
+                    <template #icon="showIcon">
+                    
+                        <FilePlus2 v-if="channelCreationStatus === 0" size="22"/>
+                        <FileWarning v-else-if="channelCreationStatus >= 300" size="22"/>
+                        <FileCheck v-else-if="channelCreationStatus >= 200" size="22"/>
+                        <Loader2 v-else-if="channelCreationStatus > 0" class="animate-spin" size="22"/>
+                        
+                    </template>
+
+                    
+                </Button>
+            </div>
+
         </template>
+
     </Panel>
 
-    <!-- Select Channel -->
-    <IftaLabel variant="in">
-        <Select
-            name="panelChannel"
-            optionLabel="label"
-            optionValue="value"
-            optionGroupLabel="label"
-            optionGroupChildren="items"
-            class="!w-full !max-w-56 !flex" 
-            :options="channelOptions"
-        >
-            <template #optiongroup="slotProps">
-                <div class="flex flex-row gap-2 justify-start items-center">
-                    <LayersIcon size="20"/>
-                    <p> {{slotProps.option.label }}</p>
-                </div>
-            </template>
-    
+    <!-- Or Divider -->
+    <div class="flex justify-center items-center !max-w-125 h-fit flex-row flex-nowrap">     
+        <div class="flex gap-3 justify-center items-center w-[40%] h-fit flex-row flex-nowrap">
+
+            <div class="flex-1 h-[1.5px] bg-zinc-700" />
+
+            <p class="text-zinc-700"> OR </p>
+
+            <div class="flex-1 h-[1.5px] bg-zinc-700" />
+
+        </div>
+    </div>
+
+    <!-- Select Existing Signup Channel -->
+    <Panel :collapsed="channelSelectType != 'select'" class="!max-w-125">
         
-    
-    
-        </Select>
-        <label for="panelChannel" class="flex gap-0.75 items-center justify-center content-center"> 
-            <MessageSquareTextIcon size="14" class="!inline !pt-0.25"/>
-            <p class="!inline"> Signup Channel </p>
-        </label>
-    </IftaLabel>
+        <template #header>
+            <div 
+             @click="()=>{channelSelectType = 'select'}" 
+             class="flex w-full gap-1.5 flex-row items-center justify-between py-0"
+            >
+                <!-- Panel Title -->
+                <div 
+                 class="flex flex-wrap flex-row gap-1.5 items-center justify-center"
+                >
+                    <ListStartIcon size="17" />
+                    <p class="text-sm font-semibold"> Select Existing Signup Channel </p>
+                </div>
+
+
+                <!-- View Icon -->
+                <div
+                    class="relative h-full w-5.5"
+                >
+                    <ChevronDown
+                     class="p-0.5 m-auto cursor-pointer transition-all "
+                     :class="[channelSelectType === 'select' ? '!opacity-0' : 'animate-pulse']"
+                    />
+                </div>
+
+            </div>
+        </template>
+
+        <template #default>
+
+            <!-- Select Channel -->
+            <IftaLabel variant="in">
+                <Select
+                    name="panelChannel"
+                    optionLabel="label"
+                    optionValue="value"
+                    optionGroupLabel="label"
+                    optionGroupChildren="items"
+                    class="!w-full !max-w-56 !flex" 
+                    :options="channelOptions"
+                >
+                    <template #optiongroup="slotProps">
+                        <div class="flex flex-row gap-2 justify-start items-center">
+                            <LayersIcon size="20"/>
+                            <p> {{slotProps.option.label }}</p>
+                        </div>
+                    </template>
+            
+                
+            
+            
+                </Select>
+                <label for="panelChannel" class="flex gap-0.75 items-center justify-center content-center"> 
+                    <MessageSquareTextIcon size="14" class="!inline !pt-0.25"/>
+                    <p class="!inline"> Signup Channel </p>
+                </label>
+            </IftaLabel>
+
+            
+        </template>
+
+    </Panel>
+
+    <!-- Form Error Messages -->
     <Message v-if="$form.panelChannel?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
         <ul class="flex flex-col gap-1">
             <li v-for="(error, index) of $form.panelChannel.errors" class="text-red-300" :key="index"> {{ error.message }}
             </li>
         </ul>
     </Message>
+    
 
 
     <Divider class="!my-2 !mb-0" />

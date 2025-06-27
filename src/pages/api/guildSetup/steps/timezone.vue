@@ -6,6 +6,8 @@
     import { CalendarCogIcon } from 'lucide-vue-next';
     import { Button } from 'primevue';
 
+    import { friendlyTimezones } from '@/utils/modules/friendlyTimezones';
+
     
     // Incomming Props:
     const props = defineProps({
@@ -18,7 +20,22 @@
     )
 
     // Form Validation:
-    const resolver = zodResolver(
+    const resolver = ({values}) => {
+        const errors = {};
+
+        if (!values.timezone || String(values.timezone).trim().length <= 0) {
+            errors.timezone = [{ message: 'Timezone is required!' }];
+        }
+
+        return {
+            values,
+            errors
+        };
+    }
+
+
+
+    const resolverOLD = zodResolver(
         z.object({
             timezone: z.union([
                 z.string().min(1, {message: 'Timezone is required'}),
@@ -42,17 +59,13 @@
         }
     }
 
-
     // Timezone Autocomplete:
-    const timezoneSuggestions = ref([])
-    const allTimezones = Intl.supportedValuesOf
-        ? Intl.supportedValuesOf('timeZone')
-        : ["America/Chicago", "America/New_York", "Europe/London", "Asia/Tokyo"];
+    const timezoneSuggestions = ref(friendlyTimezones)
     const searchTimezone = (s) => {
         const query = s.query?.toLowerCase() || '';
-        timezoneSuggestions.value = allTimezones.filter(tz =>
-            tz.toLowerCase().includes(query)
-        ).slice(0, 20); // limit to 20 suggestions for performance
+        timezoneSuggestions.value = friendlyTimezones.filter(tz =>
+            tz.value.toLowerCase().includes(query) || tz.label.toLowerCase().includes(query)
+        )
     }
 </script>
 
@@ -68,9 +81,8 @@
     <IftaLabel class="inline w-fit h-auto">
         <AutoComplete name="timezone" force-selection dropdown dropdown-mode="current"
             :suggestions="timezoneSuggestions" @complete="searchTimezone"
+            option-label="label"
             :form-control="{ validateOnValueUpdate: false, validateOnBlur: false }" 
-            placeholder="Hint: Country/Name"
-            
         />
         <label for="timezone" class="inline-flex items-center">
             <CalendarCogIcon class="opacity-80 m-0 p-0 mr-0.75 w-3.5 h-3.5"/>
