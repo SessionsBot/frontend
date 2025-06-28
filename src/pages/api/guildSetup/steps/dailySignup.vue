@@ -3,12 +3,19 @@
     import { zodResolver } from '@primevue/forms/resolvers/zod';
     import { z } from 'zod';
     import { ArrowBigDownDash, ChevronDown, ChevronDownCircle, Clock4Icon, EyeOffIcon, FileCheck, FilePlus2, FileWarning, InfoIcon, LayersIcon, ListStartIcon, Loader2, LockKeyholeIcon, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
-    import { computed, onMounted, warn, watch } from 'vue';
+    import { ref, computed, onMounted, warn, watch } from 'vue';
     import { useAuthStore } from '@/utils/stores/auth';
     import { Select } from 'primevue';
 
+
+    // Variables:
     const auth = useAuthStore()
     const userWebToken = computed(() => auth.authToken)
+
+    const userId = async () => { 
+        const user = await auth.getUserData()
+        return user?.Firebase?.uid
+    }
 
 
     // Incomming Props:
@@ -21,6 +28,8 @@
     const emits = defineEmits(
         ['updateDraft']
     )
+
+    
 
     // Auto Channel Creation:
     const channelCreationStatus = ref(0)
@@ -49,6 +58,8 @@
        
         try {
             // 1. Attempt fetch:
+            const guildId = props.guildData?.guildGeneral?.id
+            const adminId = await userId();
             const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
@@ -56,10 +67,14 @@
                     'Authorization': `Bearer ${userWebToken.value}`
                 },
                 body: JSON.stringify({
-                    actionType: 'DELETE_EVENT',
-                    data: 'EXAMPLE'
+                    actionType: 'CREATE_AUTO-SIGNUP-CHANNEL',
+                    data: {
+                        guildId,
+                        adminId
+                    }
                 })
             })
+
             // 2. Get response:
             let body;
             try{ 
@@ -72,6 +87,7 @@
                     error: 'Front-end received no response body!'
                 } 
             }
+            
             // 3. Read response/body:
             if(!response.ok){
                 // Error from Backend:
@@ -86,15 +102,24 @@
                 console.warn('Error!', 'Secure Action', body)
             } else{
                 // Success from Backend:
-                const debugObject = {
-                    statusCode: response.status,
-                    statusMessage: body?.message,
-                    errorData: body?.data
-                }
+                const creationData = body?.data?.creationResult?.data
+                const newCategory = creationData?.sessionsCategory?.sessionsCategory
+                const newChannel = creationData?.signupChannel?.signupChannel
+                // Add NEW CHANNEL to select options:
+                channelOptions.value.push( 
+                    { 
+                        label: newCategory?.name, 
+                        items: [ { label: newChannel?.name, value: newChannel?.id } ]
+                    } 
+                )
+                // Set as selection:
+                dailySignupForm.value?.setFieldValue('panelChannel', newChannel?.id)
                 // Set viewable status:
                 channelCreationStatus.value = 200
-                // Debug:
-                console.info('Success!', 'Secure Action', body)
+                // Switch cards:
+                setTimeout(() => {
+                    channelSelectType.value = 'select'
+                }, 500);
             }
 
         } catch (error) {
@@ -108,10 +133,12 @@
 
     }
 
+
     // Existing Guild Channels Selection:
-    const channelSelectType = ref('select')
+    const channelSelectType = ref('create')
     const guildChannels = computed(() => props.guildData?.guildChannels || []) // Raw guild channels data
     const channelOptions = ref([]) // Channel/Category options sent to selector
+    const signupChannelSelection = ref(null) // Reactive current channel selection
 
     const guildCategories = ref([])
     function fetchChannelOptions() {
@@ -149,6 +176,13 @@
             }));
     }
 
+    // Set Default Post Time:
+    const setDefaultPostTime = () => {
+        const defaultPostTime = new Date()
+        defaultPostTime.setHours(5, 30, 0) 
+        dailySignupForm.value?.setFieldValue('postTime', defaultPostTime)
+    }
+
 
     // Form Validation:
     const resolver = zodResolver(
@@ -169,10 +203,13 @@
 
 
     // Form Submission:
+    const dailySignupForm = ref(null)
     const submitDailySignup = (f) => {
         if(f?.valid){
             // Valid Submission:
             console.info('Daily Signup Submmited:', 'VALID', f)
+            // Save Values:
+            emits('updateDraft', f?.values)
             // Procced:
             props.changeStep('3')
         }else {
@@ -188,13 +225,14 @@
     onMounted(() => {
         // Load existing guild channels:
         fetchChannelOptions()
+        setDefaultPostTime()
     })
 
 </script>
 
 <template>
     
-<Form v-slot="$form" :resolver @submit="submitDailySignup" class="flex text-left pr-15 py-6 flex-col gap-4.5 w-full">
+<Form v-slot="$form" ref="dailySignupForm" :resolver @submit="submitDailySignup" class="flex text-left pr-15 py-6 flex-col gap-4.5 w-full">
 
 
     <!-- Signup Channel Input -->
@@ -334,6 +372,7 @@
                     optionGroupChildren="items"
                     class="!w-full !max-w-56 !flex" 
                     :options="channelOptions"
+
                 >
                     <template #optiongroup="slotProps">
                         <div class="flex flex-row gap-2 justify-start items-center">
@@ -357,7 +396,7 @@
 
     </Panel>
 
-    <!-- Form Error Messages -->
+    <!-- Form | Channel Error Messages -->
     <Message v-if="$form.panelChannel?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
         <ul class="flex flex-col gap-1">
             <li v-for="(error, index) of $form.panelChannel.errors" class="text-red-300" :key="index"> {{ error.message }}

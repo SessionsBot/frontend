@@ -375,7 +375,7 @@
                         v-if="guildData" 
                         :guildData="guildData"
                         :changeStep="activateCallback" 
-                        @updateDraft="(data) => { guildSetupDraft.dailySignUp = data}"
+                        @updateDraft="(data) => { guildSetupDraft.dailySignUp = data }"
                     />
 
                 </StepPanel>

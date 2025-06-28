@@ -1,4 +1,5 @@
 // ---------------------------------[ Imports/Variables ]--------------------------------- \\
+
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
@@ -71,7 +72,7 @@ const PrimeVue_CustomTheme = definePreset(Aura, {
   
 });
 
-// Init Prime Vue:
+// Initialize Prime Vue:
 app.use(PrimeVue, {
   theme: { // theme customization
     preset: PrimeVue_CustomTheme,
@@ -86,16 +87,18 @@ app.use(PrimeVue, {
 // ---------------------------------[ Functions ]--------------------------------- \\
 
 // Log route/page changes to Google Analytics:
-router.afterEach((to) => {
+router.afterEach((to, from) => {
   if (window.gtag) {
     window.gtag('event', 'page_view', {
       page_path: to.fullPath,
-      page_title: document.title,
+      page_title: to.name,
+      from_path: from.name,
     });
   }
 });
 
 // ---------------------------------[ Initialize App ]--------------------------------- \\
+
 // Init Plugins:
 app.use(router)
 app.use(createPinia())

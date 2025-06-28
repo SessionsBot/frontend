@@ -142,7 +142,6 @@ export const useAuthStore = defineStore('auth', {
             
             // Return Result:
             const userData = {Pinia: piniaAuthData, Firebase: firebaseAuthData}
-            console.log('All User Data:', userData)
             return userData
 
         } catch {
