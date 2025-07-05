@@ -14,6 +14,10 @@ import Aura from '@primeuix/themes/aura'
 import { definePreset } from '@primeuix/themes'
 import ConfirmationService from 'primevue/confirmationservice';
 
+import Toast, { POSITION } from "vue-toastification";
+// Import the CSS or use your own!
+import "vue-toastification/dist/index.css";
+
 const app = createApp(App)
 
 // ---------------------------------[ Prime Vue - Theme Config ]--------------------------------- \\
@@ -83,8 +87,17 @@ app.use(PrimeVue, {
   ripple: true, // ripple effect on buttons
 });
 
+// ---------------------------------[ Toast/Notifications ]--------------------------------- \\
 
-// ---------------------------------[ Functions ]--------------------------------- \\
+app.use(Toast, {
+  position: POSITION.BOTTOM_RIGHT,
+  transition: "Vue-Toastification__slideBlurred",
+  maxToasts: 10,
+  closeOnClick: false
+})
+
+
+// ---------------------------------[ Router/Firebase ]--------------------------------- \\
 
 // Log route/page changes to Google Analytics:
 router.afterEach((to, from) => {
@@ -97,7 +110,7 @@ router.afterEach((to, from) => {
   }
 });
 
-// ---------------------------------[ Initialize App ]--------------------------------- \\
+// ---------------------------------[ Initialize App/Plugins ]--------------------------------- \\
 
 // Init Plugins:
 app.use(router)

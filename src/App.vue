@@ -9,11 +9,12 @@
 
   import alertPopup from './components/alertPopup.vue'
   import { useNavStore } from './utils/stores/nav';
+  import { usePopupSystem } from './utils/stores/popup';
 
   // Vairables:
-  const siteVersion = ref("0.3.5b")
+  const siteVersion = ref("0.3.52b")
   const nav = useNavStore()
-
+  const popupSystem = usePopupSystem()
 
 </script>
 
@@ -28,7 +29,8 @@
     </transition>
   </router-view>
 
-  <alertPopup  :visible='false' :actions="[{label: 'Example', fn:() => {console.log('Example ran!')}}]" description="This is the very important description ;p" title="This is an example popup notification!" > </alertPopup>
+  <!-- Alert System -->
+  <alertPopup/>
 
   <Transition name="fade" mode="out-in">
     <siteFooter :siteVersion="siteVersion"></siteFooter>
