@@ -23,7 +23,7 @@
 <template>
   <siteHeader />
 
-  <router-view v-slot="{ Component }" :class="nav.headerVisible ? 'pt-12 sm:pt-24': ''">
+  <router-view v-slot="{ Component }" :class="nav.headerVisible ? 'mt-14 sm:mt-16': ''">
     <transition name="fade" mode="out-in">
       <component :is="Component" :key="$route.fullPath" />
     </transition>
