@@ -2,8 +2,9 @@
   // Imports:
   import { useAuthStore } from '@/utils/stores/auth';
   import { usePopupSystem } from '@/utils/stores/popup';
-import { LockIcon } from 'lucide-vue-next';
+  import { LockIcon } from 'lucide-vue-next';
   import { computed } from 'vue';
+  
 
   // Variables:
   const popupSystem = usePopupSystem()

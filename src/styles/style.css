@@ -9,26 +9,7 @@
 /* Tailwind Theme Styling */
 @theme {
     /* modern-dark-blue */
-    --color-modern-dark-blue-default: #222533;
-
-    /* modern-mute-blue */
-    --color-modern-mute-blue-default: #415a77;
-
-    /* modern-light-blue */
-    --color-modern-light-blue-default: #778da9;
-
-    /* modern-white */
-    --color-modern-white-default: #e0e1dd;
-
-    /* modern-red */
-    --color-modern-red-default: #9B2750;
-    /* modern-yellow */
-    --color-modern-yellow-default: #CAB566;
-    /* modern-green */
-    --color-modern-green-default: #008E7D;
-
-    /* modern-purple */
-    --color-modern-purple-discord: #5865f2;
+    
 
 }
 
@@ -68,6 +49,17 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* Custom Colors: */
+    --color-modern-dark-blue-default: #222533;
+    --color-modern-mute-blue-default: #415a77;
+    --color-modern-light-blue-default: #778da9;
+    --color-modern-white-default: #e0e1dd;
+    --color-modern-red-default: #9B2750;
+    --color-modern-yellow-default: #CAB566;
+    --color-modern-green-default: #008E7D;
+    --color-modern-purple-discord: #5865f2;
+
 }
 
 :root{
@@ -127,6 +119,10 @@
     --modern-purple-discord: #5865f2;
 }
 
+
+/* ---------------- Global Styles: ---------------- */
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -136,12 +132,9 @@
     }
 }
 
-
-/* ---------------- Global Styles: ---------------- */
-
-
 body{
-    background: var(--color-modern-dark-blue-default);
+    /* background: var(--color-modern-dark-blue-default); */
+    background: var(--modern-dark-blue-default);
 
     /* Mobile Tap/Mouse - Fixes: */
     -webkit-tap-highlight-color: transparent;

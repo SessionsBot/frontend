@@ -23,8 +23,9 @@
 
 
     // Setup Step Components:
-    import TimezoneSetup from './steps/timezone.vue'
-    import DailySignupSetup from './steps/dailySignup.vue'
+    import TimezoneSetup from './steps/guildSettings.vue'
+    import DailySignupSetup from './steps/signupPanels.vue'
+    import SessionSchedules from './steps/sessionSchedules.vue'
 
 
     // toast.add({severity: 'success', detail: 'detail', summary:'summary'})
@@ -58,7 +59,7 @@
     
     const currentCard = ref('null') // Controls active visible content
     const deferSetupContent = ref(true) // Hides all contents
-    const currentStep = ref("0") // Control current 'setup step'
+    const currentStep = ref("1") // Control current 'setup step'
 
     function onStepChange(val) {
         currentStep.value = val
@@ -67,6 +68,10 @@
 
     // Full Response Draft:
     const guildSetupDraft = ref({})
+
+    watch(guildSetupDraft, (newVal, oldVal) => {
+        console.info('GUILD DRAFT UPDATE', {new: newVal, old: oldVal})
+    })
 
 
     // ------------------------- [ ABORT SETUP / Confirmation ] ------------------------- \\
@@ -255,6 +260,7 @@
             id="beginSetupCard"
             class="
                 w-[90%] sm:w-[80%]
+                max-w-lg
                 border-2 border-ring
                 overflow-clip
                 !bg-black/40"
@@ -306,6 +312,11 @@
 
                     </div>
 
+                    <!-- Description -->
+                     <p class="font-light px-10 text-sm"> 
+                        Click below to get started on configuring your Discord Guild for Sessions Bot! 
+                    </p>
+
                 </div>
                 
                 
@@ -345,7 +356,7 @@
 
                 <Step class="!ring-2 !ring-offset ring-zinc-700">
                     <p :class="{'!text-emerald-500': currentStep > 1}">
-                         Set Guild Timezone
+                         Set Guild Settings
                     </p>
                 </Step>
 
@@ -353,7 +364,8 @@
                     
                         <TimezoneSetup
                             :changeStep="activateCallback" 
-                            @updateDraft="(data) => { guildSetupDraft.timezone = data }"
+                            :guildData="guildData"
+                            @updateDraft="(data) => { guildSetupDraft = data }"
                         />
 
                 </StepPanel>
@@ -365,7 +377,7 @@
             <StepItem value="2">
 
                 <Step class="!ring-2 !ring-offset ring-zinc-700"> 
-                    Configure Daily Singup 
+                    Configure Singup Panels
                 </Step>
 
                 <StepPanel v-slot="{ activateCallback }">
@@ -374,7 +386,7 @@
                         v-if="guildData" 
                         :guildData="guildData"
                         :changeStep="activateCallback" 
-                        @updateDraft="(data) => { guildSetupDraft.dailySignUp = data }"
+                        @updateDraft="(data) => { guildSetupDraft = { ...guildSetupDraft, ...data } }"
                     />
 
                 </StepPanel>
@@ -384,27 +396,40 @@
 
             <!-- Daily Schedules: -->
             <StepItem value="3">
-                <Step class="!ring-2 !ring-offset ring-zinc-700"> Create Daily Schedules </Step>
+
+                <Step class="!ring-2 !ring-offset ring-zinc-700"> 
+                    Create Session Schedules 
+                </Step>
+
                 <StepPanel v-slot="{ activateCallback }">
 
-
-                    <div class="flex flex-col gap-2.5 py-6">
-
-                        <p class="text-zinc-300/50 text-left"> Coming Soon </p>
-
-                        <div class="flex flex-row gap-3 flex-wrap">
-                            <Button class="w-fit" label="Back" severity="secondary"
-                                @click="activateCallback('2')" />
-                            <Button class="w-fit text-shadow-2xs text-accent" raised label="Submit"
-                                severity="success" @click="activateCallback('4')">
-                            </Button>
-                        </div>
-
-
-                    </div>
+                    <SessionSchedules 
+                        :guildData="guildData"
+                        :change-step="activateCallback"
+                        @updateDraft="(data) => { guildSetupDraft = { ...guildSetupDraft, ...data } }"
+                    />
 
                 </StepPanel>
             </StepItem>
+
+
+            <!-- SUBMIT BUTTONS TEMPLATE -->
+            <template>
+                <div class="hidden flex-col gap-2.5 py-6">
+
+                    <p class="text-zinc-300/50 text-left"> Coming Soon </p>
+
+                    <div class="flex flex-row gap-3 flex-wrap">
+                        <Button class="w-fit" label="Back" severity="secondary"
+                            @click="activateCallback('2')" />
+                        <Button class="w-fit text-shadow-2xs text-accent" raised label="Submit"
+                            severity="success" @click="activateCallback('4')">
+                        </Button>
+                    </div>
+
+
+                </div>
+            </template>
 
 
             <!-- HIDDEN - COMPLETE -->
@@ -483,6 +508,43 @@
     .fade-slide-enter-active,
     .fade-slide-leave-active {
     transition: opacity 0.35s cubic-bezier(.4,2,.6,1), transform 0.35s cubic-bezier(.4,2,.6,1);
+    }
+
+
+    /* Inline Step Heading Star Icon */
+    :deep().step-heading{
+        position: relative;
+        z-index: 0;
+        color: var(--color-zinc-300);
+        font-weight: 400;
+    }
+    :deep().step-heading::before{
+        width: 17px;
+        height: 17px;
+        background-color: var(--color-indigo-400);
+        filter: grayscale(.35);
+        z-index: -1;
+        content: '?';
+        font-size: 12px;
+        font-weight: 800;
+        color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: auto;
+        position: absolute;
+        border-radius: 12%;
+        top: 4px;
+        left: -28px;
+        transition: background .3s;
+    }
+
+
+    /* How can i tell in this css if a .step-hadding also has the class : required-step? */
+    :deep(.step-heading.required-step)::before{
+        background: rgb(254, 114, 114);
+        content: '★';
+        font-size: 11px;
     }
 
 </style>
