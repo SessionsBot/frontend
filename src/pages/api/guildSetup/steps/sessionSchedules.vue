@@ -1,7 +1,14 @@
 <script setup>
     // Imports:
-    import { CalendarPlus2Icon, FilePlus, FileQuestionIcon, PlusIcon, UserLockIcon, XIcon } from 'lucide-vue-next';
-import { ref, computed } from 'vue';
+    import { CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FilePlus, FileQuestionIcon, LetterTextIcon, PlusIcon, UserLockIcon, XIcon } from 'lucide-vue-next';
+    import { Label } from 'radix-vue';
+    import { ref, computed } from 'vue';
+    import { zodResolver } from '@primevue/forms/resolvers/zod';
+    import {date, z} from 'zod'
+
+    // Default Session Date:
+    let defaultSessionDate = new Date()
+    defaultSessionDate.setHours(12,0,0,0)
 
     // Incomming Props:
     const props = defineProps({
@@ -21,24 +28,25 @@ import { ref, computed } from 'vue';
 
 
     // Form:
-    const schedulesForm = {
-        // Form JS Reference:
-        schedulesFormRef: ref(null),
-        
-        // Form Validation:
-        resolver: ({values}) => {
-            let errors = {};
-
-            // Confirm testIds ex:
-            // if (!values.testIds || String(values.testIds).trim().length <= 0) {
-            //     errors.testIds = [{ message: 'testIds is required!' }];
-            // }
-
-            return {
-                values,
-                errors
-            }
+    const newScheduleForm = {
+        // Initial Values:
+        initialValues: {
+            sessionTitle: '', // 'Guild Session',
+            sessionUrl: '', // 'https://www.roblox.com/games',
+            sessionTime: '' // defaultSessionDate
         },
+
+        // Form Validation:
+        resolver: zodResolver(
+            z.object({
+                sessionTitle: z.string().min(1, {message: 'Invalid Session Title!'}),
+                sessionUrl: z.string().url({message: 'Invalid URL! (include full https address)'}),
+                sessionTime: z.date({message: 'Invalid Post Time!'}).refine(
+                    val => val instanceof Date && !isNaN(val),
+                    {message: 'Session Time is required!'}
+                )
+            })
+        ),
 
         // Form Submission:
         submit: (f) => {
@@ -53,14 +61,14 @@ import { ref, computed } from 'vue';
         }
     }
 
+
 </script>
 
 
 <template>
-<Form v-slot="$form" ref="guildSettingsForm" :resolver="schedulesForm.resolver" @submit="schedulesForm.submit" class="flex text-left pr-7 flex-col gap-2.5 py-6 w-full">
 
     <!-- Guild Schedules -->
-    <div class="flex text-left pr-10 flex-col gap-4.5 w-full"> 
+    <div class="flex text-left pr-15 py-6 flex-col gap-4.5 w-full"> 
 
         <!-- Step Heading/Star -->
         <p class="hidden step-heading absolute required-step"> </p>
@@ -80,7 +88,7 @@ import { ref, computed } from 'vue';
                 <Button
                     unstyled
                     size="small"
-                    class="!p-1 cursor-pointer text-white rounded-md !bg-emerald-500/50 !border-emerald-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
+                    class="!p-1 cursor-pointer text-white rounded-md !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
                     @click="creatingNewSchedule = true"
                  >
                     <CalendarPlus2Icon size="17" strokeWidth="2"/> 
@@ -106,31 +114,108 @@ import { ref, computed } from 'vue';
                        </div>
                     </template>
 
+
                     <!-- Creating Schedule Form/Details -->
                     <template #default>
-                       <div class="!flex flex-row !gap-1.25 font-bold text-sm">
-                        Please fill out the required information below to create your guild's first scheduled session!
-                       </div>
+                        <Form 
+                            v-slot="$form" 
+                            :resolver="newScheduleForm.resolver" 
+                            :initialValues="newScheduleForm.initialValues"
+                            @submit="newScheduleForm.submit" 
+                            class="!flex flex-col !gap-4.5 font-bold text-sm"
+                        >
+
+                            <!-- Session Title: -->
+                            <IftaLabel>
+                                <InputText
+                                 name="sessionTitle"
+                                 maxlength="30"
+                                 fluid
+                                >
+                                </InputText>
+                                <label for="sessionUrl" class="flex gap-0.75 items-center justify-center content-center"> 
+                                    <LetterTextIcon size="14" class="!inline !pt-0.25"/>
+                                    <p class="!inline"> Session Title: </p>
+                                </label>
+                            </IftaLabel>
+                            <Message v-if="$form.sessionTitle?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                                <ul class="flex flex-col gap-1">
+                                    <li v-for="(error, index) of $form.sessionTitle.errors" class="text-red-300" :key="index"> {{ error.message }}
+                                    </li>
+                                </ul>
+                            </Message>
+
+
+
+                            <!-- Session URL: -->
+                            <IftaLabel>
+                                <InputText
+                                 name="sessionUrl"
+                                 maxlength="30"
+                                 fluid
+                                >
+                                </InputText>
+                                <label for="sessionUrl" class="flex gap-0.75 items-center justify-center content-center"> 
+                                    <ExternalLinkIcon size="14" class="!inline !pt-0.25"/>
+                                    <p class="!inline"> Game / Location: (url) </p>
+                                </label>
+                            </IftaLabel>
+                            <Message v-if="$form.sessionUrl?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                                <ul class="flex flex-col gap-1">
+                                    <li v-for="(error, index) of $form.sessionUrl.errors" class="text-red-300" :key="index"> {{ error.message }}
+                                    </li>
+                                </ul>
+                            </Message>
+
+
+
+                            <!-- Session Date/Time: -->
+                            <IftaLabel>
+                                <DatePicker
+                                name="sessionTime" 
+                                fluid
+                                time-only
+                                :step-minute="5"
+                                hour-format="12"
+                                />
+                                <label for="sessionTime" class="flex gap-0.75 items-center justify-center content-center"> 
+                                    <Clock4Icon size="14" class="!inline !pt-0.25"/>
+                                    <p class="!inline"> Daily Time: </p>
+                                </label>
+                            </IftaLabel>
+                            <Message v-if="$form.sessionTime?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                                <ul class="flex flex-col gap-1">
+                                    <li v-for="(error, index) of $form.sessionTime.errors" class="text-red-300" :key="index"> {{ error.message }}
+                                    </li>
+                                </ul>
+                            </Message>
+
+
+
+                            <!-- Creating Schedule Submit/Buttons -->
+                            <div class="!flex flex-row w-full justify-start !gap-2.25 font-bold text-lg">
+                                <Button
+                                    label="Discard"
+                                    @click="$form.reset(), creatingNewSchedule = false"
+                                    severity="secondary"
+                                    size="small"
+                                />
+                                <Button
+                                    label="Save"
+                                    type="submit"
+                                    @click="newScheduleForm.submit"
+                                    
+                                    size="small"
+                                    class="!bg-emerald-500/40 !text-white !border-emerald-600/50"
+                                />
+                            </div>
+                        
+                        </Form>
                     </template>
 
 
-                    <!-- Creating Schedule Submit/Buttons -->
-                    <template #footer>
-                       <div class="!flex flex-row w-full justify-start !gap-2.25 font-bold text-lg">
-                        <Button
-                            label="Discard"
-                            @click="creatingNewSchedule = false"
-                            severity="secondary"
-                            size="small"
-                        />
-                        <Button
-                            label="Save"
-                            @click="creatingNewSchedule = false"
-                            size="small"
-                            class="!bg-emerald-500/40 !text-white !border-emerald-600/50"
-                        />
-                       </div>
-                    </template>
+                    
+
                    
 
                 </Dialog>
@@ -155,23 +240,14 @@ import { ref, computed } from 'vue';
 
         </DataView>
 
-        <!-- Invalid Input Messages:  -->
-        <Message v-if="$form.testIds?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-            <ul class="flex flex-col gap-1">
-                <li v-for="(error, index) of $form.testIds.errors" class="text-red-300" :key="index"> {{ error.message }}
-                </li>
-            </ul>
-        </Message>
-
     </div>
 
     <Divider />
 
     <!-- Last/Next Step Buttons -->
-    <div class="flex flex-row gap-3 flex-wrap">
+    <div class="flex flex-row gap-3 flex-wrap pb-6 pt-3">
         <Button class="w-fit" label="Back" severity="secondary" @click="changeStep('2')" />
-        <Button class="w-fit" label="Next" type="submit" />
+        <Button class="w-fit" label="Next" type="submit" @click="changeStep('4')" />
     </div>
     
-</Form>
 </template>
