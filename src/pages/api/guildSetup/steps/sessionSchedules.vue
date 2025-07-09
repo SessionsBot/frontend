@@ -1,10 +1,10 @@
 <script setup>
     // Imports:
-    import { CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FilePlus, FileQuestionIcon, LetterTextIcon, PlusIcon, UserLockIcon, XIcon } from 'lucide-vue-next';
-    import { Label } from 'radix-vue';
-    import { ref, computed } from 'vue';
+    import { CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FileQuestionIcon, LetterTextIcon, PencilIcon, PlusIcon, SmilePlusIcon, Trash2Icon, UserLockIcon, UsersIcon, XIcon } from 'lucide-vue-next';
+    import { ref } from 'vue';
+
     import { zodResolver } from '@primevue/forms/resolvers/zod';
-    import {date, z} from 'zod'
+    import { z } from 'zod'
 
     // Default Session Date:
     let defaultSessionDate = new Date()
@@ -22,44 +22,183 @@
         ['updateDraft']
     )
 
+
     // Schedules:
     const currentSchedules = ref([]) // holds existing shd's for list/page view
     const creatingNewSchedule = ref(false) // controls new shd form visibility
 
 
-    // Form:
-    const newScheduleForm = {
-        // Initial Values:
-        initialValues: {
-            sessionTitle: '', // 'Guild Session',
-            sessionUrl: '', // 'https://www.roblox.com/games',
-            sessionTime: '' // defaultSessionDate
+    // New Role for Schedule Form:
+    const newRoleForm = {
+        newRolePO: ref(),
+
+        // New Schedule -- New Role(s):
+        toggleNewRolePO: (event) => {
+            // Hide 'Add Role' msg if displayed:
+            newScheduleForm.showRolesRequiredText.value = false
+
+            // Open/Close 'Add Role' Panel:
+            return newRoleForm.newRolePO.value.show(event);
         },
 
-        // Form Validation:
-        resolver: zodResolver(
+        // Reactive/Updated Form Values:
+        newRoleValues: {
+            title: ref(''),
+            emoji: ref(''),
+            capacity: ref(1),
+        },
+
+        // Reset Form Inputs/Errors:
+        resetNewRolePO: () => {
+            newRoleForm.newRoleValues.title.value = ''
+            newRoleForm.newRoleValues.emoji.value = ''
+            newRoleForm.newRoleValues.capacity.value = 1
+            newRoleForm.inputErrors.value = {}
+        },
+
+        //  Form Resolver:
+        newRoleResolver: z.object({
+            title: z.string().min(1, { message: 'Role name required!' }),
+            emoji: z.string().emoji({ message: 'Invalid emoji!' }),
+            capacity: z.number().min(1).max(10)
+        }),
+
+        // Validation Checks:
+        checkNewRoleFields() {
+            const result = newRoleForm.newRoleResolver.safeParse({
+                title: newRoleForm.newRoleValues.title.value,
+                emoji: newRoleForm.newRoleValues.emoji.value,
+                capacity: Number(newRoleForm.newRoleValues.capacity.value)
+            });
+
+            const resultData = result?.error?.formErrors?.fieldErrors
+            // handle errors, e.g. show messages
+            newRoleForm.inputErrors.value = resultData
+
+            // return results
+            return{ success: result.success, errors: resultData}
+        },
+
+        // Reactive Object of Current Input Errors:
+        inputErrors: ref({}),
+
+        // Form Submit - New Role:
+        newRoleSubmit: () => {
+            const inputValidation = newRoleForm.checkNewRoleFields()
+
+            // Check for duplicate name:
+            const existingRoleName = newScheduleForm.scheduleRoles.value.find((item) => item?.title == newRoleForm.newRoleValues.title.value)
+            if(existingRoleName){
+                // Duplicate role name:
+                if (!newRoleForm.inputErrors.value?.title){
+                    // Safe add error:
+                    newRoleForm.inputErrors.value = {
+                        ...newRoleForm.inputErrors.value,
+                        title: ['No duplicate role names!']
+                    }
+                }else {
+                    newRoleForm.inputErrors.value.title = 'No duplicate role name'
+                }
+                
+            }
+
+            // Check for full validation:
+            if(inputValidation.success && !existingRoleName){
+
+                // Success - Add Role:
+                newScheduleForm.scheduleRoles.value.push(
+                    {
+                        title: newRoleForm.newRoleValues.title.value,
+                        emoji: newRoleForm.newRoleValues.emoji.value,
+                        capacity: newRoleForm.newRoleValues.capacity.value,
+                    }
+                )
+                // Reset inputs:
+                newRoleForm.newRoleValues.title.value = ''
+                newRoleForm.newRoleValues.emoji.value = ''
+                newRoleForm.newRoleValues.capacity.value = 1
+
+                // Close Pop-Over:
+                newRoleForm.newRolePO.value.hide()
+            }
+        },
+    }
+
+
+    // Top Form:
+    const newScheduleFormRef = ref(null);
+    const newScheduleForm = {
+        
+        // Initial Values:
+        initialValues: {
+            sessionTitle: '',
+            sessionUrl: '',
+            sessionTime: defaultSessionDate,
+        },
+
+
+        // Array of roles assigned to new schedule:
+        scheduleRoles: ref([]),
+        
+
+        // Toggles visibility for '1+ Roles Required' msg:
+        showRolesRequiredText: ref(false),
+
+
+        // Top Form Validation:
+        // <!--!  Validation!  -  Errors! [ADD: 15 min required time gap between schedules]  !--!>
+        mainResolver: zodResolver(
             z.object({
-                sessionTitle: z.string().min(1, {message: 'Invalid Session Title!'}),
+                sessionTitle: z.string().trim().min(1, {message: 'Invalid Session Title!'}),
                 sessionUrl: z.string().url({message: 'Invalid URL! (include full https address)'}),
                 sessionTime: z.date({message: 'Invalid Post Time!'}).refine(
                     val => val instanceof Date && !isNaN(val),
                     {message: 'Session Time is required!'}
-                )
+                ),                 
             })
         ),
 
-        // Form Submission:
+
+        // Top Form Submission:
         submit: (f) => {
-            console.log('SUBMIT:', f)
+
+            console.log('New Schedule - Submit Attempt -', f?.valid)
+            console.log(f)
+
+            f['sessionRoles'] = newScheduleForm.scheduleRoles.value;
+
+            // Confirm Roles:
+            if(newScheduleForm.scheduleRoles.value.length <= 0){
+                // No roles - show invalid:
+                newScheduleForm.showRolesRequiredText.value = true
+                return // Abort
+            }
+
+            // Confirm Inputs:
             if(f?.valid){
-                // Valid Submission:
+                // Valid Input: 
+                // Add new schedule to full list/view:
+                currentSchedules.value.push(
+                    {
+                        sessionTitle: f?.sessionTitle.value,
+                        sessionTime: f?.sessionTime.value,
+                        sessionUrl: f?.sessionUrl.value,
+                        sessionRoles: f?.sessionRoles,
+                    }
+                )
+
+                // Debug:
+                console.log('Added Schedule!, All Schedules:')
+                console.log(currentSchedules.value)
+
 
             }else {
                 // Invalid Submission:
-
+                return // Abort
             }
         }
     }
+
 
 
 </script>
@@ -74,6 +213,369 @@
         <p class="hidden step-heading absolute required-step"> </p>
 
 
+        <!-- Create Schedule Dialog/Form: -->
+        <Dialog
+            v-model:visible="creatingNewSchedule"
+            modal 
+            :draggable="true"
+            :closable="true"
+            style="width: 35rem; max-width: 70%;"
+            
+        >
+
+            <!-- Creating Schedule Header -->
+            <template #header>
+                <div class="!flex flex-row !gap-1.25 !m-0 h-fit font-bold text-lg">
+                <CalendarPlus2Icon class="self-center justify-center"/>
+                New Session Schedule:
+                </div>
+            </template>
+
+
+            <!-- Creating Schedule Form/Details -->
+            <template #default>
+                <Form 
+                    ref="newScheduleFormRef"
+                    v-slot="$form" 
+                    :resolver="newScheduleForm.mainResolver" 
+                    :initialValues="newScheduleForm.initialValues"
+                    @submit="newScheduleForm.submit" 
+                    class="!flex flex-col !gap-4.5 font-bold text-sm"
+                >
+
+                    <!-- Sub-heading Divider -->
+                    <div class="flex gap-2 flex-row w-full justify-center items-center">
+                        <div class="h-[2px] bg-zinc-700 flex flex-1" />
+                        <p class="text-zinc-500"> Details: </p>
+                        <div class="h-[2px] bg-zinc-700 flex flex-1" />
+                    </div>
+
+
+                    <!-- Session Title: -->
+                    <IftaLabel>
+                        <InputText
+                            name="sessionTitle"
+                            maxlength="30"
+                            fluid
+                            placeholder="Example Title"
+                        >
+                        </InputText>
+                        <label for="sessionUrl" class="flex gap-0.75 items-center justify-center content-center"> 
+                            <LetterTextIcon size="14" class="!inline !pt-0.25"/>
+                            <p class="!inline"> Session Title: </p>
+                        </label>
+                    </IftaLabel>
+                    <Message v-if="$form.sessionTitle?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                        <ul class="flex flex-col gap-1">
+                            <li v-for="(error, index) of $form.sessionTitle.errors" class="text-red-300" :key="index"> {{ error.message }}
+                            </li>
+                        </ul>
+                    </Message>
+
+
+                    <!-- Session URL: -->
+                    <IftaLabel>
+                        <InputText
+                            name="sessionUrl"
+                            placeholder="https://www.roblox.com/games"
+                            maxlength="30"
+                            fluid
+                        >
+                        </InputText>
+                        <label for="sessionUrl" class="flex gap-0.75 items-center justify-center content-center"> 
+                            <ExternalLinkIcon size="14" class="!inline !pt-0.25"/>
+                            <p class="!inline"> Game / Location: (url) </p>
+                        </label>
+                    </IftaLabel>
+                    <Message v-if="$form.sessionUrl?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                        <ul class="flex flex-col gap-1">
+                            <li v-for="(error, index) of $form.sessionUrl.errors" class="text-red-300" :key="index"> {{ error.message }}
+                            </li>
+                        </ul>
+                    </Message>
+
+
+                    <!-- Session Date/Time: -->
+                    <IftaLabel>
+                        <DatePicker
+                        name="sessionTime" 
+                        placeholder="12:00 pm"
+                        fluid
+                        time-only
+                        :step-minute="5"
+                        hour-format="12"
+                        />
+                        <label for="sessionTime" class="flex gap-0.75 items-center justify-center content-center"> 
+                            <Clock4Icon size="14" class="!inline !pt-0.25"/>
+                            <p class="!inline"> Daily Time: </p>
+                        </label>
+                    </IftaLabel>
+                    <Message v-if="$form.sessionTime?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                        <ul class="flex flex-col gap-1">
+                            <li v-for="(error, index) of $form.sessionTime.errors" class="text-red-300" :key="index"> {{ error.message }}
+                            </li>
+                        </ul>
+                    </Message>
+
+                    
+                    <!-- Sub-heading Divider -->
+                    <div class="flex gap-2 flex-row w-full justify-center items-center">
+                        <div class="h-[2px] bg-zinc-700 flex flex-1" />
+                        <p class="text-zinc-500"> Roles: </p>
+                        <div class="h-[2px] bg-zinc-700 flex flex-1" />
+                    </div>
+
+
+
+                    <!-- New Role Button: -->
+                    <Button  
+                        v-if="newScheduleForm.scheduleRoles.value.length >= 1"
+                        severity="secondary"
+                        class="!gap-1"
+                        @click="newRoleForm.toggleNewRolePO"
+                    >
+                        <PlusIcon size="20"/>
+                        <p> New Role </p>
+
+                    </Button>
+
+                    <!-- New Role Pop-Over / Creation: -->
+                    <Popover 
+                        :ref="newRoleForm.newRolePO"
+                    >
+                    <div class="flex flex-col gap-2 justify-center items-center">
+
+                        <!-- Role Name -->
+                        <IftaLabel>
+                            <InputText
+                            v-model:modelValue="newRoleForm.newRoleValues.title.value"
+                            maxlength="20"
+                            fluid
+                            >
+                            </InputText>
+                            <label class="flex gap-0.75 items-center justify-center content-center"> 
+                                <LetterTextIcon size="14" class="!inline !pt-0.25"/>
+                                <p class="!inline"> Role Name </p>
+                            </label>
+                        </IftaLabel>
+
+
+                        <!-- Role Emoji -->
+                        <IftaLabel>
+                            <InputText
+                            v-model:modelValue="newRoleForm.newRoleValues.emoji.value"
+                            maxlength="20"
+                            fluid
+                            >
+                            </InputText>
+                            <label class="flex gap-0.75 items-center justify-center content-center"> 
+                                <SmilePlusIcon size="14" class="!inline !pt-0.25"/>
+                                <p class="!inline"> Role Emoji </p>
+                            </label>
+
+                            <Button 
+                                label="🏷️"
+                                title="Default Emoji"
+                                unstyled
+                                class="!absolute right-2 top-4.5 grayscale-75"
+                                @click="(e) => {
+                                    newRoleForm.newRoleValues.emoji.value = '💼'
+                                }"
+                            />
+
+                        </IftaLabel>
+
+
+                        <!-- Role Capacity -->
+                        <IftaLabel>
+                            <InputNumber
+                            v-model:modelValue="newRoleForm.newRoleValues.capacity.value"
+                            maxlength="2"
+                            fluid
+                            :max="10"
+                            :min="1"
+                            >
+                            </InputNumber>
+                            <label class="flex gap-0.75 items-center justify-center content-center"> 
+                                <UsersIcon size="14" class="!inline !pt-0.25"/>
+                                <p class="!inline"> Role Capacity </p>
+                            </label>
+                        </IftaLabel>
+
+                        <!-- Submit/Reset Buttons -->
+                        <div class="flex flex-wrap flex-row gap-2 justify-center items-center">
+                            <Button
+                            @click="newRoleForm.resetNewRolePO" 
+                            unstyled
+                            class="bg-zinc-800 rounded-md hover:brightness-150 font-semibold text-sm text-zinc-300 transition-all p-2 px-3">
+                                Reset
+                            </Button>
+
+                            <Button 
+                            unstyled
+                            @click="newRoleForm.newRoleSubmit"
+                            class="bg-emerald-800 rounded-md hover:brightness-150 font-semibold text-sm text-zinc-300 transition-all p-2 px-3">
+                                Add Role
+                            </Button>
+                        </div>
+
+                        <!-- Invalid Input Messages: -->
+                            <div class="flex flex-col w-full gap-2 text-red-400 opacity-85">
+                            <p
+                            v-for="(value, key) in newRoleForm.inputErrors.value">
+
+                            - {{ String(value).replace(['[', ']', '"'], '') }}
+                            
+                            </p>
+                            </div>
+
+                    </div>
+                    </Popover>
+
+                    <!-- Roles Table -->
+                    <DataTable
+                        showGridlines
+                        :value="newScheduleForm.scheduleRoles.value"
+                    >
+
+                        <Column field="title"> 
+
+                            <template #header>
+                                <p class="text-center !w-full font-semibold"> 
+                                    Title 
+                                </p>
+                            </template>
+
+                            <template #body="data">
+                                <p> 
+                                    {{ data.data.title }} 
+                                </p>
+                            </template>
+
+                        </Column>
+
+
+                        <Column field="emoji"> 
+
+                            <template #header>
+                                <p class="text-center !w-full font-semibold"> 
+                                    Emoji 
+                                </p>
+                            </template>
+
+                            <template #body="data">
+                                <p> 
+                                    {{ data.data.emoji }} 
+                                </p>
+                            </template>
+
+                        </Column>
+
+
+                        <Column field="capacity"> 
+
+                            <template #header>
+                                <p class="text-center !w-full font-semibold"> 
+                                    Capacity 
+                                </p>
+                            </template>
+
+                            <template #body="data">
+                                <p> 
+                                    {{ data.data.capacity }} 
+                                </p>
+                            </template>
+
+                        </Column>
+
+
+                        <Column field="actions" class="!p-1 !py-2"> 
+
+                            <template #header>
+                                <p class="text-center !w-full font-semibold"> 
+                                    Actions 
+                                </p>
+                            </template>
+
+                            <template #body="data">
+                                <div class="flex gap-2 flex-row flex-wrap justify-center items-center">
+                                    <Button 
+                                        unstyled
+                                        hidden
+                                        class="bg-zinc-700 p-1 rounded-sm
+                                        flex justify-center items-center content-center"
+                                    >
+                                        <PencilIcon size="19" />
+                                    </Button>
+
+                                    <Button 
+                                        unstyled
+                                        class="bg-rose-700 grayscale-55 p-1 rounded-sm cursor-pointer
+                                        flex justify-center items-center content-center"
+                                        @click="(e) => { newScheduleForm.scheduleRoles.value.splice(data.index, 1) }"
+                                    >
+                                        <Trash2Icon size="19" />
+                                    </Button>
+
+                                </div>
+                                
+                            </template>
+
+                        </Column>
+
+
+                        <template #empty>
+                            <Button  
+                                fluid
+                                severity="secondary"
+                                class="!gap-1"
+                                @click="newRoleForm.toggleNewRolePO"
+                            >
+                                <PlusIcon size="20"/>
+                                <p> New Role </p>
+                            </Button>
+                        </template>
+
+
+                    </DataTable>
+
+                    <!-- Add Roles Message: -->
+                    <Message v-if="newScheduleForm.showRolesRequiredText.value" severity="error" class="opacity-75" size="small" variant="simple">
+                        <ul class="flex flex-col gap-1">
+                            <li class="text-red-300"> Add at least 1 role!
+                            </li>
+                        </ul>
+                    </Message>
+
+
+
+                    <!-- Submit Schedule / Buttons -->
+                    <div class="!flex flex-row w-full justify-start !gap-2.25 font-bold text-lg">
+                        <Button
+                            label="Reset"
+                            @click="$form.reset(), newScheduleForm.scheduleRoles.value=[]"
+                            severity="secondary"
+                            size="small"
+                        />
+                        <Button
+                            label="Save"
+                            type="submit"
+                            size="small"
+                            class="!bg-emerald-500/40 !text-white !border-emerald-600/50"
+                        />
+                    </div>
+                
+                </Form>
+            </template>
+
+
+            
+
+            
+
+        </Dialog>
+
+
         <!-- Schedules View -->
         <DataView
          paginator
@@ -83,7 +585,112 @@
 
             <!-- Header/Create New -->
             <template #header>
-            <div class="w-full flex flex-row justify-center items-center">
+            <div class="w-full text-white/70 flex flex-row justify-center items-center">
+                
+                <p class="font-bold flex italic gap-1.5 items-center">
+                    <Clock4Icon size="18" />
+                    SESSION SCHEDULES:
+                </p>
+                
+            </div>
+            </template>
+
+
+            <!-- Exisiitng Schd List -->
+            <template #list="slotProps">
+            <div class=" flex flex-col gap-3 py-3">
+
+                <div
+                 v-for="(item, index) in slotProps.items"
+                 :key="index"
+                 class="w-full bg-zinc-800 flex gap-2 flex-nowrap overflow-scroll justify-evenly items-center content-center"
+                >
+                
+                    <!-- Session Title/Time -->
+                    <div class="flex flex-col flex-wrap gap-1 py-1.5 justify-center items-center">
+                        <p class="text-2xl font-extrabold">
+                        {{ item.sessionTitle }}
+                        </p>
+
+                        <p class="text-lg font-medium text-white/60">
+                            {{ item.sessionTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'}) }}
+                        </p>    
+                    </div>
+
+
+                    
+
+                    <!-- Session Roles -->
+                     <section class="flex gap-2 flex-row flex-nowrap">
+                        <div 
+                            v-for="(value, key) in item.sessionRoles"
+                            class="flex flex-col text-xs max-w-16 text-center justify-center my-2 items-center gap-0.5 p-0.75 px-0 bg-zinc-900 rounded-md"
+                        >
+                            <p>
+                                {{ value?.emoji  }}
+                            </p>
+
+
+                           
+                            <p class="px-1.25 bg-neutral-400 font-bold font-stretch-semi-condensed text-black w-full h-full border-t-2 border-b-2 border-black">
+                                {{ value?.title  }}
+                            </p>
+
+
+
+                            <div class="flex flex-row gap-0.5 justify-center items-center flex-nowrap">
+                                <UsersIcon size="17"/>
+                                <p> {{ value?.capacity }} </p>
+                            </div>
+                        </div>
+                     </section>
+                    
+
+
+
+
+                        <Button 
+                            unstyled
+                            class="bg-rose-700 grayscale-55 p-1 rounded-sm cursor-pointer
+                            flex justify-center items-center content-center"
+                            @click="(e) => { currentSchedules.splice(index, 1) }"
+                        >
+                            <Trash2Icon size="19" />
+                        </Button>
+
+
+
+                </div>
+
+            </div>
+            </template>
+
+
+            <!-- No Schedules Template -->
+            <template #empty="slotProps">
+                <div class="flex gap-1.5 flex-col justify-center items-center px-5 py-6 pt-12">
+                    <FileQuestionIcon class="text-zinc-500"/>
+                    <p class="text-zinc-500">
+                        No schedules
+                    </p>
+                    <Button
+                        unstyled
+                        size="small"
+                        class="!mt-5 !p-1 cursor-pointer text-white rounded-md !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
+                        @click="creatingNewSchedule = true"
+                    >
+                        <CalendarPlus2Icon size="20" strokeWidth="2"/> 
+                        <p class="text-xs !p-0 !m-0 font-semibold !pt-0.5"> Create Schedule </p>
+                    </Button>
+                </div>
+            </template>
+
+            
+                
+
+            <!-- Create Schedule Button -- Footer  -->
+            <template #paginatorstart />
+            <template #paginatorend>
                 <!-- Create Schedule Button: -->
                 <Button
                     unstyled
@@ -91,151 +698,9 @@
                     class="!p-1 cursor-pointer text-white rounded-md !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
                     @click="creatingNewSchedule = true"
                  >
-                    <CalendarPlus2Icon size="17" strokeWidth="2"/> 
-                    <p class="text-xs !p-0 !m-0 font-semibold !pt-0.5"> New Schedule </p>
+                    <CalendarPlus2Icon size="20" strokeWidth="2"/> 
+                    <p hidden class="text-xs !p-0 !m-0 font-semibold !pt-0.5"> New Schedule </p>
                 </Button>
-
-                <!-- Create Schedule Dialog/Form: -->
-                <Dialog
-                    v-model:visible="creatingNewSchedule"
-                    modal 
-                    :draggable="false"
-                    :closable="false"
-                    header="New Schedule"
-                    style="width: 35rem; max-width: 70%;"
-                    
-                >
-
-                    <!-- Creating Schedule Header -->
-                    <template #header>
-                       <div class="!flex flex-row !gap-1.25 !m-0 h-fit font-bold text-lg">
-                        <CalendarPlus2Icon class="self-center justify-center"/>
-                        New Session Schedule:
-                       </div>
-                    </template>
-
-
-                    <!-- Creating Schedule Form/Details -->
-                    <template #default>
-                        <Form 
-                            v-slot="$form" 
-                            :resolver="newScheduleForm.resolver" 
-                            :initialValues="newScheduleForm.initialValues"
-                            @submit="newScheduleForm.submit" 
-                            class="!flex flex-col !gap-4.5 font-bold text-sm"
-                        >
-
-                            <!-- Session Title: -->
-                            <IftaLabel>
-                                <InputText
-                                 name="sessionTitle"
-                                 maxlength="30"
-                                 fluid
-                                >
-                                </InputText>
-                                <label for="sessionUrl" class="flex gap-0.75 items-center justify-center content-center"> 
-                                    <LetterTextIcon size="14" class="!inline !pt-0.25"/>
-                                    <p class="!inline"> Session Title: </p>
-                                </label>
-                            </IftaLabel>
-                            <Message v-if="$form.sessionTitle?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-                                <ul class="flex flex-col gap-1">
-                                    <li v-for="(error, index) of $form.sessionTitle.errors" class="text-red-300" :key="index"> {{ error.message }}
-                                    </li>
-                                </ul>
-                            </Message>
-
-
-
-                            <!-- Session URL: -->
-                            <IftaLabel>
-                                <InputText
-                                 name="sessionUrl"
-                                 maxlength="30"
-                                 fluid
-                                >
-                                </InputText>
-                                <label for="sessionUrl" class="flex gap-0.75 items-center justify-center content-center"> 
-                                    <ExternalLinkIcon size="14" class="!inline !pt-0.25"/>
-                                    <p class="!inline"> Game / Location: (url) </p>
-                                </label>
-                            </IftaLabel>
-                            <Message v-if="$form.sessionUrl?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-                                <ul class="flex flex-col gap-1">
-                                    <li v-for="(error, index) of $form.sessionUrl.errors" class="text-red-300" :key="index"> {{ error.message }}
-                                    </li>
-                                </ul>
-                            </Message>
-
-
-
-                            <!-- Session Date/Time: -->
-                            <IftaLabel>
-                                <DatePicker
-                                name="sessionTime" 
-                                fluid
-                                time-only
-                                :step-minute="5"
-                                hour-format="12"
-                                />
-                                <label for="sessionTime" class="flex gap-0.75 items-center justify-center content-center"> 
-                                    <Clock4Icon size="14" class="!inline !pt-0.25"/>
-                                    <p class="!inline"> Daily Time: </p>
-                                </label>
-                            </IftaLabel>
-                            <Message v-if="$form.sessionTime?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-                                <ul class="flex flex-col gap-1">
-                                    <li v-for="(error, index) of $form.sessionTime.errors" class="text-red-300" :key="index"> {{ error.message }}
-                                    </li>
-                                </ul>
-                            </Message>
-
-
-
-                            <!-- Creating Schedule Submit/Buttons -->
-                            <div class="!flex flex-row w-full justify-start !gap-2.25 font-bold text-lg">
-                                <Button
-                                    label="Discard"
-                                    @click="$form.reset(), creatingNewSchedule = false"
-                                    severity="secondary"
-                                    size="small"
-                                />
-                                <Button
-                                    label="Save"
-                                    type="submit"
-                                    @click="newScheduleForm.submit"
-                                    
-                                    size="small"
-                                    class="!bg-emerald-500/40 !text-white !border-emerald-600/50"
-                                />
-                            </div>
-                        
-                        </Form>
-                    </template>
-
-
-                    
-
-                   
-
-                </Dialog>
-            </div>
-            </template>
-
-
-            <!-- Exisiitng Schd List -->
-            <template #list="slotProps">
-
-            </template>
-
-            <!-- No Schedules Template -->
-            <template #empty="slotProps">
-                <div class="flex gap-1.5 flex-col justify-center items-center px-5 py-12">
-                    <FileQuestionIcon class="text-zinc-500"/>
-                    <p class="text-zinc-500">
-                        No schedules
-                    </p>
-                </div>
             </template>
 
         </DataView>
@@ -247,7 +712,7 @@
     <!-- Last/Next Step Buttons -->
     <div class="flex flex-row gap-3 flex-wrap pb-6 pt-3">
         <Button class="w-fit" label="Back" severity="secondary" @click="changeStep('2')" />
-        <Button class="w-fit" label="Next" type="submit" @click="changeStep('4')" />
+        <Button class="w-fit" label="Submit" severity="success" type="submit" @click="changeStep('4')" />
     </div>
     
 </template>
