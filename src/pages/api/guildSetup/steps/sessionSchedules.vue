@@ -1,7 +1,7 @@
 <script setup>
     // Imports:
-    import { CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FileQuestionIcon, LetterTextIcon, PencilIcon, PlusIcon, SmilePlusIcon, Trash2Icon, UserLockIcon, UsersIcon, XIcon } from 'lucide-vue-next';
-    import { ref } from 'vue';
+    import { BanIcon, CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FileQuestionIcon, LetterTextIcon, PencilIcon, PlusIcon, SmilePlusIcon, Trash2Icon, UserLockIcon, UsersIcon, XIcon } from 'lucide-vue-next';
+    import { computed, ref } from 'vue';
 
     import { zodResolver } from '@primevue/forms/resolvers/zod';
     import { z } from 'zod'
@@ -26,7 +26,8 @@
     // Schedules:
     const currentSchedules = ref([]) // holds existing shd's for list/page view
     const creatingNewSchedule = ref(false) // controls new shd form visibility
-
+    const moreSchedulesAllowed = computed(() => currentSchedules.value?.length <= 14)
+    const showAddScheduleMessage = ref(false)
 
     // New Role for Schedule Form:
     const newRoleForm = {
@@ -47,6 +48,9 @@
             emoji: ref(''),
             capacity: ref(1),
         },
+
+        // More Roles Allowed Boolean:
+        moreRolesAllowed: computed(() => newScheduleForm.scheduleRoles.value?.length <= 4) ,
 
         // Reset Form Inputs/Errors:
         resetNewRolePO: () => {
@@ -122,6 +126,7 @@
                 newRoleForm.newRolePO.value.hide()
             }
         },
+        
     }
 
 
@@ -131,14 +136,18 @@
         
         // Initial Values:
         initialValues: {
-            sessionTitle: '',
-            sessionUrl: '',
-            sessionTime: defaultSessionDate,
+            sessionTitle: 'Example Title', // Example Title
+            sessionUrl: 'https://www.roblox.com/games', // https://www.roblox.com/games
+            sessionTime: defaultSessionDate, //defaultSessionDate,
         },
 
 
         // Array of roles assigned to new schedule:
         scheduleRoles: ref([]),
+
+
+        // <!--!  Validation!  -  Errors! [ADD: 5 max roles per session] !--!>
+        
         
 
         // Toggles visibility for '1+ Roles Required' msg:
@@ -146,7 +155,6 @@
 
 
         // Top Form Validation:
-        // <!--!  Validation!  -  Errors! [ADD: 15 min required time gap between schedules]  !--!>
         mainResolver: zodResolver(
             z.object({
                 sessionTitle: z.string().trim().min(1, {message: 'Invalid Session Title!'}),
@@ -162,10 +170,36 @@
         // Top Form Submission:
         submit: (f) => {
 
-            console.log('New Schedule - Submit Attempt -', f?.valid)
-            console.log(f)
-
+            // Assign Session Roles to form:
             f['sessionRoles'] = newScheduleForm.scheduleRoles.value;
+
+            
+            // Confirm NO Duplicate/Unspaced Sessions:
+            const overlappingSession = currentSchedules.value.find(sch => {
+                const minimumTimeGap = 15 * 60 * 1000; // 15 minutes in ms
+                const newSchTime = new Date(f?.values.sessionTime)?.getTime();
+
+                const isTooCloseToAnotherSession = currentSchedules.value.some(sch => {
+                    const thisSchTime = new Date(sch?.sessionTime)?.getTime();
+                    const schTimeGap = Math.abs(newSchTime - thisSchTime);
+                    
+                    
+                    return schTimeGap < minimumTimeGap;
+                });
+
+                return isTooCloseToAnotherSession
+            })
+
+
+            // If Overlapping Session:
+            if(overlappingSession){
+                // Un-allowed Session Time:
+                // error/notification:
+                newScheduleFormRef.value.states.sessionTime.invalid = true
+                newScheduleFormRef.value.states.sessionTime.errors = [{message: 'Session Time too close to another!'}]
+                return // Abort
+            }
+            
 
             // Confirm Roles:
             if(newScheduleForm.scheduleRoles.value.length <= 0){
@@ -174,22 +208,32 @@
                 return // Abort
             }
 
+
+            // Debug Submission:
+            console.log('NEW SHD Attempt - Valid: -', f?.valid)
+            console.log(f)
+
+
             // Confirm Inputs:
             if(f?.valid){
                 // Valid Input: 
                 // Add new schedule to full list/view:
                 currentSchedules.value.push(
                     {
-                        sessionTitle: f?.sessionTitle.value,
-                        sessionTime: f?.sessionTime.value,
-                        sessionUrl: f?.sessionUrl.value,
+                        sessionTitle: f?.values?.sessionTitle,
+                        sessionTime: f?.values?.sessionTime,
+                        sessionUrl: f?.values?.sessionUrl,
                         sessionRoles: f?.sessionRoles,
                     }
                 )
 
                 // Debug:
-                console.log('Added Schedule!, All Schedules:')
+                console.log('Added Schedule!, All:')
                 console.log(currentSchedules.value)
+
+                // Close New Schedule Form:
+                newScheduleForm.scheduleRoles.value = [];
+                creatingNewSchedule.value = false
 
 
             }else {
@@ -200,6 +244,19 @@
     }
 
 
+    // Submit ALL Schedules to Draft:
+    const submiteScheduleStep = () => {
+        if(currentSchedules.value?.length <= 0){
+            // No schedules:
+            return showAddScheduleMessage.value = true
+        }else{
+            // Send schedules & procced:
+            console.log('Submitting all schedules to draft....');
+            emits('updateDraft', currentSchedules.value);
+            props.changeStep('4')
+        }
+        
+    }
 
 </script>
 
@@ -255,7 +312,7 @@
                     <IftaLabel>
                         <InputText
                             name="sessionTitle"
-                            maxlength="30"
+                            maxlength="26"
                             fluid
                             placeholder="Example Title"
                         >
@@ -330,12 +387,16 @@
                     <!-- New Role Button: -->
                     <Button  
                         v-if="newScheduleForm.scheduleRoles.value.length >= 1"
+                        :disabled="!newRoleForm.moreRolesAllowed.value"
                         severity="secondary"
                         class="!gap-1"
                         @click="newRoleForm.toggleNewRolePO"
                     >
-                        <PlusIcon size="20"/>
-                        <p> New Role </p>
+                        <PlusIcon v-if="newRoleForm.moreRolesAllowed.value" size="20"/>
+                        <p v-if="newRoleForm.moreRolesAllowed.value"> New Role </p>
+
+                        <BanIcon v-if="!newRoleForm.moreRolesAllowed.value" size="19"/>
+                        <p v-if="!newRoleForm.moreRolesAllowed.value"> Max Roles </p>
 
                     </Button>
 
@@ -349,7 +410,7 @@
                         <IftaLabel>
                             <InputText
                             v-model:modelValue="newRoleForm.newRoleValues.title.value"
-                            maxlength="20"
+                            maxlength="14"
                             fluid
                             >
                             </InputText>
@@ -567,12 +628,6 @@
                 
                 </Form>
             </template>
-
-
-            
-
-            
-
         </Dialog>
 
 
@@ -582,7 +637,6 @@
          :rows="5"
          :value="currentSchedules"
         >
-
             <!-- Header/Create New -->
             <template #header>
             <div class="w-full text-white/70 flex flex-row justify-center items-center">
@@ -603,62 +657,66 @@
                 <div
                  v-for="(item, index) in slotProps.items"
                  :key="index"
-                 class="w-full bg-zinc-800 flex gap-2 flex-nowrap overflow-scroll justify-evenly items-center content-center"
+                 class="w-full bg-zinc-800 flex gap-2 p-2 overflow-scroll justify-evenly items-center content-center"
                 >
                 
-                    <!-- Session Title/Time -->
-                    <div class="flex flex-col flex-wrap gap-1 py-1.5 justify-center items-center">
-                        <p class="text-2xl font-extrabold">
-                        {{ item.sessionTitle }}
-                        </p>
-
-                        <p class="text-lg font-medium text-white/60">
-                            {{ item.sessionTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'}) }}
-                        </p>    
-                    </div>
+                    <!-- Session Details: -->
+                    <div class="flex flex-1 gap-2 flex-row justify-evenly items-center">
 
 
-                    
+                        <!-- Session Title/Time -->
+                        <div class="flex flex-col flex-wrap gap-1 min-w-22 py-1.5 justify-center items-center">
+                            <p title="Session Title" class="text-[22px] text-white/80 font-extrabold">
+                            {{ item.sessionTitle }}
+                            </p>
 
-                    <!-- Session Roles -->
-                     <section class="flex gap-2 flex-row flex-nowrap">
+                            <p title="Session Time" class="text-lg font-medium text-white/50">
+                                {{ item.sessionTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'})  }}
+                            </p>    
+                        </div>
+
+
+                        <!-- Session Roles -->
+                        <section class="flex gap-2 flex-row justify-center items-center flex-wrap">
                         <div 
                             v-for="(value, key) in item.sessionRoles"
-                            class="flex flex-col text-xs max-w-16 text-center justify-center my-2 items-center gap-0.5 p-0.75 px-0 bg-zinc-900 rounded-md"
+                            class="bg-zinc-500 grayscale-50 flex flex-col border-2 border-black/50 text-xs min-w-16 text-center justify-center items-center gap-0.5 p-0.75 px-0 min-w-12 rounded-sm"
                         >
-                            <p>
+                            <p title="Emoji" class="text-shadow-lg text-black">
                                 {{ value?.emoji  }}
                             </p>
 
 
-                           
-                            <p class="px-1.25 bg-neutral-400 font-bold font-stretch-semi-condensed text-black w-full h-full border-t-2 border-b-2 border-black">
-                                {{ value?.title  }}
+                            
+                            <p title="Role Title" class="text-white px-1.25 py-0.25 text-wrap bg-zinc-700 font-bold font-stretch-semi-condensed w-full h-full border-t-2 border-b-2 border-black/50">
+                                {{ value?.title.toUpperCase()  }}
                             </p>
 
 
 
-                            <div class="flex flex-row gap-0.5 justify-center items-center flex-nowrap">
-                                <UsersIcon size="17"/>
+                            <div title="Capacity" class="flex text-black flex-row gap-0.5 justify-center items-center flex-nowrap">
+                                <UsersIcon size="17" stroke-width="1.75"/>
                                 <p> {{ value?.capacity }} </p>
                             </div>
                         </div>
-                     </section>
-                    
+                        </section>
 
 
+                    </div>
 
 
+                    <!-- Session Actions: -->
+                    <div title="Delete Schedule" class="flex flex-row justify-center items-center">
                         <Button 
                             unstyled
-                            class="bg-rose-700 grayscale-55 p-1 rounded-sm cursor-pointer
+                            class="bg-rose-700 grayscale-55 p-1 m-2 rounded-sm cursor-pointer
                             flex justify-center items-center content-center"
                             @click="(e) => { currentSchedules.splice(index, 1) }"
                         >
                             <Trash2Icon size="19" />
                         </Button>
-
-
+                    </div>
+                        
 
                 </div>
 
@@ -668,12 +726,16 @@
 
             <!-- No Schedules Template -->
             <template #empty="slotProps">
-                <div class="flex gap-1.5 flex-col justify-center items-center px-5 py-6 pt-12">
-                    <FileQuestionIcon class="text-zinc-500"/>
-                    <p class="text-zinc-500">
-                        No schedules
+                <div class="flex gap-0 flex-col justify-center items-center px-5 py-6">
+                    
+                    <FileQuestionIcon stroke-width="1.25" class="text-zinc-500" />
+                    <p class="text-zinc-500 font-light italic">
+                        NO SCHEDULES
                     </p>
+
+
                     <Button
+                    hidden
                         unstyled
                         size="small"
                         class="!mt-5 !p-1 cursor-pointer text-white rounded-md !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
@@ -686,24 +748,33 @@
             </template>
 
             
-                
-
             <!-- Create Schedule Button -- Footer  -->
             <template #paginatorstart />
             <template #paginatorend>
                 <!-- Create Schedule Button: -->
                 <Button
+                    title="Create Schedule"
                     unstyled
+                    :disabled="!moreSchedulesAllowed"
                     size="small"
-                    class="!p-1 cursor-pointer text-white rounded-md !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
-                    @click="creatingNewSchedule = true"
+                    class="!p-1 cursor-pointer text-white rounded-md disabled:!bg-zinc-600 disabled:!cursor-not-allowed !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
+                    @click="creatingNewSchedule = true, showAddScheduleMessage = false"
                  >
-                    <CalendarPlus2Icon size="20" strokeWidth="2"/> 
-                    <p hidden class="text-xs !p-0 !m-0 font-semibold !pt-0.5"> New Schedule </p>
+                    <CalendarPlus2Icon v-if="moreSchedulesAllowed" size="20" strokeWidth="2"/> 
+                    <BanIcon v-if="!moreSchedulesAllowed" size="19.5" />
                 </Button>
             </template>
 
         </DataView>
+
+
+       <!-- Schedule Input Messages: -->
+        <Message v-if="showAddScheduleMessage" severity="error" class="opacity-75" size="small" variant="simple">
+            <ul class="flex flex-col gap-1">
+                <li class="text-red-300"> Add at least 1 schedule!
+                </li>
+            </ul>
+        </Message>
 
     </div>
 
@@ -712,7 +783,7 @@
     <!-- Last/Next Step Buttons -->
     <div class="flex flex-row gap-3 flex-wrap pb-6 pt-3">
         <Button class="w-fit" label="Back" severity="secondary" @click="changeStep('2')" />
-        <Button class="w-fit" label="Submit" severity="success" type="submit" @click="changeStep('4')" />
+        <Button class="w-fit" label="Submit" severity="success" type="submit" @click="submiteScheduleStep" />
     </div>
     
 </template>

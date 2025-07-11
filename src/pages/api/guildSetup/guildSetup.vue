@@ -61,7 +61,7 @@
     
     const currentCard = ref('null') // Controls active visible content
     const deferSetupContent = ref(true) // Hides all contents
-    const currentStep = ref("1") // Control current 'setup step'
+    const currentStep = ref("0") // Control current 'setup step'
 
     function onStepChange(val) {
         currentStep.value = val
