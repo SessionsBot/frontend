@@ -104,7 +104,7 @@
         
         <IftaLabel class="inline max-w-65 h-auto">
             <AutoComplete 
-                name="timezone" 
+                name="timeZone" 
                 force-selection dropdown
                 fluid
                 placeholder="Make a selection..."
@@ -112,7 +112,7 @@
                 option-label="label"
                 :form-control="{ validateOnValueUpdate: false, validateOnBlur: false }" 
             />
-            <label for="timezone" class="inline-flex items-center">
+            <label for="timeZone" class="inline-flex items-center">
                 <CalendarCogIcon class="opacity-80 m-0 p-0 mr-0.75 w-3.5 h-3.5"/>
                 Timezone
             </label>
@@ -120,9 +120,9 @@
 
 
         <!-- Input Messages:  -->
-        <Message v-if="$form.timezone?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+        <Message v-if="$form.timeZone?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
             <ul class="flex flex-col gap-1">
-                <li v-for="(error, index) of $form.timezone.errors" class="text-red-300" :key="index"> {{ error.message }}
+                <li v-for="(error, index) of $form.timeZone.errors" class="text-red-300" :key="index"> {{ error.message }}
                 </li>
             </ul>
         </Message>

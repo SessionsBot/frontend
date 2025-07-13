@@ -7,9 +7,8 @@
     import { useAuthStore } from '@/utils/stores/auth';
 
     
-
     // UI:
-    import { CableIcon, EarthIcon, Link2Icon, LockIcon, MailIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
+    import { CableIcon, EarthIcon, LayoutDashboardIcon, Link2Icon, LockIcon, MailIcon, PartyPopperIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
     import Card from 'primevue/card';
     import Step from 'primevue/step';
     import StepItem from 'primevue/stepitem';
@@ -17,7 +16,6 @@
     import Stepper from 'primevue/stepper';
     import { useConfirm, Button } from 'primevue';
     import ConfirmDialog from 'primevue/confirmdialog';
-
     import ProgressSpinner from 'primevue/progressspinner';
     import { motion } from 'motion-v';
 
@@ -28,14 +26,13 @@
     import SessionSchedules from './steps/sessionSchedules.vue'
 
 
-    // toast.add({severity: 'success', detail: 'detail', summary:'summary'})
-
     // ------------------------- [ Variables ] ------------------------- \\
     const router = useRouter()
     const route = useRoute()
     const auth = useAuthStore()
     const nav = useNavStore()
     const userLoggedIn = computed(() => auth.isAuthenticated)
+    const userWebToken = computed(() => auth.authToken)
     const guildId = ref('GUILD_ID')
     // Watch Authentication:
     watch(userLoggedIn, (newVal, oldVal) => {
@@ -43,6 +40,7 @@
             currentCard.value = 'signIn';
         }
     })
+    
 
     // ------------------------- [ Guild Data ] ------------------------- \\
     const guildData = ref(null)
@@ -57,23 +55,105 @@
         : 'GUILD'
     });
 
-    // ------------------------- [ Guild Setup Steps: ] ------------------------- \\
-    
-    const currentCard = ref('null') // Controls active visible content
-    const deferSetupContent = ref(true) // Hides all contents
-    const currentStep = ref("0") // Control current 'setup step'
 
-    function onStepChange(val) {
-        currentStep.value = val
-        // do other stuff
+    // ------------------------- [ FULL Setup Draft ] ------------------------- \\
+    const guildSetupDraft = ref({})
+    // Debugging:
+    // watch(guildSetupDraft, (newVal, oldVal) => {
+    //     console.info('GUILD DRAFT UPDATE', newVal)
+    // })
+
+    // Color Convertor:
+    function rgbToDiscordHex({ r, g, b }) {
+        const hex = (r << 16) + (g << 8) + b;
+        return `0x${hex.toString(16).padStart(6, '0')}`;
     }
 
-    // Full Response Draft:
-    const guildSetupDraft = ref({})
 
-    watch(guildSetupDraft, (newVal, oldVal) => {
-        console.info('GUILD DRAFT UPDATE', {new: newVal, old: oldVal})
-    })
+    // Submit Full Setup to Backend:
+    const submitSetupDraft = async () => {
+        let setupSubmissionData = {}
+        try {
+            // 0. Prepare - Debug:
+            // Prepare - Guild Accent Color:
+            const colorObj = guildSetupDraft.value?.accentColor || {r:155, g:66, b:245}
+            const convertedHex = rgbToDiscordHex(colorObj)
+            
+            // Prepare - Daily Post Time:
+            const requestedHours = new Date(guildSetupDraft.value?.postTime).getHours() || 5
+            const requestedMinuets = new Date(guildSetupDraft.value?.postTime).getMinutes() || 30
+
+            // Prepare - Full Submission:
+            setupSubmissionData['accentColor'] = convertedHex || '0x9b42f5'
+            setupSubmissionData['timeZone'] = guildSetupDraft.value?.timeZone?.value || 'America/Chicago'
+            setupSubmissionData['adminRoleIds'] = guildSetupDraft.value?.adminIds || []
+            setupSubmissionData['panelChannelId'] = guildSetupDraft.value?.panelChannel || null
+            setupSubmissionData['dailySignupPostTime'] = {hours: requestedHours, minutes: requestedMinuets}
+            setupSubmissionData['signupMentionIds'] = guildSetupDraft.value?.mentionRoles || []
+            setupSubmissionData['allGuildSchedules'] = guildSetupDraft.value?.sessionSchedules || []
+
+
+            // Debug:
+            // console.info('Submitting Guild Setup:', setupSubmissionData)
+
+
+            // 1. Attempt request/save:
+            const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/secure-action`;
+            const response = await fetch(requestUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${userWebToken.value}`
+                },
+                body: JSON.stringify({
+                    actionType: 'SETUP-GUILD',
+                    guildId: guildId.value,
+                    data: {
+                        configuration: setupSubmissionData
+                    }
+                })
+            })
+
+            // 2. Get Response:
+            const body = await response.json();
+
+            // 3. Read Response:
+            if(response.ok){
+                // Success:
+                // console.log('Success:', response.status, body)
+                // Show success card:
+                currentCard.value = 'setupSuccess';
+            }else {
+                // Error:
+                console.warn('Error - Response:', response.status, body)
+            }
+
+            
+
+
+        } catch (error) {
+            // Debug error:
+            console.error('Network/Server ERROR', 'Secure Action')
+            console.warn(error)
+        }
+    }
+
+
+    // ------------------------- [ Guild Setup Steps: ] ------------------------- \\
+    const currentCard = ref('null') // Controls active visible content
+    const deferSetupContent = ref(true) // Hides all contents
+    const currentStep = ref("1") // Control current 'setup step'
+
+    // Check for Final Submission Step:
+    function onStepChange(val) {
+        currentStep.value = val
+
+        // IF FINAL/SUBMIT STEP:
+        if(val === 4 || val === '4'){
+            
+            submitSetupDraft()
+        }
+    }
 
 
     // ------------------------- [ ABORT SETUP / Confirmation ] ------------------------- \\
@@ -94,6 +174,8 @@
 
 
     // ------------------------- [ Page Load / Mounted ] ------------------------- \\
+    // -- Get Guild Data
+    // -- Check Authentication
     onMounted(async () => {
         // Hide Standard Header:
         const nav = useNavStore()
@@ -101,10 +183,10 @@
 
         // Get query:
         const query = useRoute().query
-        const guildId = query.guildId
+        const G_ID = query.guildId
 
         // Fetch Guild Data:
-        const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/discord/guild?guildId=' + guildId;
+        const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/discord/guild?guildId=' + G_ID;
         await fetch(requestUrl, {
             method: 'GET',
             headers: {
@@ -123,6 +205,7 @@
             if(data.success){
                 // Update varaibles & page:
                 guildData.value = data.data
+                guildId.value = data.data?.guildGeneral?.id
                 deferSetupContent.value = false
                 currentCard.value = 'wait'
             } else {
@@ -134,8 +217,9 @@
         .catch(error => {
             console.error('FAILED TO FETCH GUILD DATA: ', error);
         });
-        if(currentCard.value === 'dataError') return // Data error takes priority
 
+        // Data error takes priority - ABORT
+        if(currentCard.value === 'dataError') return 
 
         // Check authetication:
         if(!auth.isAuthenticated){
@@ -524,6 +608,79 @@
 
 
         </Stepper>
+
+
+        <!-- Setup Success/Finished  Card: -->
+        <Card v-else-if="currentCard === 'setupSuccess'" 
+            class="
+                w-[90%] sm:w-[80%]
+                max-w-lg
+                border-2 border-ring
+                overflow-clip
+                !bg-black/40"
+        >
+
+            <template #header>
+                <div class="bg-zinc-900 border-b-2 border-b-ring p-2 !w-full !flex !flex-wrap !justify-between !items-center !content-center flex-row !text-nowrap">
+                    
+                    <!-- Card Title -->
+                    <p class="inline-flex font-bold content-center items-center w-fit h-fit">
+                        <PartyPopperIcon class="bg-ring w-fit rounded-md p-0.75 mr-1.5 inline h-fit" />
+                        Setup Completed!
+                    </p>
+
+                </div>
+            </template>
+
+            <template #content>
+
+                <div class="flex flex-col justify-center items-center gap-5 ">
+
+                    <!-- Heading -->
+                    <p class="font-semibold text-2xl"> Congratulations! </p>
+
+                    <!-- Guild/Sessions Icons -->
+                    <div class="flex h-full justify-center gap-1.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
+                        
+                        <img src="../../../assets/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
+
+                        <span class="bg-zinc-500/80 scale-75 w-fit px-1.5 rounded-2xl">
+                            <Link2Icon class="scale-90" />
+                        </span>
+
+                        <img :src="guildIconImg" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
+
+                    </div>
+
+                    <!-- Description -->
+                     <p class="font-light px-10 text-sm"> 
+                        You have successfully completed all of the setup steps to start using Sessions Bot within your Discord Server!
+                    </p>
+                    
+
+                </div>
+                
+                
+
+            </template>
+
+
+            <template #footer>
+            <div class="flex flex-col justify-center items-center gap-5 mt-5 ">
+
+                <Button
+                    @click="() => { router.push({name: 'dashboard'}) } "
+                    class="!gap-1 !bg-emerald-400/80 !border-0 mb-1 hover:brightness-125 !transition-all duration-400"
+                    severity="success"
+                >
+                    <LayoutDashboardIcon size="22" stroke-width="2.25" />
+                    <p>My Dashboard</p>
+                </Button>
+
+            </div>
+            </template>
+
+        </Card>
 
 
     </Transition>

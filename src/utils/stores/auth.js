@@ -41,6 +41,7 @@ export const useAuthStore = defineStore('auth', {
                     // Confirm Login:
                     if(debugAuth) console.log('Token VALID! - Signed In')
                     this.isAuthenticated = true;
+                    
                 } catch {
                     this.signOut();
                     return;
@@ -56,8 +57,13 @@ export const useAuthStore = defineStore('auth', {
                 if(debugAuth) console.group(`--- FIREBASE AUTH CHANGE ---`)
                 if(debugAuth) console.log('Logged In:', !!user)
                 if(!user){
+                    // No firebase user - signed out:
                     console.warn('Firebase - Logged out user from auth state change...');
                     this.signOut()
+                }else {
+                    // Firebase user - signed in:
+                    // Log User Data:
+                    if(debugAuth) console.log(await this.getUserData())
                 }
                 console.groupEnd()
             });
@@ -128,7 +134,7 @@ export const useAuthStore = defineStore('auth', {
 
         // User Data - Returns Object:
         async getUserData() { try {
-            if (!this.authToken) return 'Missing authentication token!';
+            if (!this.authToken) throw 'Missing authentication token!';
 
             // JSON Web Token:
             const base64Payload = this.authToken.split('.')[1];
@@ -136,6 +142,7 @@ export const useAuthStore = defineStore('auth', {
 
             // Firebase User Token:
             const user = firebaseAuth.currentUser
+            if(!user) throw 'No firebase user!'
             const tokenResult = await user.getIdTokenResult()
             const firebaseAuthData = user ? {uid: user?.uid, ...tokenResult} : null;
 
@@ -144,7 +151,8 @@ export const useAuthStore = defineStore('auth', {
             const userData = {Pinia: piniaAuthData, Firebase: firebaseAuthData}
             return userData
 
-        } catch {
+        } catch(e) {
+            console.warn('Failed to fetch user data!', e)
             return null;
         }},
     }

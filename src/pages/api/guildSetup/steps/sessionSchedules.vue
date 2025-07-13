@@ -1,7 +1,7 @@
 <script setup>
     // Imports:
     import { BanIcon, CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FileQuestionIcon, LetterTextIcon, PencilIcon, PlusIcon, SmilePlusIcon, Trash2Icon, UserLockIcon, UsersIcon, XIcon } from 'lucide-vue-next';
-    import { computed, ref } from 'vue';
+    import { computed, ref, watch } from 'vue';
 
     import { zodResolver } from '@primevue/forms/resolvers/zod';
     import { z } from 'zod'
@@ -15,7 +15,6 @@
         changeStep: Function,
         guildData: Object
     })
-
 
     // Outgoing Emits
     const emits = defineEmits(
@@ -45,6 +44,7 @@
         // Reactive/Updated Form Values:
         newRoleValues: {
             title: ref(''),
+            description: ref(''),
             emoji: ref(''),
             capacity: ref(1),
         },
@@ -55,6 +55,7 @@
         // Reset Form Inputs/Errors:
         resetNewRolePO: () => {
             newRoleForm.newRoleValues.title.value = ''
+            newRoleForm.newRoleValues.description.value = ''
             newRoleForm.newRoleValues.emoji.value = ''
             newRoleForm.newRoleValues.capacity.value = 1
             newRoleForm.inputErrors.value = {}
@@ -63,6 +64,7 @@
         //  Form Resolver:
         newRoleResolver: z.object({
             title: z.string().min(1, { message: 'Role name required!' }),
+            description: z.string().min(5, { message: 'Role description required!' }),
             emoji: z.string().emoji({ message: 'Invalid emoji!' }),
             capacity: z.number().min(1).max(10)
         }),
@@ -71,6 +73,7 @@
         checkNewRoleFields() {
             const result = newRoleForm.newRoleResolver.safeParse({
                 title: newRoleForm.newRoleValues.title.value,
+                description: newRoleForm.newRoleValues.description.value,
                 emoji: newRoleForm.newRoleValues.emoji.value,
                 capacity: Number(newRoleForm.newRoleValues.capacity.value)
             });
@@ -89,6 +92,8 @@
         // Form Submit - New Role:
         newRoleSubmit: () => {
             const inputValidation = newRoleForm.checkNewRoleFields()
+
+            // console.info('Role Submit:', inputValidation)
 
             // Check for duplicate name:
             const existingRoleName = newScheduleForm.scheduleRoles.value.find((item) => item?.title == newRoleForm.newRoleValues.title.value)
@@ -112,13 +117,15 @@
                 // Success - Add Role:
                 newScheduleForm.scheduleRoles.value.push(
                     {
-                        title: newRoleForm.newRoleValues.title.value,
-                        emoji: newRoleForm.newRoleValues.emoji.value,
-                        capacity: newRoleForm.newRoleValues.capacity.value,
+                        roleName: newRoleForm.newRoleValues.title.value,
+                        roleDescription: newRoleForm.newRoleValues.description.value,
+                        roleEmoji: newRoleForm.newRoleValues.emoji.value,
+                        roleCapacity: newRoleForm.newRoleValues.capacity.value,
                     }
                 )
                 // Reset inputs:
                 newRoleForm.newRoleValues.title.value = ''
+                newRoleForm.newRoleValues.description.value = ''
                 newRoleForm.newRoleValues.emoji.value = ''
                 newRoleForm.newRoleValues.capacity.value = 1
 
@@ -146,7 +153,8 @@
         scheduleRoles: ref([]),
 
 
-        // <!--!  Validation!  -  Errors! [ADD: 5 max roles per session] !--!>
+
+        // Boolean to show 'Role Required' input error:
         
         
 
@@ -209,27 +217,17 @@
             }
 
 
-            // Debug Submission:
-            console.log('NEW SHD Attempt - Valid: -', f?.valid)
-            console.log(f)
-
-
             // Confirm Inputs:
             if(f?.valid){
-                // Valid Input: 
-                // Add new schedule to full list/view:
+                // Valid Input - Add new schedule to list:
                 currentSchedules.value.push(
                     {
                         sessionTitle: f?.values?.sessionTitle,
-                        sessionTime: f?.values?.sessionTime,
+                        sessionDateDaily: f?.values?.sessionTime,
                         sessionUrl: f?.values?.sessionUrl,
-                        sessionRoles: f?.sessionRoles,
+                        roles: f?.sessionRoles,
                     }
                 )
-
-                // Debug:
-                console.log('Added Schedule!, All:')
-                console.log(currentSchedules.value)
 
                 // Close New Schedule Form:
                 newScheduleForm.scheduleRoles.value = [];
@@ -251,8 +249,7 @@
             return showAddScheduleMessage.value = true
         }else{
             // Send schedules & procced:
-            console.log('Submitting all schedules to draft....');
-            emits('updateDraft', currentSchedules.value);
+            emits('updateDraft', {sessionSchedules: currentSchedules.value} );
             props.changeStep('4')
         }
         
@@ -421,6 +418,22 @@
                         </IftaLabel>
 
 
+                        <!-- Role Description -->
+                        <IftaLabel>
+                            <InputText
+                            v-model:modelValue="newRoleForm.newRoleValues.description.value"
+                            maxlength="50"
+                            minlength="5"
+                            fluid
+                            >
+                            </InputText>
+                            <label class="flex gap-0.75 items-center justify-center content-center"> 
+                                <LetterTextIcon size="14" class="!inline !pt-0.25"/>
+                                <p class="!inline"> Role Description </p>
+                            </label>
+                        </IftaLabel>
+
+
                         <!-- Role Emoji -->
                         <IftaLabel>
                             <InputText
@@ -509,7 +522,7 @@
 
                             <template #body="data">
                                 <p> 
-                                    {{ data.data.title }} 
+                                    {{ data.data.roleName }} 
                                 </p>
                             </template>
 
@@ -526,7 +539,7 @@
 
                             <template #body="data">
                                 <p> 
-                                    {{ data.data.emoji }} 
+                                    {{ data.data.roleEmoji }} 
                                 </p>
                             </template>
 
@@ -543,7 +556,7 @@
 
                             <template #body="data">
                                 <p> 
-                                    {{ data.data.capacity }} 
+                                    {{ data.data.roleCapacity }} 
                                 </p>
                             </template>
 
@@ -560,6 +573,7 @@
 
                             <template #body="data">
                                 <div class="flex gap-2 flex-row flex-wrap justify-center items-center">
+                                    <!-- Edit Button -->
                                     <Button 
                                         unstyled
                                         hidden
@@ -569,6 +583,8 @@
                                         <PencilIcon size="19" />
                                     </Button>
 
+
+                                    <!-- Delete Button -->
                                     <Button 
                                         unstyled
                                         class="bg-rose-700 grayscale-55 p-1 rounded-sm cursor-pointer
@@ -600,7 +616,7 @@
 
                     </DataTable>
 
-                    <!-- Add Roles Message: -->
+                    <!-- Add Roles Required Message: -->
                     <Message v-if="newScheduleForm.showRolesRequiredText.value" severity="error" class="opacity-75" size="small" variant="simple">
                         <ul class="flex flex-col gap-1">
                             <li class="text-red-300"> Add at least 1 role!
@@ -671,7 +687,7 @@
                             </p>
 
                             <p title="Session Time" class="text-lg font-medium text-white/50">
-                                {{ item.sessionTime.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'})  }}
+                                {{ item.sessionDateDaily.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'})  }}
                             </p>    
                         </div>
 
@@ -679,24 +695,20 @@
                         <!-- Session Roles -->
                         <section class="flex gap-2 flex-row justify-center items-center flex-wrap">
                         <div 
-                            v-for="(value, key) in item.sessionRoles"
-                            class="bg-zinc-500 grayscale-50 flex flex-col border-2 border-black/50 text-xs min-w-16 text-center justify-center items-center gap-0.5 p-0.75 px-0 min-w-12 rounded-sm"
+                            v-for="(value, key) in item.roles"
+                            class="bg-zinc-500 grayscale-50 flex flex-col border-2 border-black/50 text-xs min-w-16 text-center justify-center items-center gap-0.5 p-0.75 px-0 rounded-sm"
                         >
-                            <p title="Emoji" class="text-shadow-lg text-black">
-                                {{ value?.emoji  }}
+                            <p title="Role Emoji" class="text-shadow-lg text-black">
+                                {{ value?.roleEmoji  }}
                             </p>
-
-
                             
-                            <p title="Role Title" class="text-white px-1.25 py-0.25 text-wrap bg-zinc-700 font-bold font-stretch-semi-condensed w-full h-full border-t-2 border-b-2 border-black/50">
-                                {{ value?.title.toUpperCase()  }}
+                            <p :title="value?.roleName + ' | ' + value?.roleDescription || 'Role Name'" class="text-white px-1.25 py-0.25 text-wrap bg-zinc-700 font-medium font-stretch-semi-condensed w-full h-full border-t-2 border-b-2 border-black/25">
+                                {{ value?.roleName.toUpperCase()  }}
                             </p>
 
-
-
-                            <div title="Capacity" class="flex text-black flex-row gap-0.5 justify-center items-center flex-nowrap">
+                            <div title="Role Capacity" class="flex text-black flex-row gap-0.5 justify-center items-center flex-nowrap">
                                 <UsersIcon size="17" stroke-width="1.75"/>
-                                <p> {{ value?.capacity }} </p>
+                                <p> {{ value?.roleCapacity }} </p>
                             </div>
                         </div>
                         </section>

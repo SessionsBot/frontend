@@ -67,8 +67,8 @@
                 },
                 body: JSON.stringify({
                     actionType: 'CREATE_AUTO-SIGNUP-CHANNEL',
+                    guildId,
                     data: {
-                        guildId,
                         adminId
                     }
                 })
@@ -98,7 +98,7 @@
                 // Set viewable status:
                 channelCreationStatus.value = 400
                 // Debug:
-                console.warn('Error!', 'Secure Action', body)
+                console.warn('Responsed - Error!', 'Secure Action', body)
             } else{
                 // Success from Backend:
                 const creationData = body?.data?.creationResult?.data
