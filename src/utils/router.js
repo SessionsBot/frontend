@@ -58,7 +58,8 @@ const routes = [
     path: '/user/dashboard',
     name: 'dashboard',
     component: dashboard,
-    meta: {requiresAuth: true}
+    meta: {requiresAuth: true},
+    alias: '/dashboard'
 
   },
   // {
