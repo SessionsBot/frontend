@@ -1,0 +1,31 @@
+name: "🐛 Bug Report"
+description: "Report a reproducible bug in the project"
+title: "[Bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: "### Please fill out the following bug report as completely as possible."
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: "What OS, browser, or device are you using?"
+      placeholder: "e.g. macOS 14 / Chrome 115"
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: "List the exact steps to reproduce the issue."
+      placeholder: "1. Go to...\n2. Click on...\n3. Error appears"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: "What did you expect to happen?"
+    validations:
+      required: true
