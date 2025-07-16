@@ -5,11 +5,12 @@
 
     // UI:
     import BlackHoleBackground from '@/components/ui/bg-black-hole/BlackHoleBackground.vue';
+import { InfoIcon, TriangleAlertIcon } from 'lucide-vue-next';
     const router = useRouter()
     const route = useRoute()
 
     // Variables:
-    const redirectTime = 5000; // Seconds till each redirect
+    const redirectTime = 15; // Seconds till each redirect
     const timeLeft = ref(redirectTime); // Time until this redirect
 
     // Redirect Home Fn:
@@ -42,24 +43,24 @@
 
     
     
-    <main class="relative text-white text-shadow-md text-shadow-black/30 gap-2 p-3 text-center flex-1 flex-col flex flex-wrap justify-center items-center content-center">
+    <main class="relative gap-2 p-3 flex-1 flex-col flex flex-wrap justify-center items-center content-center text-center">
+
+        <h1 class="font-bold text-4xl py-2 px-2.5 rounded-md bg-zinc-900 ring-1 ring-ring"> 
+            PAGE NOT FOUND!
+        </h1>
         
-        <BlackHoleBackground 
-            class="
-                absolute flex justify-center items-center content-center flex-1
-            "
-        > 
+        <TriangleAlertIcon class="text-amber-300/70 fill-amber-200/10" size="225" stroke-width="1.5" />
 
-        </BlackHoleBackground> 
+        <p class="text-amber-300/40 relative bottom-3 text-2xl font-extrabold"> 404 </p>
 
-        <div class="absolute z-10 gap-4 py-8 bg-modern-yellow-default w-[90%] sm:w-120 shadow-sm rounded-lg shadow-black/80 flex flex-wrap flex-col justify-center items-center content-center">
-            <h1 class="text-4xl bg-red-800/80 px-4 py-2 rounded-lg font-black shadow-sm shadow-black/50"> ⚠️ Uh Oh! </h1>
-            <p class="text-xl px-5 py-2 bg-black/50 w-full font-bold"> We can't find the page you're looking for!</p>
-            <div class="gap-0.5 text-black/70 mt-2 flex flex-wrap flex-col justify-center items-center content-center">
-                <p class="text-[11px] px-5 font-light"> You will be automatically redirected to the Hompage in {{timeLeft}} seconds... </p>
-                <p class="text-[11px] px-5 font-light"> If you're not automatically redirected you can <a @click="redirectHome" title="Go Home" class="cursor-pointer hover:underline text-blue-700">click here</a>.</p>
-            </div>
-            
+        <div class="ring-1 ring-ring text-left max-w-122 w-[90%] bg-zinc-900 px-1.5 py-2 rounded-md">
+            <InfoIcon class="inline m-0.5 opacity-85" />
+            <p class="inline opacity-85"> This resource may have been removed or moved to a new location. If you think this is an issue please get in contact with our support team! </p>
+        </div>
+
+        <div class="gap-1.75 mt-2 flex flex-wrap flex-col justify-center items-center content-center">
+                <p class="text-[12px] px-5 font-normal"> You will be automatically redirected to the Hompage in {{timeLeft}} seconds... </p>
+                <p class="text-[11px] px-5 font-light"> If you're not automatically redirected you can <a @click="redirectHome" title="Go Home" class="cursor-pointer text-blue-400/70 hover:underline">click here</a>.</p>
         </div>
 
     </main>
