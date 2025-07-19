@@ -15,3 +15,4 @@ jobs:
               run: gh label clone SessionsBot/.github --force
               env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - run: ECHO 'Sync completed!'
