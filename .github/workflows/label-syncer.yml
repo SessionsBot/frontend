@@ -13,3 +13,5 @@ jobs:
         steps:
             - name: Fetch/update from config
               run: gh label clone SessionsBot/.github --force
+              env:
+                GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
