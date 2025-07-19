@@ -13,7 +13,7 @@
     const userWebToken = computed(() => auth.authToken)
 
     const userId = async () => { 
-        const user = await auth.getUserData()
+        const user = await auth.userData
         return user?.Firebase?.uid
     }
 

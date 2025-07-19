@@ -17,6 +17,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import Toast, { POSITION } from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
+import { auth } from './utils/firebase.js'
 
 const app = createApp(App)
 
@@ -97,7 +98,7 @@ app.use(Toast, {
 })
 
 
-// ---------------------------------[ Router/Firebase ]--------------------------------- \\
+// ---------------------------------[ Router/Analytics ]--------------------------------- \\
 
 // Log route/page changes to Google Analytics:
 router.afterEach((to, from) => {
@@ -110,15 +111,36 @@ router.afterEach((to, from) => {
   }
 });
 
-// ---------------------------------[ Initialize App/Plugins ]--------------------------------- \\
+// ---------------------------------[ Initialize Auth/App/Plugins ]--------------------------------- \\
+
+
 
 // Init Plugins:
-app.use(router)
 app.use(createPinia())
 app.use(ConfirmationService)
 
-// Init/Load Auth:
-useAuthStore().initializeAuth()
+// wait for auth - promise:
+function waitForAuthReady() {
+  return new Promise((resolve) => {
+    // Get auth:
+    const authStore = useAuthStore();
+    // Listen for Firebase auth state change
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      await authStore.initializeAuth();
+      unsubscribe(); // Stop listening after first event
+      resolve();
+    });
+  })
+}
 
-// Mount App:
-app.mount('#app')
+
+// after auth prepared - mount app:
+waitForAuthReady().then(() => {
+
+  // Mount App:
+  app.use(router)
+  app.mount('#app')
+
+})
+
+
