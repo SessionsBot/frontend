@@ -11,8 +11,13 @@ jobs:
     Sync-Labels:
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
             - name: Fetch/update from config
               run: gh label clone SessionsBot/.github --force
               env:
                 GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            - run: ECHO 'Sync completed!'
+                
+            - name: Sync Completed
+              run: ECHO 'Sync completed!'
