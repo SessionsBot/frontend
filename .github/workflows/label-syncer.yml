@@ -2,6 +2,17 @@ name: Manual Label Sync
 
 on:
     workflow_dispatch:
+      inputs:
+        deleteUnmatched:
+            type: boolean
+            description: 'Delete labels not in config? (true or false)'
+            required: true
+            default: false
+        exampleEnv:
+            type: environment
+            description: 'Example env input?'
+            required: false
+            default: 'default_string'
 
 permissions:
     issues: write
@@ -10,6 +21,8 @@ permissions:
 jobs:
     Sync-Labels:
         uses: SessionsBot/.github/.github/workflows/sync-all-labels.yml@main
+        with: 
+            deleteUnmatched: ${{ inputs.deleteUnmatched }}
         permissions:
             pull-requests: write
             issues: write
