@@ -28,8 +28,6 @@ jobs:
               uses: peaceiris/actions-gh-pages@v4
               with:
                 github_token: ${{ secrets.GITHUB_TOKEN }}
-                publish_dir: dist
-                publish_branch: gh-pages  # or your custom branch
                 keep_files: false         # ensures totally clean deploy
                 allow_empty_commit: false # avoid empty deploy commits
                 enable_jekyll: false      # skip Jekyll (.nojekyll file)
