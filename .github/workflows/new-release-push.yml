@@ -1,5 +1,5 @@
 
-name: New Release - Deploy Site
+name: New Push - Deploy Site
 run-name: 🚀 New Release - Deployed by ${{ github.actor }}
 
 on: 
