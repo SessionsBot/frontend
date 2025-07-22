@@ -1,0 +1,36 @@
+
+name: New Release - Deploy Site
+run-name: 🚀 New Release - Deployed by ${{ github.actor }}
+
+on: 
+    push:
+        branches:
+            - 'main'
+
+permissions:
+  contents: write
+
+jobs:
+    deploy-app:
+        name: Build & Deploy Web App
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+
+            - name: Install Dependencies
+              run: npm ci
+
+            - name: Build App Files
+              run: npm run build
+
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                publish_dir: ./dist
+                publish_branch: gh-pages  # or your custom branch
+                keep_files: false         # ensures totally clean deploy
+                allow_empty_commit: false # avoid empty deploy commits
+                enable_jekyll: false      # skip Jekyll (.nojekyll file)
+
