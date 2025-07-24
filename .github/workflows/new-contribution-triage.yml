@@ -1,4 +1,5 @@
 name: "New Pull Request/Issue - Auto Triage"
+run-name: Contribution by ${{ github.actor }} - Auto Triage
 
 on:
   pull_request:
