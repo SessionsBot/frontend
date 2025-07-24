@@ -5,7 +5,7 @@ on:
       inputs:
         deleteUnmatched:
             type: boolean
-            description: 'Delete labels not in config? (true or false)'
+            description: 'Delete labels not in config?'
             default: false
 
 permissions:
