@@ -1,0 +1,14 @@
+name: "New Pull Request/Issue - Auto Triage"
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  Begin-Auto-Triage:
+    uses: SessionsBot/.github/.github/workflows/new-auto-triage.yml@main
+    permissions:
+      pull-requests: write
+      issues: write
