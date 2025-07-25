@@ -1,12 +1,12 @@
 name: "Closed PR/Issue - Auto Triage"
-run-name: Contribution by ${{ github.actor }} - Auto Triage - ${{ github.event.issue.state }}
+run-name: Contribution by ${{ github.actor }} - Auto Triage
 description:
 
 on:
   pull_request:
-    types: [closed, reopened,]
+    types: [closed, converted_to_draft]
   issues:
-    types: [opened, reopened]
+    types: [closed]
 
 jobs:
   Triage:

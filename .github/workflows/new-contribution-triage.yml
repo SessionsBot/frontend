@@ -1,5 +1,5 @@
 name: "New PR/Issue - Auto Triage"
-run-name: Contribution by ${{ github.actor }} - Auto Triage - ${{ github.event_name }}
+run-name: Contribution by ${{ github.actor }} - Auto Triage
 
 on:
   pull_request:
