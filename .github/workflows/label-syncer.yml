@@ -1,4 +1,4 @@
-name: Manual Label Sync
+name: Manual - Label Sync
 
 on:
     workflow_dispatch:
