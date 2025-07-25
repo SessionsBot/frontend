@@ -1,4 +1,4 @@
-name: "New Pull Request/Issue - Auto Triage"
+name: "New PR/Issue - Auto Triage"
 run-name: Contribution by ${{ github.actor }} - Auto Triage - ${{ github.event_name }}
 
 on:
@@ -8,7 +8,7 @@ on:
     types: [opened, reopened]
 
 jobs:
-  Begin-Auto-Triage:
+  Triage:
     uses: SessionsBot/.github/.github/workflows/start-auto-triage.yml@main
     permissions:
       pull-requests: write
