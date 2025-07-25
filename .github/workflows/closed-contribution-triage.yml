@@ -6,7 +6,7 @@ on:
   pull_request:
     types: [closed, reopened,]
   issues:
-    types: [opened, reopened]
+    types: [closed]
 
 jobs:
   Triage:
