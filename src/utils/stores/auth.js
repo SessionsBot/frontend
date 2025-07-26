@@ -1,3 +1,4 @@
+// @ts-check
 // Imports:
 import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
@@ -77,7 +78,11 @@ export const useAuthStore = defineStore('auth', {
             console.groupEnd()
         },
 
-        // Redirect to Discord for Sign in:
+        /**
+         * Sign in/authenticate a user through Discord OAuth, accepts an optional `stickyRoute` to redirect back to a specified path after sign in.
+         * 
+         * @param { String } stickyRoute Router path to redirect to after a successful sign in *(optional)*
+         */
         async authWithDiscord(stickyRoute){
             if(stickyRoute){ localStorage.setItem('stickySignIn', stickyRoute) }
             location.href = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fapi%2Flogin%2Fdiscord-redirect&scope=identify+guilds'
