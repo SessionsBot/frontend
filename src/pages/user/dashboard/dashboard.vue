@@ -4,6 +4,8 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../../utils/stores/auth.js'
 import { createLucideIcon, HomeIcon, Icon, LayoutDashboard, UserCircle2Icon } from 'lucide-vue-next';
+import { getGuildData } from '@/utils/modules/backendApi.js';
+
 
 
 // Auth:
@@ -13,31 +15,35 @@ const userData = computed(() => auth.userData)
 const userData_manageableGuilds = computed(() => auth.userData?.Firebase?.claims?.manageableGuilds)
 const userId = computed(() => auth.userData?.Firebase?.uid)
 
-const manageableGuildOptions = ref([])
+const manageableGuildSelectOptions = ref([])
+const manageableGuildSelected = ref(null)
 
 // Router:
 const router = useRouter()
 const route = useRoute()
 
+
 const getManageableGuilds = async () => {
 
-    if(!userData.value) { 
-        console.log('No user data for managable guilds')
-        return ['DATA ERROR']; 
+    // Get guild data from backend:
+    for (const guild of userData_manageableGuilds.value) {
+        const fetchedData = await getGuildData(guild)
+        console.log('Dashboard Fetched:', fetchedData)
+        // Add managable guild select option:
+        manageableGuildSelectOptions.value.push({
+            guildName: fetchedData?.data?.guildGeneral?.name,
+            guildId: fetchedData?.data?.guildGeneral?.id,
+            guildIcon: fetchedData?.data?.guildIcon,
+        })
     }
-
-    const manageableGuildsData = userData.value?.Firebase?.claims?.manageableGuilds
-    if(!manageableGuildsData) return [];
-
-    console.log('Managable Guilds', manageableGuildsData)
-
-    manageableGuildOptions.value = manageableGuildsData
-
-    return manageableGuildsData
+    
+    
+    
+    
 }
 
 
-onMounted(() => {
+onMounted(async () => {
     console.log('Auth Data', {
         LoggedIn: userLoggedIn.value,
         UserId: userId.value,
@@ -45,6 +51,7 @@ onMounted(() => {
         UserData: userData.value
     });
     
+    await getManageableGuilds()
 })
 
 </script>
@@ -79,8 +86,27 @@ onMounted(() => {
 
         <!-- Select Guild Dropdown: -->
         <Select 
-            :options="userData_manageableGuilds"
-        />
+            :options="manageableGuildSelectOptions"
+            option-label="guildName"
+            option-value="guildId"
+            v-model:model-value="manageableGuildSelected"
+        >
+ 
+            <template #option="slotProps">
+                <div class="flex gap-2 justify-center items-center ">
+                    <img class="max-w-6" :src="slotProps.option?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'" >
+                    <p> {{ slotProps.option?.guildName }}</p>
+                </div>
+            </template>
+
+            <template #value="slotProps">
+                <div class="flex gap-2 justify-center items-center ">
+                    <img class="max-w-6" :src="slotProps.value?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'" >
+                    <p> {{ manageableGuildSelected }}</p>
+                </div>
+            </template>
+
+        </Select>
     
     </section>
         
