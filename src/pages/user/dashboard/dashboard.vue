@@ -4,7 +4,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../../utils/stores/auth.js'
 import { createLucideIcon, HomeIcon, Icon, LayoutDashboard, UserCircle2Icon } from 'lucide-vue-next';
-import { getGuildData } from '@/utils/modules/backendApi.js';
+import { getGuildData } from '@/utils/modules/backendApi.ts';
 
 
 
@@ -29,6 +29,7 @@ const getManageableGuilds = async () => {
     for (const guild of userData_manageableGuilds.value) {
         const fetchedData = await getGuildData(guild)
         console.log('Dashboard Fetched:', fetchedData)
+        fetchedData.
         // Add managable guild select option:
         manageableGuildSelectOptions.value.push({
             guildName: fetchedData?.data?.guildGeneral?.name,
