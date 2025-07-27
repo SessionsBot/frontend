@@ -27,10 +27,10 @@ const getManageableGuilds = async () => {
 
     // Get guild data from backend:
     for (const guild of userData_manageableGuilds.value) {
-        const fetchedData = await getGuildData(guild)
+        const fetchedData = await getGuildData(guildId)
         console.log('Dashboard Fetched:', fetchedData)
-        fetchedData.
-        // Add managable guild select option:
+        fetchedData
+        // Add manageable guild select option:
         manageableGuildSelectOptions.value.push({
             guildName: fetchedData?.data?.guildGeneral?.name,
             guildId: fetchedData?.data?.guildGeneral?.id,
@@ -44,6 +44,17 @@ const getManageableGuilds = async () => {
 }
 
 
+async function fetchGuildData(g_id){
+    const results = await getGuildData(g_id)
+    if (results.success) {
+        console.info('Fetched Guild Data:', results)
+        console.log(JSON.stringify(results.data.guildDatabaseData, ''))
+    } else {
+        console.warn('Guild Fetch', 'ERROR', results)
+    }
+}
+
+
 onMounted(async () => {
     console.log('Auth Data', {
         LoggedIn: userLoggedIn.value,
@@ -52,7 +63,9 @@ onMounted(async () => {
         UserData: userData.value
     });
     
-    await getManageableGuilds()
+    // await getManageableGuilds()
+
+    await fetchGuildData('1379160686629880028')
 })
 
 </script>
@@ -60,7 +73,7 @@ onMounted(async () => {
 <template>
 <div id="userDashboardPage" class="flex flex-1 flex-col justify-start items-center gap-3">
 
-    <!-- Sub-Header - Breadcrub / Guild Select -->
+    <!-- Sub-Header - Breadcrumb / Guild Select -->
     <section class="flex flex-wrap flex-col sm:flex-row sm:justify-between justify-center items-center content-center gap-3 px-2 py-3 w-full">
         
         <!-- Page Breadcrumb: -->
