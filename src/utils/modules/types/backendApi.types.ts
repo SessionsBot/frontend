@@ -5,13 +5,13 @@ import { FirebaseGuildDoc } from "./firestoreData.types";
 
 /** The full interface response for internal backend API. */
 export interface APIResponse<responseData> {
-    /** Whether the request was successful. */
+    /** Whether the API request was successful. */
     success: boolean;
 
-    /** The response data, if any. */
+    /** The API response data, if any. */
     data?: responseData;
 
-    /** Any error details, if any. */
+    /** Any API error details, if any. */
     error?: APIErrorData;
 }
 
@@ -59,3 +59,7 @@ export interface GuildData {
 
 
 }
+
+
+/** The full API response object for a "Secure Action" attempt. */
+export type SecureActionResponse = APIResponse<unknown>;

@@ -1,5 +1,5 @@
 // Imported TypeScript:
-import { GuildDataResponse } from './types/backendApi.types'
+import { GuildDataResponse, SecureActionResponse } from './types/backendApi.types'
 
 
 /** Fetches guild data from backend API.
@@ -33,5 +33,29 @@ export async function getGuildData(guildId) : Promise <GuildDataResponse> {
             error
         };
         return responseData;
+    }
+}
+
+
+/** Attempt to POST/execute a 'secure action' within the backend API.
+ * 
+ * - Requires Authentication (via token)
+ * - Specified Secure Actions Available
+ *      - Otherwise, make a direct API call...
+ * 
+ * @param authToken Authentication token to provide for secure action attempt.
+ * 
+ * @param actionType The secure action to attempt to execute.
+ * 
+ * @param data Any further data to provide for the call
+ * 
+ * - Please reference backend code for necessary objects to provide!
+ */
+export async function postSecureAction(authToken:string, actionType:string, data?:any) : Promise <SecureActionResponse> {
+    
+    // Return no logic alert:
+    return {
+        success: false, 
+        error: {code:500, message: 'This Secure Action fn logic has not been completed yet!'}
     }
 }
