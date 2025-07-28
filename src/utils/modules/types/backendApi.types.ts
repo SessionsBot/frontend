@@ -63,3 +63,9 @@ export interface GuildData {
 
 /** The full API response object for a "Secure Action" attempt. */
 export type SecureActionResponse = APIResponse<unknown>;
+
+/** Available secure actions to run through the _Secure Action API_. */
+export type SecureActionNames =
+  | 'CREATE_AUTO-SIGNUP-CHANNEL'
+  | 'SETUP-GUILD';
+

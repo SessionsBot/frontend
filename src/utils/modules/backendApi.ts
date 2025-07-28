@@ -1,9 +1,9 @@
 // Imported TypeScript:
-import { GuildDataResponse, SecureActionResponse } from './types/backendApi.types'
+import { GuildDataResponse, SecureActionNames, SecureActionResponse } from './types/backendApi.types'
 
 
 /** Fetches guild data from backend API.
- * 
+ * @details
  * + Discord Guild API Data
  * + Discord Guild ➞ Channels API Data
  * + Internal Firestore Guild Data
@@ -26,7 +26,7 @@ export async function getGuildData(guildId) : Promise <GuildDataResponse> {
         return responseData;
 
     } catch (error) {
-        console.warn('API ERROR', 'FETCH GUILD DATA: ', error);
+        console.warn('API ERROR', 'Fetch Guild Data', error);
         responseData = {
             success: false,
             data: null,
@@ -37,25 +37,65 @@ export async function getGuildData(guildId) : Promise <GuildDataResponse> {
 }
 
 
-/** Attempt to POST/execute a 'secure action' within the backend API.
- * 
+/** Attempts to execute a **secure action** within the backend API.
+ *
+ * @details 
  * - Requires Authentication (via token)
- * - Specified Secure Actions Available
+ * - *Specified Secure Actions Available*
  *      - Otherwise, make a direct API call...
  * 
  * @param authToken Authentication token to provide for secure action attempt.
  * 
  * @param actionType The secure action to attempt to execute.
  * 
- * @param data Any further data to provide for the call
+ * @param guildId The Discord guild by ID to perform the secure action.
  * 
- * - Please reference backend code for necessary objects to provide!
+ * @param requestData Any further data to provide for the request, Please view the [backend API code](https://github.com/SessionsBot/backend/blob/main/src/webService) for required data for each action type.
  */
-export async function postSecureAction(authToken:string, actionType:string, data?:any) : Promise <SecureActionResponse> {
+export async function attemptSecureAction(authToken:string, actionType:SecureActionNames, guildId?:string, requestData?:any) : Promise <SecureActionResponse> {
     
-    // Return no logic alert:
-    return {
-        success: false, 
-        error: {code:500, message: 'This Secure Action fn logic has not been completed yet!'}
+    let responseData : SecureActionResponse;
+
+    try {
+        // 1. Attempt Secure Action:
+        const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/secure-action`;
+        const response = await fetch(requestUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+                actionType: 'SETUP-GUILD',
+                guildId: guildId || 'null',
+                data: requestData
+            })
+        })
+
+        // 2. Get Request Response:
+        responseData = await response.json()
+
+        // 3. Check for Errors:
+        if(!responseData?.success) {
+            // Error Occurred:
+            throw responseData?.error?.message
+        }
+            
+        // 4. Success:
+        return responseData
+        
+    
+    } catch (error) {
+        // Error Occurred:
+        console.warn('API ERROR', 'Secure Action', error);
+        // Return Error:
+        return responseData = {
+            success: false,
+            error: {
+                code: 500,
+                message: error
+            }
+        }
     }
+
 }
