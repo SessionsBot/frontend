@@ -15,7 +15,7 @@ updates:
       - "Dependencies"
       - "Needs Review"
     allow:
-      - dependency-type: "direct"  
+      - dependency-type: "all"  
     groups:
       npm-dependencies:
         patterns:
