@@ -12,7 +12,6 @@ updates:
       prefix: "chore"
       include: "scope"            
     labels:
-      - "Dependencies"
       - "Needs Review"
     allow:
       - dependency-type: "all"  
