@@ -1,5 +1,5 @@
 // Imported TypeScript:
-import { GuildDataResponse, SecureActionNames, SecureActionResponse } from './types/backendApi.types'
+import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "backendApi.types";
 
 
 /** Fetches guild data from backend API.
