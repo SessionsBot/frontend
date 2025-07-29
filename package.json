@@ -10,10 +10,10 @@
     "run": "vite build"
   },
   "dependencies": {
-    "@primeuix/themes": "^1.2.1",
+    "@primeuix/themes": "^1.2.2",
     "@primevue/forms": "^4.3.6",
     "@tailwindcss/vite": "^4.1.11",
-    "@vueuse/core": "^13.5.0",
+    "@vueuse/core": "^13.6.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^12.0.0",
@@ -31,12 +31,12 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
-    "@sessionsbot/api-types": "^1.0.3",
     "@primevue/auto-import-resolver": "^4.3.6",
+    "@sessionsbot/api-types": "^1.0.0",
     "@tailwindcss/postcss": "^4.1.11",
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.6",
     "serve": "^14.2.4",
     "shadcn-vue": "^2.2.0",
     "tailwindcss": "^4.1.7",
