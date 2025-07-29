@@ -1,5 +1,6 @@
 // Imported TypeScript:
-import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "backendApi.types";
+// import { GuildDataResponse, SecureActionResponse, SecureActionNames } 
+import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "@sessionsbot/api-types";
 
 
 /** Fetches guild data from backend API.
