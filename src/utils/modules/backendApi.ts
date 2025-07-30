@@ -5,9 +5,9 @@ import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "@ses
 
 /** Fetches guild data from backend API.
  * @details
- * + Discord Guild API Data
- * + Discord Guild ➞ Channels API Data
- * + Internal Firestore Guild Data
+ * + Discord ➞ Guild API Data
+ * + Discord ➞ Channels API Data
+ * + Firestore ➞ Internal Guild Data
  * + and more...
  * @param guildId Discord Guild ID to fetch data for
  */
