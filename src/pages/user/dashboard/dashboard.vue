@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 // Imports:
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
@@ -6,7 +6,7 @@ import { useAuthStore } from '../../../utils/stores/auth.js'
 import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
 import { TYPE, useToast } from 'vue-toastification';
-import { GuildDataResponse } from '@sessionsbot/api-types';
+// import { GuildDataResponse } from '@sessionsbot/api-types';
 const toast = useToast()
 
 
@@ -28,8 +28,6 @@ const manageableGuildSelectOptions = ref([])
 const manageableGuildIdSelected = ref(null)
 /** Current Guild's Data Object Selected to manage within dashboard. */
 const manageableGuildSelected = ref({})
-
-let guildEX : GuildDataResponse
 
 // Computed Guild Data:
 
@@ -183,7 +181,7 @@ onMounted(async () => {
                     <!-- Todays Sessions Count -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Todays Sessions: </p>
-                        <p class="outlookRowValue"> % </p>
+                        <p class="outlookRowValue"> {{ todaysSessionCount || '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
