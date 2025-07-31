@@ -6,7 +6,6 @@ import { useAuthStore } from '../../../utils/stores/auth.js'
 import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
 import { TYPE, useToast } from 'vue-toastification';
-// import { GuildDataResponse } from '@sessionsbot/api-types';
 const toast = useToast()
 
 
