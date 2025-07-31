@@ -3,8 +3,11 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../../utils/stores/auth.js'
-import { createLucideIcon, HomeIcon, Icon, LayoutDashboard, UserCircle2Icon } from 'lucide-vue-next';
+import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
+import { TYPE, useToast } from 'vue-toastification';
+const toast = useToast()
+
 
 // Auth:
 const auth = useAuthStore()
@@ -58,7 +61,8 @@ async function fetchUserDashboard() {
 
     // Fetch 'Select Guild' Options:
     await getManageableGuilds()
-
+    toast.success('Dashboard has loaded!')
+    
 }
 
 
@@ -78,10 +82,11 @@ onMounted(async () => {
 
         <!-- Sub-Header - Breadcrumb / Guild Select -->
         <section
-            class="flex flex-wrap flex-col sm:flex-row sm:justify-between justify-center items-center content-center gap-3 px-2 py-3 w-full">
+            class="flex flex-wrap flex-row justify-between items-start content-start gap-3 px-2 py-3 w-full">
 
             <!-- Page Breadcrumb: -->
-            <Breadcrumb class="self-start rounded-md !px-4 !py-3" :model="[
+            <Transition name="scale-fade" mode="out-in">
+            <Breadcrumb v-if="pageReady" class="self-start rounded-md !px-4 !py-3" :model="[
                     { label: 'Home', href: '/', icon: HomeIcon },
                     { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
                 ]">
@@ -96,9 +101,11 @@ onMounted(async () => {
                     </div>
                 </template>
             </Breadcrumb>
+            </Transition>
 
             <!-- Select Guild Dropdown: -->
-            <Select :options="manageableGuildSelectOptions" option-label="guildName" option-value="guildId"
+            <Transition name="scale-fade" mode="out-in">
+            <Select v-if="pageReady" :options="manageableGuildSelectOptions" option-label="guildName" option-value="guildId"
                 :model-value="manageableGuildSelected" :loading="!pageReady">
 
                 <template #empty>
@@ -123,6 +130,7 @@ onMounted(async () => {
                 </template>
 
             </Select>
+            </Transition>
 
         </section>
 
@@ -132,9 +140,9 @@ onMounted(async () => {
         <section v-if="!pageReady" class="flex flex-col flex-1 h-full w-full justify-center items-center">
         
             
-            <div class="flex gap-4 p-5 m-5 flex-col justify-center items-center bg-zinc-900 italic  rounded-lg ring-2 ring-ring">
+            <div class="flex gap-4 p-12 m-5 flex-col justify-center items-center bg-zinc-900 italic  rounded-lg ring-2 ring-ring">
                 
-                <ProgressSpinner stroke-width="4" />
+                <ProgressSpinner stroke-width="3" />
 
                 <p class="text-md text-center"> Please wait...</p>
                 
@@ -146,15 +154,183 @@ onMounted(async () => {
         </section>
 
 
-        <section v-else-if="pageReady" class="flex flex-col flex-1 h-full w-full justify-center items-center">
+        <!-- Dashboard View -->
+        <section v-else-if="pageReady" class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-center">
         
             
-            <div class="flex gap-4 p-5 m-5 flex-col justify-center items-center bg-zinc-900 italic  rounded-lg ring-2 ring-ring">
+            <!-- Todays Outlook: -->
+            <div class="flex flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
+                <!-- Heading -->
+                <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
+                    <Calendar1Icon />
+                    <p class="font-medium"> Todays Outlook</p>
+                </div>
 
-                <p class="text-4xl text-center"> GUILD DASHBOARD</p>
+                <!-- Results -->
+                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
+                    
+                    <!-- Todays Sessions Count -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Todays Sessions: </p>
+                        <p class="outlookRowValue"> % </p>
+                    </div>
+
+                    <div class="w-[95%] h-[2px] bg-ring self-center" />
+
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Available Roles: </p>
+                        <p class="outlookRowValue"> % </p>
+                    </div>
+
+                    <div class="w-[95%] h-[2px] bg-ring self-center" />
+
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Roles Assigned: </p>
+                        <p class="outlookRowValue"> % </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Member Outlook: -->
+            <div class="flex flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
-                <p class="text-sm text-neutral-400 text-center"> This is your Dashboard! </p>
+                <!-- Heading -->
+                <div class="flex flex-row bg-white/5 text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
+                    <ContactRoundIcon />
+                    <p class="font-medium"> Member Outlook</p>
+                </div>
+
+                <!-- Results -->
+                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
+                    
+                    <!-- Most Active -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Most Active: </p>
+                        <p class="outlookRowValue"> @USER </p>
+                    </div>
+
+                    <div class="w-[95%] h-[2px] bg-ring self-center" />
+
+                    <!-- Roles Assigned -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Roles Assigned: </p>
+                        <p class="outlookRowValue"> % </p>
+                    </div>
+
+                    <div class="w-[95%] h-[2px] bg-ring self-center" />
+
+                    <!-- Sessions Hosted -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Sessions Hosted: </p>
+                        <p class="outlookRowValue"> % </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Guild Outlook: -->
+            <div class="flex flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+                
+                <!-- Heading -->
+                <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
+                    <Globe2Icon />
+                    <p class="font-medium"> Guild Outlook</p>
+                </div>
+
+                <!-- Results -->
+                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
+                    
+                    <!-- Schedules Setup -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Schedules Setup: </p>
+                        <p class="outlookRowValue"> % </p>
+                    </div>
+
+                    <div class="w-[95%] h-[2px] bg-ring self-center" />
+
+                    <!-- Daily Post Time -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Daily Post Time: </p>
+                        <p class="outlookRowValue"> 00:00 AM </p>
+                    </div>
+
+                    <div class="w-[95%] h-[2px] bg-ring self-center" />
+
+                    <!-- Subscription Plan -->
+                    <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
+                        <p> Current Plan: </p>
+                        <p class="outlookRowValue"> FREE </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Upcoming Sessions: -->
+            <div class="flex flex-col overflow-clip justify-between min-w-125 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+                
+                <!-- Heading -->
+                <div class="flex bg-white/5 flex-row text-center justify-between items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
+                    <div class="flex flex-row gap-2 justify-between items-center content-center">
+                        <ClockIcon />
+                        <p class="font-medium"> Upcoming Sessions </p>
+                    </div>
+
+                    <div class="flex flex-row gap-2 justify-between items-center content-center">
+                        <p class="font-medium text-sm bg-emerald-700/70 p-1 px-1.5 rounded-md"> % Sessions </p>
+                    </div>
+                    
+                </div>
+
+                <!-- Results -->
+                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
+                    
+                    <!-- Schedule: -->
+                    <div class="flex flex-row justify-between p-1.5 gap-4.5 items-center content-center">
+                        
+                        <!-- Sch Title -->
+                         <p>
+                            SESSION TITLE
+                         </p>
+
+                        <!-- Sch Roles Available -->
+                         <p>
+                            ROLES AVAILABLE
+                         </p>
+
+                        <!-- Sch Roles Assigned -->
+                         <p>
+                            ROLES ASSIGNED
+                         </p>
+
+                        <!-- Sch Actions -->
+                         <div class="flex flex-wrap flex-col justify-center items-center content-center text-center p-3 gap-3">
+
+                            <Button unstyled class="upcomingSch_actionBtnEdit">
+                                <PencilIcon size="13" />
+                                <p> Edit </p>
+                            </Button>
+
+                            <Button unstyled class="upcomingSch_actionBtnDelete">
+                                <Trash2Icon size="13" />
+                                <p> Delete </p>
+                            </Button>
+
+                         </div>
+
+                    </div>
+
+
+                    <div class="w-[100%] h-[2px] bg-ring self-center" />
+
+                </div>
 
             </div>
 
@@ -174,5 +350,44 @@ onMounted(async () => {
 #userDashboardPage {
     /* <Select> - background color */
     --p-select-background: var(--color-zinc-900);
+}
+
+
+.outlookRowValue {
+    background: var(--color-zinc-800);
+    padding: 2px 6px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+}
+
+.upcomingSch_actionBtnEdit{
+    background: var(--color-cyan-700);
+    filter: grayscale(.3);
+    font-weight: 600;
+    padding: 4px 8px;
+    font-size: small;
+    border-radius: 6px;
+    display: flex;
+    gap: 3px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+.upcomingSch_actionBtnDelete{
+    background: var(--color-rose-800);
+    filter: grayscale(.4);
+    font-weight: 600;
+    padding: 4px 8px;
+    font-size: small;
+    border-radius: 6px;
+    display: flex;
+    gap: 3px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
 }
 </style>

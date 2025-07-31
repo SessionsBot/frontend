@@ -7,6 +7,7 @@ import router from './utils/router.js'
 import './styles/style.css' // or your Tailwind import
 
 import { useAuthStore } from "./utils/stores/auth.js";
+import { auth } from './utils/firebase.js'
 import { useNavStore } from './utils/stores/nav'
 
 import PrimeVue from 'primevue/config';
@@ -17,7 +18,7 @@ import ConfirmationService from 'primevue/confirmationservice';
 import Toast, { POSITION } from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
-import { auth } from './utils/firebase.js'
+
 
 const app = createApp(App)
 
