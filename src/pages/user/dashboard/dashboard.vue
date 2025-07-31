@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // Imports:
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
@@ -6,6 +6,7 @@ import { useAuthStore } from '../../../utils/stores/auth.js'
 import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
 import { TYPE, useToast } from 'vue-toastification';
+import { GuildDataResponse } from '@sessionsbot/api-types';
 const toast = useToast()
 
 
@@ -21,8 +22,16 @@ const router = useRouter()
 const route = useRoute()
 
 // Select Guild - View Selected:
+/** Array for 'Guild Select' options that controls dashboard view. */
 const manageableGuildSelectOptions = ref([])
-const manageableGuildSelected = ref(null)
+/** Current Guild Id Selected to manage within dashboard. */
+const manageableGuildIdSelected = ref(null)
+/** Current Guild's Data Object Selected to manage within dashboard. */
+const manageableGuildSelected = ref({})
+
+// Computed Guild Data:
+
+// const todaysSessionCount = computed(() => manageableGuildsData.value[manageableGuildIdSelected.value])
 
 // Static - Manageable Guilds Data:
 const manageableGuildsData = ref({})
@@ -45,7 +54,7 @@ const getManageableGuilds = async () => { // Fetched on page load
                 guildIcon: fetchedData?.data?.guildIcon,
             });
             // Select as guild:
-            if(!manageableGuildSelected.value) manageableGuildSelected.value = fetchedData?.data?.guildGeneral?.id
+            if(!manageableGuildIdSelected.value) manageableGuildIdSelected.value = fetchedData?.data?.guildGeneral?.id
         } else{
             // Bot not in guild:
             console.warn('SessionsBot is not a member within', guildId);
@@ -59,9 +68,8 @@ const getManageableGuilds = async () => { // Fetched on page load
 // Top level - Load/refresh all user dashboard contents:
 async function fetchUserDashboard() {
 
-    // Fetch 'Select Guild' Options:
+    // Fetch Manageable Guilds Data:
     await getManageableGuilds()
-    toast.success('Dashboard has loaded!')
     
 }
 
@@ -69,10 +77,10 @@ async function fetchUserDashboard() {
 // On page load:
 const pageReady = ref(false)
 onMounted(async () => {
-    console.info('pageReady', pageReady.value);
+
     await fetchUserDashboard()
     pageReady.value = true;
-    console.info('pageReady', pageReady.value);
+
 })
 
 </script>
@@ -106,7 +114,7 @@ onMounted(async () => {
             <!-- Select Guild Dropdown: -->
             <Transition name="scale-fade" mode="out-in">
             <Select v-if="pageReady" :options="manageableGuildSelectOptions" option-label="guildName" option-value="guildId"
-                :model-value="manageableGuildSelected" :loading="!pageReady">
+                :model-value="manageableGuildIdSelected" :loading="!pageReady">
 
                 <template #empty>
                     SELECT
