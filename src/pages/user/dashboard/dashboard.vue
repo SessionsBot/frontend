@@ -29,9 +29,11 @@ const manageableGuildIdSelected = ref(null)
 /** Current Guild's Data Object Selected to manage within dashboard. */
 const manageableGuildSelected = ref({})
 
+let guildEX : GuildDataResponse
+
 // Computed Guild Data:
 
-// const todaysSessionCount = computed(() => manageableGuildsData.value[manageableGuildIdSelected.value])
+const todaysSessionCount = computed(() => manageableGuildsData.value[manageableGuildIdSelected.value].guildDatabaseData?.upcomingSessions?.length)
 
 // Static - Manageable Guilds Data:
 const manageableGuildsData = ref({})
