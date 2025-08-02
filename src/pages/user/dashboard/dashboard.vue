@@ -3,13 +3,11 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../../utils/stores/auth.ts'
-import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
+import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
-import { TYPE, useToast } from 'vue-toastification';
+import { useToast } from 'vue-toastification';
 import { objectEntries } from '@vueuse/core';
 import { DateTime } from 'luxon';
-
-const toast = useToast()
 
 
 // Auth:
@@ -23,20 +21,31 @@ const userId = computed(() => auth.userData?.Firebase?.uid)
 const router = useRouter()
 const route = useRoute()
 
-// Select Guild - View Selected:
+const toast = useToast()
+
+
 /** Array for __ALL__ 'Guild Select' options that controls dashboard view. */
 const manageableGuildSelectOptions = ref([])
-/** __Current Guild__ Id Selected to manage within dashboard. */
+
+/** __Current Guild__ Id Selected to manage/view within dashboard. */
 const guildSelectedId = ref(null)
+
 /** __Current Guild's__ Data Object Selected to manage within dashboard. 
  * @type  { import('vue').ComputedRef <import('@sessionsbot/api-types').GuildData>}
 */
 const guildSelectedData = computed(() => new Object(manageableGuildsData.value[guildSelectedId.value]));
 
-
-// Static - Manageable Guilds Data:
+/** Static -- All Manageable Guilds Data */
 const manageableGuildsData = ref({})
+
+/** Used to fetch all manageable guild data for dashboard 
+ * - Used on initial page load
+ * - Also auto selects `guildSelectedId` by first fetched
+*/
 const getManageableGuilds = async () => { // Fetched on page load
+
+    // Reset previous options:
+    manageableGuildSelectOptions.value = [];
 
     // Get guild data from backend:
     for (const guildId of userData_manageableGuilds.value) {
@@ -54,11 +63,11 @@ const getManageableGuilds = async () => { // Fetched on page load
                 guildId: fetchedData?.data?.guildGeneral?.id,
                 guildIcon: fetchedData?.data?.guildIcon,
             });
-            // Select as guild:
-            if(!guildSelectedId.value) guildSelectedId.value = fetchedData?.data?.guildGeneral?.id
+            // Select as guild if non selected:
+            if(!guildSelectedId.value) guildSelectedId.value = fetchedData?.data?.guildGeneral?.id;
         } else{
             // Bot not in guild:
-            console.warn('SessionsBot is not a member within', guildId);
+            console.info('SessionsBot is not a member within manageable guild:', guildId);
         }
         
     }
@@ -128,34 +137,42 @@ const schedulesSetupCount = computed(() => {
 
 const dailyPostTime = computed(() => {
     let result = '00:00 AM';
-    const time = guildSelectedData.value?.guildDatabaseData?.sessionSignup.dailySignupPostTime
-    const timezone = guildSelectedData.value?.guildDatabaseData?.timeZone
+
+    const time = guildSelectedData.value?.guildDatabaseData?.sessionSignup?.dailySignupPostTime;
     if (!time) return '?';
 
+    const timezone = guildSelectedData.value?.guildDatabaseData?.timeZone || 'America/Chicago';
+    
     const date = DateTime.fromObject({hour: time.hours, minute: time.minutes}, {zone: timezone})
     if (!date.isValid) return '?';
+
     result = date.toLocaleString(DateTime.TIME_SIMPLE)
 
     return result
 
 });
 
+const upcomingSessionsObj = computed(() =>  {
+    return guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+});
 
 
-// Top level - Load/refresh all user dashboard contents:
-async function fetchUserDashboard() {
-
-    // Fetch Manageable Guilds Data:
-    await getManageableGuilds()
-    
+/** Reload User Dashboard with `selectedGuildId` to refresh data/view. */
+async function reloadUserDashboard(selectedGuildId) {
+    pageReady.value = false;
+    setTimeout(() => pageReady.value = true, 700);
 }
 
 
 // On page load:
 const pageReady = ref(false)
 onMounted(async () => {
-
-    await fetchUserDashboard()
+    
+    // Show loading:
+    pageReady.value = false;
+    // Fetch Manageable Guilds Data:
+    await getManageableGuilds()
+    // Show dashboard:
     pageReady.value = true;
 
 })
@@ -171,7 +188,7 @@ onMounted(async () => {
 
             <!-- Page Breadcrumb: -->
             <Transition name="scale-fade" mode="out-in">
-            <Breadcrumb v-if="pageReady" class="self-start rounded-md !px-4 !py-3" :model="[
+            <Breadcrumb  class="self-start rounded-md !px-4 !py-3" :model="[
                     { label: 'Home', href: '/', icon: HomeIcon },
                     { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
                 ]">
@@ -189,14 +206,16 @@ onMounted(async () => {
             </Transition>
 
             <!-- Select Guild Dropdown: -->
-            <Transition name="scale-fade" mode="out-in">
-            <Select v-if="pageReady" :options="manageableGuildSelectOptions" option-label="guildName" option-value="guildId"
-                :model-value="guildSelectedId" :loading="!pageReady">
-
-                <template #empty>
-                    SELECT
-                </template>
-
+            <Transition name="scale-fade" mode="out-in" duration="1">
+            <Select 
+                :loading="!pageReady"
+                :options="manageableGuildSelectOptions" 
+                option-label="guildName" 
+                option-value="guildId"
+                v-model="guildSelectedId"
+                @update:model-value="reloadUserDashboard"
+                
+            >
 
                 <template #option="slotProps">
                     <div class="flex gap-2 justify-center items-center ">
@@ -210,7 +229,7 @@ onMounted(async () => {
                     <div class="flex gap-2 justify-center items-center ">
                         <img class="max-w-6"
                             :src="manageableGuildsData[slotProps.value]?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
-                        <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Select Guild' }} </p>
+                        <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Loading' }} </p>
                     </div>
                 </template>
 
@@ -281,8 +300,14 @@ onMounted(async () => {
 
 
             <!-- Member Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex relative flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
+                <!-- Coming Soon Banner -->
+                 <div class="absolute w-[200%] h-10 bg-red-900/50 ring-2 ring-white/70 flex top-[48%] rotate-13 gap-2 p-2 justify-center items-center content-center text-center">
+                    <p class="text-lg font-black" style="font-family: Verdana"> Coming Soon </p>
+                 </div>
+
+
                 <!-- Heading -->
                 <div class="flex flex-row bg-white/5 text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
                     <ContactRoundIcon />
@@ -358,7 +383,7 @@ onMounted(async () => {
             </div>
 
 
-            <!-- Upcoming Sessions: -->
+            <!-- Upcoming Sessions - TABLE VIEW -->
             <div class="flex flex-col overflow-clip justify-between min-w-125 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
@@ -369,7 +394,7 @@ onMounted(async () => {
                     </div>
 
                     <div class="flex flex-row gap-2 justify-between items-center content-center">
-                        <p class="font-medium text-sm bg-emerald-700/20 p-1 px-1.5 rounded-md"> % Sessions </p>
+                        <p class="font-medium text-sm bg-emerald-700/20 p-1 px-1.5 rounded-md"> {{ todaysSessionCount | '%' }} Sessions </p>
                     </div>
                     
                 </div>
@@ -377,43 +402,96 @@ onMounted(async () => {
                 <!-- Results -->
                 <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
                     
-                    <!-- Schedule: -->
-                    <div class="flex flex-row justify-between p-1.5 gap-4.5 items-center content-center">
+                    <!-- Sessions Tables -->
+                    <table v-if="todaysSessionCount >= 1" class="table border-1 border-ring">
+
+                    <!-- Heading Row -->
+                    <tr class="border-1 border-ring bg-white/5">
+                        <th 
+                            v-for="item in ['Session Title', 'Session Time', 'Session Roles', 'Actions']" 
+                            scope="col" 
+                            class="border-2 border-ring p-2 font-medium text-center"
+                        > 
+                            {{ item }} 
+                        </th>
+                    </tr>
+                    
+                    <!-- Session Row: -->
+                    <tr v-for="(value, key) in upcomingSessionsObj" class="text-center">
                         
                         <!-- Sch Title -->
-                         <p>
-                            SESSION TITLE
-                         </p>
+                         <td class="border-2 border-ring p-2.5">
+                            <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
+                                {{ value.title }}
+                            </p>
+                         </td>
+                         
 
                         <!-- Sch Roles Available -->
-                         <p>
-                            ROLES AVAILABLE
-                         </p>
+                         <td class="border-2 border-ring p-2.5">
+                            <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
+                                {{ DateTime.fromSeconds(Number(value.date.discordTimestamp)).toLocaleString(DateTime.TIME_SIMPLE) }}
+                            </p>
+                         </td>
 
                         <!-- Sch Roles Assigned -->
-                         <p>
-                            ROLES ASSIGNED
-                         </p>
+                         <td class="border-2 border-ring p-2.5">
+                            <div class="flex flex-col justify-center items-center content-center gap-1.5">
+                                
+                                <div class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
+                                    
+                                    <p class="flex justify-center flex-nowrap items-center content-center gap-0.75"> 
+                                        <CheckCircle2Icon class="inline" size="16"/>
+                                        Available
+                                    </p>
+
+                                    <p class="flex justify-center items-center gap-1 bg-zinc-800 px-1.25 py-0.5 rounded-md"> 
+                                        ?
+                                    </p>
+
+                                </div>
+
+                                <div class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
+                                    
+                                    <p class="flex justify-center flex-nowrap items-center content-center gap-0.75"> 
+                                        <UserCircleIcon class="inline" size="16"/>
+                                        Assigned
+                                    </p>
+
+                                    <p class="flex justify-center items-center gap-1 bg-zinc-800 p-1 py-0.5 rounded-md"> 
+                                        ?
+                                    </p>
+
+                                </div>
+
+                            </div>
+                         </td>
 
                         <!-- Sch Actions -->
-                         <div class="flex flex-wrap flex-col justify-center items-center content-center text-center p-3 gap-3">
+                         <td class="border-2 border-ring p-0.5">
+                            <div class="flex flex-wrap flex-col justify-center items-center content-center text-center p-3 gap-3">
 
-                            <Button unstyled class="upcomingSch_actionBtnEdit">
-                                <PencilIcon size="13" />
-                                <p> Edit </p>
-                            </Button>
+                                <Button unstyled class="upcomingSch_actionBtnEdit">
+                                    <PencilIcon size="13" />
+                                    <p> Edit </p>
+                                </Button>
 
-                            <Button unstyled class="upcomingSch_actionBtnDelete">
-                                <Trash2Icon size="13" />
-                                <p> Delete </p>
-                            </Button>
+                                <Button unstyled class="upcomingSch_actionBtnDelete">
+                                    <Trash2Icon size="13" />
+                                    <p> Delete </p>
+                                </Button>
 
-                         </div>
+                            </div>
+                         </td>
 
-                    </div>
+                    </tr>
 
+                    </table>
 
-                    <div class="w-[100%] h-[2px] bg-ring self-center" />
+                    <!-- No Sessions Msg -->
+                    <p v-else class="font-light p-2 text-center flex justify-center items-center content-center">
+                        No upcoming sessions  :(
+                    </p>
 
                 </div>
 
@@ -444,11 +522,12 @@ onMounted(async () => {
     border-radius: 6px;
     color: white;
     font-weight: 500;
+    text-align: center;
 }
 
 .upcomingSch_actionBtnEdit{
-    background: var(--color-cyan-700);
-    filter: grayscale(.3);
+    background: var(--color-zinc-700);
+    filter: grayscale(.5);
     font-weight: 600;
     padding: 4px 8px;
     font-size: small;
@@ -463,7 +542,7 @@ onMounted(async () => {
 
 .upcomingSch_actionBtnDelete{
     background: var(--color-rose-800);
-    filter: grayscale(.4);
+    filter: grayscale(.55);
     font-weight: 600;
     padding: 4px 8px;
     font-size: small;
