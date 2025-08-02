@@ -1,5 +1,5 @@
 {
-  "name": "my-vue-app",
+  "name": "sessions-bot-web-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,7 +12,6 @@
   "dependencies": {
     "@primeuix/themes": "^1.1.2",
     "@primevue/forms": "^4.3.5",
-    "@sessionsbot/api-types": "^2.0.1",
     "@tailwindcss/vite": "^4.1.7",
     "@vueuse/core": "^13.4.0",
     "class-variance-authority": "^0.7.1",
@@ -32,6 +31,7 @@
     "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
+    "@sessionsbot/api-types": "^2.0.1",
     "@primevue/auto-import-resolver": "^4.3.5",
     "@tailwindcss/postcss": "^4.1.7",
     "@vitejs/plugin-vue": "^5.2.3",
