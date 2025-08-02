@@ -6,7 +6,7 @@ import App from './App.vue'
 import router from './utils/router.js'
 import './styles/style.css' // or your Tailwind import
 
-import { useAuthStore } from "./utils/stores/auth.js";
+import { useAuthStore } from "./utils/stores/auth.ts";
 import { auth } from './utils/firebase.js'
 import { useNavStore } from './utils/stores/nav'
 

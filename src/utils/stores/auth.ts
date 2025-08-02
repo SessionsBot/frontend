@@ -115,7 +115,7 @@ export const useAuthStore = defineStore('auth', {
                 console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
             })
 
-            // Signin/Update - Pina:
+            // Signin/Update - Pinia:
             this.authToken = authToken;
             this.isAuthenticated = true;
             this.updateUserData()
@@ -133,7 +133,7 @@ export const useAuthStore = defineStore('auth', {
             // debugAuth:
             if(debugAuth) console.log(`[Auth]: User Signing Out...`);
 
-            // Signout/Reset - Pina:
+            // Signout/Reset - Pinia:
             this.authToken = null;
             this.userData = null;
             this.isAuthenticated = false;

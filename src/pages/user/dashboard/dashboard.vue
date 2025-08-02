@@ -2,11 +2,12 @@
 // Imports:
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../../../utils/stores/auth.js'
+import { useAuthStore } from '../../../utils/stores/auth.ts'
 import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
 import { TYPE, useToast } from 'vue-toastification';
 import { objectEntries } from '@vueuse/core';
+import { DateTime } from 'luxon';
 
 const toast = useToast()
 
@@ -104,7 +105,7 @@ const rolesAssignedCount = computed(() => {
             return
         else {
             Array.from(session[1]?.roles).forEach(role => {
-                totalAssigned += role?.users.length
+                totalAssigned += role?.users?.length || 0;
             })
         }
         
@@ -113,6 +114,33 @@ const rolesAssignedCount = computed(() => {
     return totalAssigned
 
 });
+
+const schedulesSetupCount = computed(() => {
+    let totalSetup = 0;
+    const sessionSchedules = guildSelectedData.value?.guildDatabaseData?.sessionSchedules
+    if (!sessionSchedules) return 0;
+
+    totalSetup = objectEntries(sessionSchedules).length
+
+    return totalSetup
+
+});
+
+const dailyPostTime = computed(() => {
+    let result = '00:00 AM';
+    const time = guildSelectedData.value?.guildDatabaseData?.sessionSignup.dailySignupPostTime
+    const timezone = guildSelectedData.value?.guildDatabaseData?.timeZone
+    if (!time) return '?';
+
+    const date = DateTime.fromObject({hour: time.hours, minute: time.minutes}, {zone: timezone})
+    if (!date.isValid) return '?';
+    result = date.toLocaleString(DateTime.TIME_SIMPLE)
+
+    return result
+
+});
+
+
 
 // Top level - Load/refresh all user dashboard contents:
 async function fetchUserDashboard() {
@@ -230,21 +258,21 @@ onMounted(async () => {
                     <!-- Todays Sessions Count -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Todays Sessions: </p>
-                        <p class="outlookRowValue"> {{ todaysSessionCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ todaysSessionCount | '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Available Roles: </p>
-                        <p class="outlookRowValue"> {{ availableRolesCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ availableRolesCount | '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Roles Assigned: </p>
-                        <p class="outlookRowValue"> {{ rolesAssignedCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ rolesAssignedCount | '?' }} </p>
                     </div>
 
                 </div>
@@ -306,7 +334,7 @@ onMounted(async () => {
                     <!-- Schedules Setup -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Schedules Setup: </p>
-                        <p class="outlookRowValue"> % </p>
+                        <p class="outlookRowValue"> {{ schedulesSetupCount | '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
@@ -314,7 +342,7 @@ onMounted(async () => {
                     <!-- Daily Post Time -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Daily Post Time: </p>
-                        <p class="outlookRowValue"> 00:00 AM </p>
+                        <p class="outlookRowValue"> {{ dailyPostTime }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
