@@ -6,6 +6,8 @@ import { useAuthStore } from '../../../utils/stores/auth.js'
 import { Calendar1Icon, ClockIcon, ContactRoundIcon, createLucideIcon, Globe2Icon, HomeIcon, Icon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircle2Icon } from 'lucide-vue-next';
 import { getGuildData } from '@/utils/modules/backendApi.ts';
 import { TYPE, useToast } from 'vue-toastification';
+import { objectEntries } from '@vueuse/core';
+
 const toast = useToast()
 
 
@@ -21,16 +23,15 @@ const router = useRouter()
 const route = useRoute()
 
 // Select Guild - View Selected:
-/** Array for 'Guild Select' options that controls dashboard view. */
+/** Array for __ALL__ 'Guild Select' options that controls dashboard view. */
 const manageableGuildSelectOptions = ref([])
-/** Current Guild Id Selected to manage within dashboard. */
-const manageableGuildIdSelected = ref(null)
-/** Current Guild's Data Object Selected to manage within dashboard. */
-const manageableGuildSelected = ref({})
+/** __Current Guild__ Id Selected to manage within dashboard. */
+const guildSelectedId = ref(null)
+/** __Current Guild's__ Data Object Selected to manage within dashboard. 
+ * @type  { import('vue').ComputedRef <import('@sessionsbot/api-types').GuildData>}
+*/
+const guildSelectedData = computed(() => new Object(manageableGuildsData.value[guildSelectedId.value]));
 
-// Computed Guild Data:
-
-const todaysSessionCount = computed(() => manageableGuildsData.value[manageableGuildIdSelected.value].guildDatabaseData?.upcomingSessions?.length)
 
 // Static - Manageable Guilds Data:
 const manageableGuildsData = ref({})
@@ -53,7 +54,7 @@ const getManageableGuilds = async () => { // Fetched on page load
                 guildIcon: fetchedData?.data?.guildIcon,
             });
             // Select as guild:
-            if(!manageableGuildIdSelected.value) manageableGuildIdSelected.value = fetchedData?.data?.guildGeneral?.id
+            if(!guildSelectedId.value) guildSelectedId.value = fetchedData?.data?.guildGeneral?.id
         } else{
             // Bot not in guild:
             console.warn('SessionsBot is not a member within', guildId);
@@ -63,6 +64,55 @@ const getManageableGuilds = async () => { // Fetched on page load
 
 }
 
+
+// Computed Guild Data:
+const todaysSessionCount = computed(() => {
+    const upcomingSessionsObj = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+    return upcomingSessionsObj ? objectEntries(upcomingSessionsObj).length : `ERROR`;
+});
+
+const availableRolesCount = computed(() => {
+    let totalAvailable = 0;
+    const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+    if (!upcomingSessions) return 0;
+
+    objectEntries(upcomingSessions).forEach((session) => {
+
+        if (!session[1]?.roles) 
+            return console.log('No roles?');
+        else {
+            Array.from(session[1]?.roles).forEach(role => {
+                const availInRole = role?.roleCapacity - role?.users.length
+                totalAvailable += availInRole
+            })
+        }
+        
+    })
+
+    return totalAvailable
+
+});
+
+const rolesAssignedCount = computed(() => {
+    let totalAssigned = 0;
+    const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+    if (!upcomingSessions) return 0;
+
+    objectEntries(upcomingSessions).forEach((session) => {
+
+        if (!session[1]?.roles) 
+            return
+        else {
+            Array.from(session[1]?.roles).forEach(role => {
+                totalAssigned += role?.users.length
+            })
+        }
+        
+    })
+
+    return totalAssigned
+
+});
 
 // Top level - Load/refresh all user dashboard contents:
 async function fetchUserDashboard() {
@@ -113,7 +163,7 @@ onMounted(async () => {
             <!-- Select Guild Dropdown: -->
             <Transition name="scale-fade" mode="out-in">
             <Select v-if="pageReady" :options="manageableGuildSelectOptions" option-label="guildName" option-value="guildId"
-                :model-value="manageableGuildIdSelected" :loading="!pageReady">
+                :model-value="guildSelectedId" :loading="!pageReady">
 
                 <template #empty>
                     SELECT
@@ -187,14 +237,14 @@ onMounted(async () => {
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Available Roles: </p>
-                        <p class="outlookRowValue"> % </p>
+                        <p class="outlookRowValue"> {{ availableRolesCount || '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Roles Assigned: </p>
-                        <p class="outlookRowValue"> % </p>
+                        <p class="outlookRowValue"> {{ rolesAssignedCount || '?' }} </p>
                     </div>
 
                 </div>
@@ -291,7 +341,7 @@ onMounted(async () => {
                     </div>
 
                     <div class="flex flex-row gap-2 justify-between items-center content-center">
-                        <p class="font-medium text-sm bg-emerald-700/70 p-1 px-1.5 rounded-md"> % Sessions </p>
+                        <p class="font-medium text-sm bg-emerald-700/20 p-1 px-1.5 rounded-md"> % Sessions </p>
                     </div>
                     
                 </div>
