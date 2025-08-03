@@ -394,7 +394,7 @@ onMounted(async () => {
                     </div>
 
                     <div class="flex flex-row gap-2 justify-between items-center content-center">
-                        <p class="font-medium text-sm bg-sky-700/20 p-1 px-1.5 rounded-md"> {{ todaysSessionCount | '%' }} Sessions </p>
+                        <p class="font-medium text-sm bg-sky-700/20 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ todaysSessionCount | '%' }} Sessions </p>
                     </div>
                     
                 </div>
