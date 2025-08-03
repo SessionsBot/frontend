@@ -394,7 +394,7 @@ onMounted(async () => {
                     </div>
 
                     <div class="flex flex-row gap-2 justify-between items-center content-center">
-                        <p class="font-medium text-sm bg-emerald-700/20 p-1 px-1.5 rounded-md"> {{ todaysSessionCount | '%' }} Sessions </p>
+                        <p class="font-medium text-sm bg-sky-700/20 p-1 px-1.5 rounded-md"> {{ todaysSessionCount | '%' }} Sessions </p>
                     </div>
                     
                 </div>
@@ -406,91 +406,65 @@ onMounted(async () => {
                     <table v-if="todaysSessionCount >= 1" class="table border-1 border-ring">
 
                     <!-- Heading Row -->
-                    <tr class="border-1 border-ring bg-white/5">
-                        <th 
-                            v-for="item in ['Session Title', 'Session Time', 'Session Roles', 'Actions']" 
-                            scope="col" 
-                            class="border-2 border-ring p-2 font-medium text-center"
-                        > 
-                            {{ item }} 
-                        </th>
-                    </tr>
+                     <thead>
+                        <tr class="border-1 border-ring bg-white/5">
+                            <th 
+                                v-for="item in ['Session Title', 'Session Time', 'Session Roles']" 
+                                scope="col" 
+                                class="border-2 border-ring p-2 font-medium text-center"
+                            > 
+                                {{ item }} 
+                            </th>
+                        </tr>
+                    </thead>
                     
                     <!-- Session Row: -->
-                    <tr v-for="(value, key) in upcomingSessionsObj" class="text-center">
-                        
-                        <!-- Sch Title -->
-                         <td class="border-2 border-ring p-2.5">
-                            <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
-                                {{ value.title }}
-                            </p>
-                         </td>
-                         
+                    <tbody>
+                        <tr v-for="(value, key) in upcomingSessionsObj" class="text-center text-white font-light">
+                            
+                            <!-- Sch Title -->
+                            <td class="border-2 border-ring p-2.5">
+                                <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
+                                    {{ value.title }}
+                                </p>
+                            </td>
+                            
 
-                        <!-- Sch Roles Available -->
-                         <td class="border-2 border-ring p-2.5">
-                            <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
-                                {{ DateTime.fromSeconds(Number(value.date.discordTimestamp)).toLocaleString(DateTime.TIME_SIMPLE) }}
-                            </p>
-                         </td>
+                            <!-- Sch Time -->
+                            <td class="border-2 border-ring p-2.5">
+                                <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
+                                    {{ DateTime.fromSeconds(Number(value.date.discordTimestamp)).toLocaleString(DateTime.TIME_SIMPLE) }}
+                                </p>
+                            </td>
 
-                        <!-- Sch Roles Assigned -->
-                         <td class="border-2 border-ring p-2.5">
-                            <div class="flex flex-col justify-center items-center content-center gap-1.5">
-                                
-                                <div class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
-                                    
-                                    <p class="flex justify-center flex-nowrap items-center content-center gap-0.75"> 
-                                        <CheckCircle2Icon class="inline" size="16"/>
-                                        Available
-                                    </p>
+                            <!-- Sch Roles -->
+                            <td class="border-2 border-ring p-2.5">
+                                <div class="flex flex-col justify-center items-center content-center gap-1.5">
 
-                                    <p class="flex justify-center items-center gap-1 bg-zinc-800 px-1.25 py-0.5 rounded-md"> 
-                                        ?
-                                    </p>
+                                    <div v-for="role in value.roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
+                                        
+                                        <p class="text-sm flex justify-center flex-nowrap items-center content-center gap-0.75"> 
+                                            <UserCircleIcon class="inline" size="15"/>
+                                            {{ role.roleName }}
+                                        </p>
 
-                                </div>
+                                        <p class="text-sm flex justify-center items-center gap-1 bg-zinc-800 p-1 py-0.25 rounded-md"> 
+                                            {{ role?.users?.length | '0' }}/{{ role?.roleCapacity | '?' }}
+                                        </p>
 
-                                <div class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
-                                    
-                                    <p class="flex justify-center flex-nowrap items-center content-center gap-0.75"> 
-                                        <UserCircleIcon class="inline" size="16"/>
-                                        Assigned
-                                    </p>
-
-                                    <p class="flex justify-center items-center gap-1 bg-zinc-800 p-1 py-0.5 rounded-md"> 
-                                        ?
-                                    </p>
+                                    </div>
 
                                 </div>
+                            </td>
 
-                            </div>
-                         </td>
-
-                        <!-- Sch Actions -->
-                         <td class="border-2 border-ring p-0.5">
-                            <div class="flex flex-wrap flex-col justify-center items-center content-center text-center p-3 gap-3">
-
-                                <Button unstyled class="upcomingSch_actionBtnEdit">
-                                    <PencilIcon size="13" />
-                                    <p> Edit </p>
-                                </Button>
-
-                                <Button unstyled class="upcomingSch_actionBtnDelete">
-                                    <Trash2Icon size="13" />
-                                    <p> Delete </p>
-                                </Button>
-
-                            </div>
-                         </td>
-
-                    </tr>
+                        </tr>
+                    </tbody>
 
                     </table>
 
                     <!-- No Sessions Msg -->
                     <p v-else class="font-light p-2 text-center flex justify-center items-center content-center">
-                        No upcoming sessions  :(
+                        No upcoming sessions ☹
                     </p>
 
                 </div>
