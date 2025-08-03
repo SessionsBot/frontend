@@ -12,7 +12,6 @@
   import { usePopupSystem } from './utils/stores/popup';
 
   // Variables:
-  const siteVersion = ref("0.4.0a")
   const nav = useNavStore()
   const popupSystem = usePopupSystem()
 
@@ -33,7 +32,7 @@
   <alertPopup/>
 
   <Transition name="fade" mode="out-in">
-    <siteFooter :siteVersion="siteVersion"></siteFooter>
+    <siteFooter></siteFooter>
   </Transition>
 
 </template>

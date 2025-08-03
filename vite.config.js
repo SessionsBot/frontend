@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import pkg from './package.json'
 import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
@@ -28,6 +29,9 @@ export default defineConfig({
       dts: './private/auto-imports.d.ts',   // optional, good for TS/IDE help
     }),
   ],
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
