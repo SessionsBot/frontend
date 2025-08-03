@@ -13,7 +13,7 @@ import pricingPlans from '@/pages/info/pricing.vue'
 
 // User Page Imports:
 import signIntoAccount from '../pages/user/signIntoAccount.vue'
-import dashboard from '../pages/user/dashboard.vue'
+import dashboard from '../pages/user/dashboard/dashboard.vue'
 
 // API Page Imports:
 import signInRedirect from '../pages/api/signInRedirect.vue'
