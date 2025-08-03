@@ -219,7 +219,7 @@ onMounted(async () => {
 
                 <template #option="slotProps">
                     <div class="flex gap-2 justify-center items-center ">
-                        <img class="max-w-6"
+                        <img class="max-w-6 rounded-sm"
                             :src="slotProps.option?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
                         <p> {{ slotProps.option?.guildName }}</p>
                     </div>
@@ -227,7 +227,7 @@ onMounted(async () => {
 
                 <template #value="slotProps">
                     <div class="flex gap-2 justify-center items-center ">
-                        <img class="max-w-6"
+                        <img class="max-w-6 rounded-sm"
                             :src="manageableGuildsData[slotProps.value]?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
                         <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Loading' }} </p>
                     </div>
@@ -259,7 +259,7 @@ onMounted(async () => {
 
 
         <!-- Dashboard View -->
-        <section v-else-if="pageReady" class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-center">
+        <section v-else-if="pageReady" class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">
         
             
             <!-- Todays Outlook: -->
@@ -299,8 +299,8 @@ onMounted(async () => {
             </div>
 
 
-            <!-- Member Outlook: -->
-            <div class="flex relative flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <!-- Member Outlook: HIDDEN -->
+            <div hidden class="flex relative flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Coming Soon Banner -->
                  <div class="absolute w-[200%] h-10 bg-red-900/50 ring-2 ring-white/70 flex top-[48%] rotate-13 gap-2 p-2 justify-center items-center content-center text-center">
@@ -384,7 +384,7 @@ onMounted(async () => {
 
 
             <!-- Upcoming Sessions - TABLE VIEW -->
-            <div class="flex flex-col overflow-clip justify-between min-w-125 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex overflow-clip flex-col justify-between min-w-125 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-between items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -403,7 +403,7 @@ onMounted(async () => {
                 <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
                     
                     <!-- Sessions Tables -->
-                    <table v-if="todaysSessionCount >= 1" class="table border-1 border-ring">
+                    <table v-if="todaysSessionCount >= 1" class="inline-table border-1 border-ring ">
 
                     <!-- Heading Row -->
                      <thead>
@@ -420,6 +420,7 @@ onMounted(async () => {
                     
                     <!-- Session Row: -->
                     <tbody>
+                      
                         <tr v-for="(value, key) in upcomingSessionsObj" class="text-center text-white font-light">
                             
                             <!-- Sch Title -->
@@ -458,13 +459,14 @@ onMounted(async () => {
                             </td>
 
                         </tr>
+
                     </tbody>
 
                     </table>
 
                     <!-- No Sessions Msg -->
                     <p v-else class="font-light p-2 text-center flex justify-center items-center content-center">
-                        No upcoming sessions ☹
+                        No upcoming sessions...
                     </p>
 
                 </div>

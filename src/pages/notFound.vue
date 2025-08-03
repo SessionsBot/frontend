@@ -61,7 +61,7 @@
             </div>
 
             <div class="gap-1.75 mt-2 flex flex-wrap flex-col justify-center items-center content-center">
-                    <p class="text-[12px] px-5 font-normal"> You will be automatically redirected to the Hompage in {{timeLeft}} seconds... </p>
+                    <p class="text-[12px] px-5 font-normal"> You will be automatically redirected to the Homepage in {{timeLeft}} seconds... </p>
                     <p class="text-[11px] px-5 font-light"> If you're not automatically redirected you can <a @click="redirectHome" title="Go Home" class="cursor-pointer text-blue-400/70 hover:underline">click here</a>.</p>
             </div>
 
