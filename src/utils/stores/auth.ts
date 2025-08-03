@@ -1,4 +1,3 @@
-// @ts-check
 // Imports:
 import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
@@ -12,10 +11,12 @@ export const useAuthStore = defineStore('auth', {
    
     // States:
     state: () => ({
-        // Is Authenticated - Boolean:
-        isAuthenticated: !!localStorage.getItem('authToken'),
-        // Auth Token - String or Null:
+        /**  Is Authenticated - `Boolean` */
+        isAuthenticated: false,
+        /** Current user's authToken - `String` or `null` */
         authToken: localStorage.getItem('authToken') || null,
+        /** User Data - Static - Update by fn: */
+        userData: null,
     }),
 
     // Getters:
@@ -25,7 +26,12 @@ export const useAuthStore = defineStore('auth', {
 
     // Actions:
     actions: {
-        // Check/Initialize Auth on Page Load:
+        
+        /** Check/Initialize Auth on Page Load
+         * - This function should be called on each app mount from `main.js`
+         * - Should also finish execution before app mounts!
+         *     - This ensures all user data is fetched before app is visible.
+         */
         async initializeAuth() {
             if(debugAuth) console.group('Authentication Initialization')
 
@@ -40,10 +46,10 @@ export const useAuthStore = defineStore('auth', {
                         return;
                     }
                     // Confirm Login:
-                    if(debugAuth) console.log('Token VALID! - Signed In')
-                    this.isAuthenticated = true;
+                    if(debugAuth) console.log('Token VALID!')
                     
-                } catch {
+                } catch(e) {
+                    console.warn('Failed to initialize authentication', e)
                     this.signOut();
                     return;
                 }
@@ -52,19 +58,22 @@ export const useAuthStore = defineStore('auth', {
                 return;
             }
 
-            // Validate Firebase Auth
+            // Firebase Auth State Changes:
             onAuthStateChanged(firebaseAuth, async (user) => {
                 
                 if(debugAuth) console.group(`--- FIREBASE AUTH CHANGE ---`)
-                if(debugAuth) console.log('Logged In:', !!user)
+                
                 if(!user){
                     // No firebase user - signed out:
                     console.warn('Firebase - Logged out user from auth state change...');
                     this.signOut()
+                    if(debugAuth) console.log('Logged out!')
                 }else {
-                    // Firebase user - signed in:
-                    // Log User Data:
-                    if(debugAuth) console.log(await this.getUserData())
+                    // Firebase user - previously signed in:
+                    // Update Data:
+                    this.updateUserData()
+                    this.isAuthenticated = true;
+                    if(debugAuth) console.log('Logged in!')
                 }
                 console.groupEnd()
             });
@@ -72,8 +81,7 @@ export const useAuthStore = defineStore('auth', {
             console.groupEnd()
         },
 
-        /**
-         * Sign in/authenticate a user through Discord OAuth, accepts an optional `stickyRoute` to redirect back to a specified path after sign in.
+        /** Sign in/authenticate a user through Discord OAuth, accepts an optional `stickyRoute` to redirect back to a specified path after sign in.
          * 
          * @param { String } stickyRoute Router path to redirect to after a successful sign in *(optional)*
          */
@@ -82,7 +90,11 @@ export const useAuthStore = defineStore('auth', {
             location.href = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fapi%2Flogin%2Fdiscord-redirect&scope=identify+guilds'
         },
 
-        // Login to Account using Token:
+        /** Sign in to account using `authToken`
+         *  - (manual sign ins only - not previous/saved sessions): 
+         * 
+         * @param { string } authToken JSON Web Token used for authentication
+         */ 
         async signInWithToken(authToken) { try {
             // Get JSON Data from Token:
             const base64Payload = authToken.split('.')[1];
@@ -92,10 +104,6 @@ export const useAuthStore = defineStore('auth', {
 
             // debugAuth:
             if(debugAuth) console.log(`[Auth]: User Signing In...`);
-
-            // Signin/Update - Pina:
-            this.authToken = authToken;
-            this.isAuthenticated = true;
 
             // Set Local Browser Data:
             localStorage.setItem('authToken', authToken);
@@ -107,19 +115,27 @@ export const useAuthStore = defineStore('auth', {
                 console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
             })
 
+            // Signin/Update - Pinia:
+            this.authToken = authToken;
+            this.isAuthenticated = true;
+            this.updateUserData()
+
+            // Debug:
             if(debugAuth) console.log(`[Auth]: User Signed In!`);
         } catch (e) {
+            // Error - Sign In Failed:
             this.signOut()
             console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
         }},
 
-        // Logut of Account:
+        /** Logout of Account: */
         async signOut() { try {
             // debugAuth:
             if(debugAuth) console.log(`[Auth]: User Signing Out...`);
 
-            // Signout/Reset - Pina:
+            // Signout/Reset - Pinia:
             this.authToken = null;
+            this.userData = null;
             this.isAuthenticated = false;
 
             // Reset Local Browser Data:
@@ -133,12 +149,12 @@ export const useAuthStore = defineStore('auth', {
             // debugAuth:
             if(debugAuth) console.log(`[Auth]: User Signed Out!`);
         } catch(e) {
-            // Error Occured:
+            // Error Occurred:
             console.warn(`'[Firebase]: Failed to sign out of account! \n Error:  ${e}`)
         }},
 
-        // User Data - Returns Object:
-        async getUserData() { try {
+        /** Update User Data - Updates State: */
+        async updateUserData() { try {
             if (!this.authToken) throw 'Missing authentication token!';
 
             // JSON Web Token:
@@ -147,18 +163,21 @@ export const useAuthStore = defineStore('auth', {
 
             // Firebase User Token:
             const user = firebaseAuth.currentUser
-            if(!user) throw 'No firebase user!'
+            if(!user) throw 'No firebase user for data update!'
             const tokenResult = await user.getIdTokenResult()
             const firebaseAuthData = user ? {uid: user?.uid, ...tokenResult} : null;
 
             
             // Return Result:
             const userData = {Pinia: piniaAuthData, Firebase: firebaseAuthData}
-            return userData
+            this.userData = userData
+            if(debugAuth) console.log('User data updated:', this.userData)
 
         } catch(e) {
-            console.warn('Failed to fetch user data!', e)
+            console.info('Failed to update user data!', e)
             return null;
         }},
+
     }
+
 });

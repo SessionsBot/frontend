@@ -204,7 +204,7 @@
         })
         .then(data => {
             if(data.success){
-                // Update varaibles & page:
+                // Update variables & page:
                 guildData.value = data.data
                 guildId.value = data.data?.guildGeneral?.id
                 deferSetupContent.value = false
@@ -222,7 +222,7 @@
         // Data error takes priority - ABORT
         if(currentCard.value === 'dataError') return 
 
-        // Check authetication:
+        // Check authentication:
         if(!auth.isAuthenticated){
             // Force sign in:
             return currentCard.value = 'signIn';
@@ -431,7 +431,7 @@
 
                     <!-- Information Text -->
                     <p class=" text-md font-light w-full text-left p-0 m-0"> 
-                        It appears this Discord Server has <b> been previously configured</b>! <br> <br> You can visit your dashboard to futher modify settings for this server and Sessions Bot if you have the necessary permissions.
+                        It appears this Discord Server has <b> been previously configured</b>! <br> <br> You can visit your dashboard to further modify settings for this server and Sessions Bot if you have the necessary permissions.
                     </p> 
 
                     <Button @click=" router.push('/dashboard')" class="mt-10 !bg-yellow-600 hover:!bg-yellow-700 !text-white !border-0 font-semibold">
@@ -571,7 +571,7 @@
             <StepItem value="2">
 
                 <Step class="!ring-2 !ring-offset ring-zinc-700"> 
-                    Configure Singup Panels
+                    Configure Signup Panels
                 </Step>
 
                 <StepPanel v-slot="{ activateCallback }">
@@ -805,9 +805,6 @@
         left: -28px;
         transition: background .3s;
     }
-
-
-    /* How can i tell in this css if a .step-hadding also has the class : required-step? */
     :deep(.step-heading.required-step)::before{
         background: rgb(254, 114, 114);
         content: '★';

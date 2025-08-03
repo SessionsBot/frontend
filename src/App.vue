@@ -11,7 +11,7 @@
   import { useNavStore } from './utils/stores/nav';
   import { usePopupSystem } from './utils/stores/popup';
 
-  // Vairables:
+  // Variables:
   const siteVersion = ref("0.4.0a")
   const nav = useNavStore()
   const popupSystem = usePopupSystem()
