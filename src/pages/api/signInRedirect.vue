@@ -14,8 +14,10 @@ const statusMessage = ref('{ ! }')
 const titleSubHeading = ref('Loading')
 
 /* NOTES:
-   (-) Add/update logic to correctly parsee and use new auth tokens from V2 API
-   (-) Replace any previous broken logic in relation to changed (decoded) userData?
+    (-) Revisit/revise logic that handles redirecting another sign-in/fresh sign-ins
+        (-) Seems like there are multiple components/pages that direct a sign in... (combine these)
+    (-) Add/update logic to correctly parsee and use new auth tokens from V2 API
+    (-) Replace any previous broken logic in relation to changed (decoded) userData?
 */
 
 // On Page Load Event:
