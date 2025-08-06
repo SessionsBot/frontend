@@ -13,6 +13,11 @@ const redirect = true; // <-- DEVELOPMENT ENVIRONMENTS
 const statusMessage = ref('{ ! }')
 const titleSubHeading = ref('Loading')
 
+/* NOTES:
+   (-) Add/update logic to correctly parsee and use new auth tokens from V2 API
+   (-) Replace any previous broken logic in relation to changed (decoded) userData?
+*/
+
 // On Page Load Event:
 onMounted(() => {
     // JSON WEB TOKEN -- AUTH ATTEMPTS:
@@ -62,7 +67,7 @@ const homepage = () => router.push('/')
 <template> 
 <div class="text-white flex flex-col w-full h-full flex-1 items-center justify-center mb-10">
 
-    <!-- Graidient Wrap -->
+    <!-- Gradient Wrap -->
     <div class="w-[85%] sm:w-[75%] md:w-150 h-auto relative rounded-md p-[2px] bg-gradient-to-r from-black to-orange-600/70 animate-gradient-x">
         
         <!-- Content -->
