@@ -19,11 +19,6 @@ export const useAuthStore = defineStore('auth', {
         userData: null,
     }),
 
-    // Getters:
-    getters: {
-       // ...
-    },
-
     // Actions:
     actions: {
         
@@ -41,7 +36,8 @@ export const useAuthStore = defineStore('auth', {
                     // Check Token Expiration:
                     const payload = JSON.parse(atob(this.authToken.split('.')[1]));
                     if (!payload.exp || DateTime.fromSeconds(payload.exp).diffNow().valueOf() <= 0) {
-                        if(debugAuth) console.log('Token EXPIRED! - Signed Out!')
+                        // If token expired:
+                        console.log('Authorization Token EXPIRED! - Signed Out!')
                         this.signOut();
                         return;
                     }
@@ -54,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
                     return;
                 }
             } else {
-                if(debugAuth) console.log('Token NOT FOUND?! - Signed Out!')
+                if(debugAuth) console.log('No auth token found - Signed Out!')
                 return;
             }
 
@@ -87,19 +83,19 @@ export const useAuthStore = defineStore('auth', {
          */
         async authWithDiscord(stickyRoute){
             if(stickyRoute){ localStorage.setItem('stickySignIn', stickyRoute) }
-            location.href = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fapi%2Flogin%2Fdiscord-redirect&scope=identify+guilds'
+            location.href = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fbrilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app%2Fapi%2Fv2%2Fusers%2Fauth%2Fdiscord&scope=identify+guilds';
         },
 
         /** Sign in to account using `authToken`
          *  - (manual sign ins only - not previous/saved sessions): 
          * 
-         * @param { string } authToken JSON Web Token used for authentication
+         * @param {string} authToken JSON Web Token used for authentication
+         * @param {string} firebaseToken Custom firebase token for signing into Firebase
          */ 
-        async signInWithToken(authToken) { try {
+        async signInWithToken(authToken, firebaseToken) { try {
             // Get JSON Data from Token:
             const base64Payload = authToken.split('.')[1];
             const userData = JSON.parse(atob(base64Payload));
-            const firebaseToken = userData?.firebaseToken
             if(!base64Payload || !userData || !firebaseToken) return console.log(`{!} Cannot Sign In! - Missing Firebase Token`)
 
             // debugAuth:
@@ -125,7 +121,7 @@ export const useAuthStore = defineStore('auth', {
         } catch (e) {
             // Error - Sign In Failed:
             this.signOut()
-            console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`)
+            console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`);
         }},
 
         /** Logout of Account: */
@@ -155,7 +151,7 @@ export const useAuthStore = defineStore('auth', {
 
         /** Update User Data - Updates State: */
         async updateUserData() { try {
-            if (!this.authToken) throw 'Missing authentication token!';
+            if (!this.authToken) throw new Error('Missing authentication token! - Cannot fetch user data...');
 
             // JSON Web Token:
             const base64Payload = this.authToken.split('.')[1];
@@ -163,15 +159,15 @@ export const useAuthStore = defineStore('auth', {
 
             // Firebase User Token:
             const user = firebaseAuth.currentUser
-            if(!user) throw 'No firebase user for data update!'
+            if(!user) throw new Error('No firebase user for data update!');
             const tokenResult = await user.getIdTokenResult()
             const firebaseAuthData = user ? {uid: user?.uid, ...tokenResult} : null;
 
             
             // Return Result:
-            const userData = {Pinia: piniaAuthData, Firebase: firebaseAuthData}
-            this.userData = userData
-            if(debugAuth) console.log('User data updated:', this.userData)
+            const result = {Pinia: piniaAuthData, Firebase: firebaseAuthData};
+            this.userData = result;
+            if(debugAuth) console.log('User data updated:', this.userData);
 
         } catch(e) {
             console.info('Failed to update user data!', e)

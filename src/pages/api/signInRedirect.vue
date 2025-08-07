@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 // App Imports:
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -21,19 +21,24 @@ const titleSubHeading = ref('Loading')
 */
 
 // On Page Load Event:
-onMounted(() => {
+onMounted(async () => {
     // JSON WEB TOKEN -- AUTH ATTEMPTS:
-    const userAuthToken = route.query?.token;
+    const userAuthToken = route.query?.authToken;
+    const firebaseToken = route.query?.firebaseToken;
     const signInFailed = route.query?.failed;
     const statusFooterText = document.getElementById('statusFooterText')
 
+    if (signInFailed) {
+        // Sign in attempt failed:
+        return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})
+    }
     
 
     if (userAuthToken) {
         // Token provided:
         statusMessage.value = 'Validating Token'
         // Login user:
-        auth.signInWithToken(userAuthToken);
+        auth.signInWithToken(userAuthToken, firebaseToken);
         // Redirect:
         const stickyReRoute = localStorage.getItem('stickySignIn')
         if(redirect) {
