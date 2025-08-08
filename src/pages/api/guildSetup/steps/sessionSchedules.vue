@@ -226,10 +226,14 @@
 
             // Confirm Inputs:
             if(f?.valid){
-                // Valid Input - Prepare Schedule Time:
+                // Valid Input
+                // Prepare Schedule Time:
                 const hours = f?.values?.sessionTime.getHours()
                 const minutes = f?.values?.sessionTime.getMinutes()
                 const scheduleTimeObj = {hours, minutes}
+
+                // Generate Session Id:
+                const scheduleId = 'shd_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 
                 // Add new schedule to list
                 currentSchedules.value.push(
@@ -238,6 +242,7 @@
                         sessionDateDaily: scheduleTimeObj,
                         sessionUrl: f?.values?.sessionUrl,
                         roles: f?.sessionRoles,
+                        scheduleId
                     }
                 )
 
