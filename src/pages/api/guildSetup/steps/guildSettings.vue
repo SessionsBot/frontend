@@ -55,8 +55,8 @@
         const errors = {};
 
         // Confirm timezone:
-        if (!values.timezone || String(values.timezone).trim().length <= 0) {
-            errors.timezone = [{ message: 'Timezone is required!' }];
+        if (!values.timeZone || String(values.timeZone).trim().length <= 0) {
+            errors.timeZone = [{ message: 'Timezone is required!' }];
         }
 
         // Confirm accent color:

@@ -5,12 +5,13 @@
 
     import { zodResolver } from '@primevue/forms/resolvers/zod';
     import { z } from 'zod'
+    import { DateTime } from 'luxon';
 
     // Default Session Date:
     let defaultSessionDate = new Date()
     defaultSessionDate.setHours(12,0,0,0)
 
-    // Incomming Props:
+    // Incoming Props:
     const props = defineProps({
         changeStep: Function,
         guildData: Object
@@ -21,12 +22,19 @@
         ['updateDraft']
     )
 
-
     // Schedules:
     const currentSchedules = ref([]) // holds existing shd's for list/page view
     const creatingNewSchedule = ref(false) // controls new shd form visibility
     const moreSchedulesAllowed = computed(() => currentSchedules.value?.length <= 14)
     const showAddScheduleMessage = ref(false)
+
+    // Get Schedule Display Time Helper:
+    function getScheduleDisplayTime(sessionDate){
+        const date = new Date()
+        date.setHours(sessionDate?.hours);
+        date.setMinutes(sessionDate?.minutes);
+        return date.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'})
+    }
 
     // New Role for Schedule Form:
     const newRoleForm = {
@@ -197,8 +205,6 @@
 
                 return isTooCloseToAnotherSession
             })
-
-
             // If Overlapping Session:
             if(overlappingSession){
                 // Un-allowed Session Time:
@@ -219,11 +225,16 @@
 
             // Confirm Inputs:
             if(f?.valid){
-                // Valid Input - Add new schedule to list:
+                // Valid Input - Prepare Schedule Time:
+                const hours = f?.values?.sessionTime.getHours()
+                const minutes = f?.values?.sessionTime.getMinutes()
+                const scheduleTimeObj = {hours, minutes}
+
+                // Add new schedule to list
                 currentSchedules.value.push(
                     {
                         sessionTitle: f?.values?.sessionTitle,
-                        sessionDateDaily: f?.values?.sessionTime,
+                        sessionDateDaily: scheduleTimeObj,
                         sessionUrl: f?.values?.sessionUrl,
                         roles: f?.sessionRoles,
                     }
@@ -687,7 +698,7 @@
                             </p>
 
                             <p title="Session Time" class="text-lg font-medium text-white/50">
-                                {{ item.sessionDateDaily.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'})  }}
+                                {{ getScheduleDisplayTime(item.sessionDateDaily) }}
                             </p>    
                         </div>
 
