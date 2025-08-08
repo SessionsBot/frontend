@@ -18,7 +18,7 @@
     }
 
 
-    // Incomming Props:
+    // Incoming Props:
     const props = defineProps({
         guildData: Object,
         changeStep: Function
@@ -98,7 +98,7 @@
                 // Set viewable status:
                 channelCreationStatus.value = 400
                 // Debug:
-                console.warn('Responsed - Error!', 'Secure Action', body)
+                console.warn('Responded - Error!', 'Secure Action', body)
             } else{
                 // Success from Backend:
                 const creationData = body?.data?.creationResult?.data
@@ -216,16 +216,16 @@
         
         if(f?.valid){ // Valid Submission:
             // Save Values:
-            emits('updateDraft', f?.values)
-            // Procced:
+            emits('updateDraft', {sessionSignup: f?.values})
+            // Proceed:
             props.changeStep('3')
 
         }else { // Invalid Submission:
-            // Open Channel Select if Invald Channel Selected:
+            // Open Channel Select if Invalid Channel Selected:
             if(f?.errors?.panelChannel){
                 channelSelectType.value = 'select';
             }
-            // Dont Procced:
+            // Don't Proceed:
             props.changeStep('2')
         }
     }

@@ -243,12 +243,12 @@
 
 
     // Submit ALL Schedules to Draft:
-    const submiteScheduleStep = () => {
+    const submitScheduleStep = () => {
         if(currentSchedules.value?.length <= 0){
             // No schedules:
             return showAddScheduleMessage.value = true
         }else{
-            // Send schedules & procced:
+            // Send schedules & proceed:
             emits('updateDraft', {sessionSchedules: currentSchedules.value} );
             props.changeStep('4')
         }
@@ -795,7 +795,7 @@
     <!-- Last/Next Step Buttons -->
     <div class="flex flex-row gap-3 flex-wrap pb-6 pt-3">
         <Button class="w-fit" label="Back" severity="secondary" @click="changeStep('2')" />
-        <Button class="w-fit" label="Submit" severity="success" type="submit" @click="submiteScheduleStep" />
+        <Button class="w-fit" label="Submit" severity="success" type="submit" @click="submitScheduleStep" />
     </div>
     
 </template>
