@@ -30,7 +30,6 @@
     const router = useRouter()
     const route = useRoute()
     const auth = useAuthStore()
-    const newAuth = useAuthStore()
     const nav = useNavStore()
     const userLoggedIn = computed(() => auth.isAuthenticated)
     const userWebToken = computed(() => auth.authToken)
@@ -223,19 +222,13 @@
         if(currentCard.value === 'dataError') return 
 
         // Check authentication:
-        if(!auth.isAuthenticated){
-            // Force sign in:
-            return currentCard.value = 'signIn';
-        }
+        if(!auth.isAuthenticated) return currentCard.value = 'signIn';
 
-        // Check if guild in database / already setup:
-        if(guildData.value?.guildDatabaseData){
-            // Check if guild has already been set up:
-            if(guildData.value?.guildDatabaseData?.setupCompleted){
-                console.info('This guild is already setup!');
-                return currentCard.value = 'alreadySetup'
-            } 
-        }
+        // Check if guild already setup:
+        if(guildData.value?.guildDatabaseData?.setupCompleted) return currentCard.value = 'alreadySetup';
+     
+        // Show setup if no issue:
+        currentCard.value = 'startSetup'
 
     })
 
