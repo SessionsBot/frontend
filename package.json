@@ -16,8 +16,8 @@
     "@vueuse/core": "^13.6.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "firebase": "^12.0.0",
-    "lucide-vue-next": "^0.536.0",
+    "firebase": "^12.1.0",
+    "lucide-vue-next": "^0.539.0",
     "luxon": "^3.7.1",
     "motion-v": "^1.7.0",
     "pinia": "^3.0.3",
@@ -41,8 +41,8 @@
     "shadcn-vue": "^2.2.0",
     "tailwindcss": "^4.1.7",
     "unplugin-auto-import": "^20.0.0",
-    "unplugin-vue-components": "^28.8.0",
-    "vite": "^7.0.6",
+    "unplugin-vue-components": "^29.0.0",
+    "vite": "^7.1.1",
     "vite-plugin-html": "^3.2.2"
   }
 }
