@@ -129,6 +129,7 @@
                         roleDescription: newRoleForm.newRoleValues.description.value,
                         roleEmoji: newRoleForm.newRoleValues.emoji.value,
                         roleCapacity: newRoleForm.newRoleValues.capacity.value,
+                        users: []
                     }
                 )
                 // Reset inputs:
