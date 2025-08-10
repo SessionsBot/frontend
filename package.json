@@ -14,6 +14,7 @@
     "@primevue/forms": "^4.3.7",
     "@tailwindcss/vite": "^4.1.11",
     "@vueuse/core": "^13.6.0",
+    "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "firebase": "^12.0.0",

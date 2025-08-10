@@ -1,6 +1,7 @@
 // Imported TypeScript:
 // import { GuildDataResponse, SecureActionResponse, SecureActionNames } 
 import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "@sessionsbot/api-types";
+import axios from "axios";
 
 
 /** Fetches guild data from backend API.
@@ -17,22 +18,22 @@ export async function getGuildData(guildId) : Promise <GuildDataResponse> {
     let responseData : GuildDataResponse;
 
     try {
-        const response = await fetch(requestUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        responseData = await response.json();
-        return responseData;
+        const guildFetchAttempt = await axios.get(requestUrl)
 
+        if(!guildFetchAttempt?.data?.data) throw 'Could not fetch/find guild data, please try again!';
+        else responseData = guildFetchAttempt?.data
+        
+        return responseData;
+        
     } catch (error) {
+        
         console.warn('API ERROR', 'Fetch Guild Data', error);
-        responseData = {
-            success: false,
-            data: null,
-            error
-        };
+        if(error?.response?.data) return error?.response?.data // Return response error data if possible
+        else responseData = {
+                success: false,
+                data: null,
+                error
+            };
         return responseData;
     }
 }
