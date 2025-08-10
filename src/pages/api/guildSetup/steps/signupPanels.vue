@@ -53,25 +53,18 @@
         channelCreationStatus.value = 100
 
         // Attempt request:
-        const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/secure-action`;
-       
         try {
             // 1. Attempt fetch:
             const guildId = props.guildData?.guildGeneral?.id
+            if(!guildId) throw 'No guild id provided!';
+            const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/channels/auto-signup`;
             const adminId = await userId();
             const response = await fetch(requestUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${userWebToken.value}`
-                },
-                body: JSON.stringify({
-                    actionType: 'CREATE_AUTO-SIGNUP-CHANNEL',
-                    guildId,
-                    data: {
-                        adminId
-                    }
-                })
+                }
             })
 
             // 2. Get response:

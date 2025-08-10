@@ -98,7 +98,7 @@ router.beforeEach((to, from, next) => {
     next({ path: '/user/sign-in', query: { message: `Please sign in to access ${to.name}` } })
 
   } else if(to.path === '/user/sign-in' && auth.isAuthenticated){
-    // Already Signed In, redirect to User Dashbaord
+    // Already Signed In, redirect to User Dashboard
     next({path: '/user/dashboard'})
 
   } else {

@@ -24,6 +24,7 @@
     import TimezoneSetup from './steps/guildSettings.vue'
     import DailySignupSetup from './steps/signupPanels.vue'
     import SessionSchedules from './steps/sessionSchedules.vue'
+import { getGuildData } from '@/utils/modules/backendApi';
 
 
     // ------------------------- [ Variables ] ------------------------- \\
@@ -98,19 +99,15 @@
 
 
             // 1. Attempt request/save:
-            const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/secure-action`;
+            const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId.value}/configuration`;
             const response = await fetch(requestUrl, {
-                method: 'POST',
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${userWebToken.value}`
                 },
                 body: JSON.stringify({
-                    actionType: 'SETUP-GUILD',
-                    guildId: guildId.value,
-                    data: {
-                        configuration: setupSubmissionData
-                    }
+                    configuration: setupSubmissionData
                 })
             })
 
@@ -186,37 +183,14 @@
         const G_ID = query.guildId
 
         // Fetch Guild Data:
-        const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/discord/guild?guildId=' + G_ID;
-        await fetch(requestUrl, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(async response => {
-            // Get response:
-            const responseData = await response.json()
-                .then((d) => {return d})
-                .catch((e) => {return 'Failed to get guild data response body!'})
-
-            return responseData;
-        })
-        .then(data => {
-            if(data.success){
-                // Update variables & page:
-                guildData.value = data.data
-                guildId.value = data.data?.guildGeneral?.id
-                deferSetupContent.value = false
-                currentCard.value = 'wait'
-            } else {
-                // Error:
-                currentCard.value = 'dataError'
-                throw new Error("Response did not return success!" + JSON.stringify(data, '', 2));
-            }
-        })
-        .catch(error => {
-            console.error('FAILED TO FETCH GUILD DATA: ', error);
-        });
+        const getGuildAttempt = await getGuildData(guildId);
+        if(!getGuildAttempt.success) return currentCard.value = 'dataError';
+        else { // Data Found:
+            guildData.value = getGuildAttempt.data
+            guildId.value = getGuildAttempt.data.guildGeneral.id
+            deferSetupContent.value = false
+            currentCard.value = 'wait'
+        }
 
         // Data error takes priority - ABORT
         if(currentCard.value === 'dataError') return 
