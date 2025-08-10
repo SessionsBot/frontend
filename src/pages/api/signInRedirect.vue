@@ -23,6 +23,7 @@ onMounted(async () => {
 
     if (failed) {
         // Sign in attempt failed:
+        console.warn(`{!} Sign in attempt failed! - from: 'Backend'`)
         statusMessage.value = 'Sign In - Failed';
         auth.signOut()
         return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})
@@ -40,6 +41,7 @@ onMounted(async () => {
         const signInResults = await auth.signInWithToken(jwt, firebase);
         if(!signInResults.success) {
             // Sign in attempt failed:
+            console.warn('{!} Sign in attempt failed! - Invalid Token?')
             statusMessage.value = 'Sign In - Failed';
             auth.signOut()
             return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})

@@ -12,7 +12,7 @@ import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "@ses
  * @param guildId Discord Guild ID to fetch data for
  */
 export async function getGuildData(guildId) : Promise <GuildDataResponse> {
-    const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/api/v2/guilds/' + guildId;
+    const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/' + guildId;
 
     let responseData : GuildDataResponse;
 
