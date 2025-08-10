@@ -2,6 +2,7 @@
     import { ref, computed, onMounted } from 'vue';
     import { useAuthStore } from '../../utils/stores/auth';
     import { useRoute } from 'vue-router'
+import router from '@/utils/router';
     
     const route = useRoute()
     
@@ -9,6 +10,7 @@
     const customDetailsString = ref('In order to access this page you must be signed in to an account! To proceed, sign in using your Discord account by clicking on the button below.')
 
     const auth = useAuthStore()
+    const isAuthenticated = computed(() => auth.isAuthenticated)
     const authWithDiscord = () => auth.authWithDiscord()
     const discordIntegrationInfoRedirect = () => window.open('https://discord.com/developers/docs/topics/oauth2', '_blank')
 
@@ -18,6 +20,10 @@
         // Discord Auth Error:
         if(q?.discordAuthError){
             customDetailsString.value = 'An error occurred when attempting to authenticate with your Discord Account! Please start over and try again, if this issue persists please contact our support team.'
+        }
+        // Check if already signed in:
+        if(isAuthenticated){
+            return router.push('/dashboard');
         }
     })
 

@@ -3,6 +3,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../utils/stores/auth'
+import LzString from 'lz-string'
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -13,45 +14,53 @@ const redirect = true; // <-- DEVELOPMENT ENVIRONMENTS
 const statusMessage = ref('{ ! }')
 const titleSubHeading = ref('Loading')
 
-/* NOTES:
-    (-) Revisit/revise logic that handles redirecting another sign-in/fresh sign-ins
-        (-) Seems like there are multiple components/pages that direct a sign in... (combine these)
-    (-) Add/update logic to correctly parsee and use new auth tokens from V2 API
-    (-) Replace any previous broken logic in relation to changed (decoded) userData?
-*/
 
 // On Page Load Event:
 onMounted(async () => {
     // JSON WEB TOKEN -- AUTH ATTEMPTS:
-    const userAuthToken = route.query?.authToken;
-    const firebaseToken = route.query?.firebaseToken;
-    const signInFailed = route.query?.failed;
+    const {token, failed} = route?.query
     const statusFooterText = document.getElementById('statusFooterText')
 
-    if (signInFailed) {
+    if (failed) {
         // Sign in attempt failed:
+        statusMessage.value = 'Sign In - Failed';
+        auth.signOut()
         return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})
     }
     
 
-    if (userAuthToken) {
+    if (token) {
         // Token provided:
-        statusMessage.value = 'Validating Token'
+        statusMessage.value = 'Validating Token';
+        // Decode Token:
+        // @ts-expect-error
+        const decodedTokenString = LzString.decompressFromEncodedURIComponent(token);
+        const {jwt, firebase} = JSON.parse(decodedTokenString);
         // Login user:
-        auth.signInWithToken(userAuthToken, firebaseToken);
-        // Redirect:
-        const stickyReRoute = localStorage.getItem('stickySignIn')
-        if(redirect) {
-            if (stickyReRoute) {
-                router.push(stickyReRoute)
-                localStorage.removeItem('stickySignIn')
+        const signInResults = await auth.signInWithToken(jwt, firebase);
+        if(!signInResults.success) {
+            // Sign in attempt failed:
+            statusMessage.value = 'Sign In - Failed';
+            auth.signOut()
+            return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})
+        }else{
+            // Sign in attempt succeeded:
+            statusMessage.value = 'Sign In - Success';
+             // Redirect:
+            const stickyReRoute = localStorage.getItem('stickySignIn')
+            if(redirect) {
+                if (stickyReRoute) {
+                    router.push(stickyReRoute)
+                    localStorage.removeItem('stickySignIn')
+                }
+                else {router.push('/user/dashboard')}
             }
-            else {router.push('/user/dashboard')}
         }
+       
 
     } else {
         // Token NOT provided:
-        console.warn('{!} Missing required auth token for login redirect!')
+        console.warn('{!} Missing auth token for sign in!')
         statusMessage.value = `Login Failed!`
         statusFooterText.classList.add('text-rose-500', 'font-black')
         // SignOut any user:

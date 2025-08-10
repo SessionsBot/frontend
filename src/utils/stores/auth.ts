@@ -96,7 +96,8 @@ export const useAuthStore = defineStore('auth', {
             // Get JSON Data from Token:
             const base64Payload = authToken.split('.')[1];
             const userData = JSON.parse(atob(base64Payload));
-            if(!base64Payload || !userData || !firebaseToken) return console.log(`{!} Cannot Sign In! - Missing Firebase Token`)
+            if(!base64Payload || !userData) throw {message: `{!} Cannot Sign In! - Missing Auth Token/Data`};
+            if(!firebaseToken) throw {message: `{!} Cannot Sign In! - Missing Firebase Token`};
 
             // debugAuth:
             if(debugAuth) console.log(`[Auth]: User Signing In...`);
@@ -118,10 +119,12 @@ export const useAuthStore = defineStore('auth', {
 
             // Debug:
             if(debugAuth) console.log(`[Auth]: User Signed In!`);
+            return {success: true}
         } catch (e) {
             // Error - Sign In Failed:
             this.signOut()
             console.log(`'[Firebase]: Failed to sign in using custom token! \n Error:  ${e}`);
+            return {success: false}
         }},
 
         /** Logout of Account: */
