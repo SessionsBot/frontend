@@ -180,7 +180,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div id="userDashboardPage" class="flex flex-1 flex-col justify-start items-center gap-3">
+    <div id="userDashboardPage" class="flex flex-1 max-w-full flex-col justify-start items-center gap-3">
 
         <!-- Sub-Header - Breadcrumb / Guild Select -->
         <section

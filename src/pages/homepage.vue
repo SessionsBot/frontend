@@ -16,27 +16,27 @@
             <div class="bg-modern-purple-discord/40 gap-2 p-3 w-screen lg:w-[65%] lg:max-w-180 lg:rounded-md h-fit flex justify-center items-center flex-wrap ring-2 ring-white/10">
                 <!-- Section 1 - Heading -->
                 <h1 class="font-bold text-3xl p-1 pb-0"> 
-                    Roblox Group Sessions managment has never been easier!
+                    Roblox Group Sessions management has never been easier!
                 </h1>
                 <!-- Section 1 - Details -->
                 <p class="text-left p-3 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify exisiting event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 1 - Action Buttons -->
                 <div class="gap-5 flex flex-wrap flex-row  justify-center items-center w-full">
 
-                    <button class="default_button">
+                    <Button severity="info">
                         Invite Bot to Your Server
                     </button>
-                    <button class="default_button">
+                    <Button severity="contrast">
                         Join Community Server
                     </button>
                     
                 </div>
                 <!-- Section 1 - Caption -->
                 <p class="pt-1 italic opacity-50 text-xs before:content-['*'] beforeAstricMark"> 
-                    Certain features are currently only availble via slash commands 
+                    Certain features are currently only available via slash commands 
                 </p>
                 
             </div>
@@ -55,16 +55,16 @@
             <div class="bg-modern-green-default/40 gap-2 p-3 w-screen h-fit flex justify-center items-center flex-wrap flex-col ring-2 ring-white/10">
                 <!-- Section 2 - Heading -->
                 <h1 class="font-bold text-3xl p-1"> 
-                    Roblox Group Sessions managment has never been easier!
+                    Roblox Group Sessions management has never been easier!
                 </h1>
                 <!-- Section 2 - Details -->
                 <p class="text-left p-3 pt-1 xl:w-[55%]"> 
-                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify exisiting event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 2 - Caption -->
                 <p class="italic opacity-50 pb-1 text-xs before:content-['*'] beforeAstricMark"> 
-                    Certain features are currently only availble via slash commands 
+                    Certain features are currently only available via slash commands 
                 </p>
                 
             </div>
@@ -79,16 +79,16 @@
             <div class="bg-modern-red-default/40 gap-2 p-3 w-screen lg:w-[65%] lg:max-w-130 lg:rounded-md h-fit flex justify-center items-center flex-wrap ring-2 ring-white/10">
                 <!-- Section 3 - Heading -->
                 <h1 class="font-bold text-3xl p-1 pb-0"> 
-                    Roblox Group Sessions managment has never been easier!
+                    Roblox Group Sessions management has never been easier!
                 </h1>
                 <!-- Section 3 - Details -->
                 <p class="text-left pb-0 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify exisiting event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 3 - Caption -->
                 <p class="italic opacity-50 text-xs before:content-['*'] beforeAstricMark"> 
-                    Certain features are currently only availble via slash commands 
+                    Certain features are currently only available via slash commands 
                 </p>
                 
             </div>
