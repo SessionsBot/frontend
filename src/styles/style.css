@@ -139,10 +139,18 @@ body{
     /* Mobile Tap/Mouse - Fixes: */
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+    /* @apply min-h-full w-full max-w-full flex flex-col flex-wrap flex-1 absolute; */
+    flex: 1; /* Fills remaining space between header/footer */
+    display: flex;
+    flex-direction: column;
 }
 
 #app {
-    @apply min-h-full w-full flex flex-col flex-wrap flex-1 absolute;
+    @apply min-h-full w-full max-w-full flex flex-col flex-wrap flex-1 relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    min-height: 100vh; /* Full screen height */
 }
 
 .p-button {
