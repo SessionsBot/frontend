@@ -40,7 +40,7 @@
                         <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Manage your sessions from the web dashboard </span>
                     </li>
                 </ul>
-                <Button label="Get Started" rounded class="w-full" />
+                <Button @click="defaultWindow.open('https://invite.sessionsbot.fyi', '_blank')" label="Get Started" rounded class="w-full" />
             </div>
 
             <!-- Premium Plan -->
@@ -89,8 +89,7 @@
             <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-900 shadow-sm gap-6">
                 <div class="flex flex-col gap-2">
                     <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">🏢 Enterprise</h4>
-                    <p class="text-zinc-500 dark:text-zinc-400 leading-normal">Lorem ipsum dolor sit, amet
-                        consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                    <p class="text-zinc-500 dark:text-zinc-400 leading-normal"> Designed for larger Discord Servers.</p>
                 </div>
 
                 <div class="w-full h-px bg-zinc-200 dark:bg-zinc-700" />
@@ -129,5 +128,6 @@
 </template>
 
 <script setup>
+import { defaultWindow } from '@vueuse/core';
 import Button from 'primevue/button';
 </script>

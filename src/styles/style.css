@@ -1,5 +1,6 @@
 /* ---------------- Imports: ---------------- */
 @import url(./animations.css);
+@import url(./fonts.css);
 
 @import "tailwindcss";
 @import "tw-animate-css";

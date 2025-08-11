@@ -1,0 +1,17 @@
+@font-face {
+  font-family: 'Playwrite AUSA';
+  src: url('../assets/fonts/Playwrite_AU_SA/PlaywriteAUSA-VariableFont_wght.woff2') format('woff2'),
+       url('../assets/fonts/Playwrite_AU_SA/PlaywriteAUSA-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900; /* full supported range */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DynaPuff';
+  src: url('../assets/fonts/DynaPuff/DynaPuff-VariableFont_wdth,wght.woff2') format('woff2'),
+       url('../assets/fonts/DynaPuff/DynaPuff-VariableFont_wdth,wght.ttf') format('truetype');
+  font-weight: 100 900; /* full supported range */
+  font-style: normal;
+  font-display: swap;
+}

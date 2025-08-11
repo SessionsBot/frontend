@@ -183,7 +183,7 @@ import { getGuildData } from '@/utils/modules/backendApi';
         const G_ID = query.guildId
 
         // Fetch Guild Data:
-        const getGuildAttempt = await getGuildData(guildId);
+        const getGuildAttempt = await getGuildData(G_ID);
         if(!getGuildAttempt.success) return currentCard.value = 'dataError';
         else { // Data Found:
             guildData.value = getGuildAttempt.data
