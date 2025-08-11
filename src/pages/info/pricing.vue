@@ -1,19 +1,19 @@
 <template>
-    <div class="px-6 py-20 md:px-12 lg:px-20 flex justify-center items-center flex-col">
+    <div class="px-6 pt-0 pb-20 md:px-12 lg:px-20 flex justify-center items-center flex-col">
         
         <div class="flex flex-col gap-4 items-center justify-center my-12">
             <div class="text-primary dark:text-zinc-0 font-bold text-4xl lg:text-5xl text-center leading-tight">
                 Pricing Plans</div>
-            <div class="text-zinc-500 dark:text-zinc-400 text-lg text-center leading-normal">Lorem ipsum dolor
-                sit, amet consectetur adipisicing elit. Velit numquam eligendi quos.</div>
+            <div class="text-zinc-500 dark:text-zinc-400 text-lg text-center leading-normal">  Find the solution that best suits your needs! </div>
         </div>
 
         <div class="flex lg:flex-row flex-col gap-8 max-w-7xl mx-auto">
-            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-400 dark:bg-zinc-800 shadow-sm gap-6">
+            
+            <!-- Free Plan -->
+            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-400 dark:bg-zinc-900 shadow-sm gap-6">
                 <div class="flex flex-col gap-2">
-                    <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">Basic</h4>
-                    <p class="text-zinc-500 dark:text-zinc-400 leading-normal">Lorem ipsum dolor sit, amet
-                        consectetur adipisicing elit. Velit numquam eligendi quos.</p>
+                    <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">🪙 Basic</h4>
+                    <p class="text-zinc-500 dark:text-zinc-400 leading-normal"> Works best for smaller Discord Servers.</p>
                 </div>
 
                 <div class="w-full h-px bg-zinc-200 dark:bg-zinc-700" />
@@ -25,24 +25,70 @@
                 <ul class="list-none flex flex-col gap-4 flex-1">
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Arcu vitae elementum </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Schedule up to 7 daily sessions </span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Dui faucibus in ornare
-                        </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create up to 3 custom roles per session <br> <p class="ml-6 text-sm"> - max: 5 assigned users per role</p> </span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Morbi tincidunt augue
-                        </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Daily guild `Signup Panels` for upcoming sessions </span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="pi pi-check-circle !text-lg text-green-500" />
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Manage your sessions from the web dashboard </span>
                     </li>
                 </ul>
                 <Button label="Get Started" rounded class="w-full" />
             </div>
-            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-800 shadow-sm gap-6">
+
+            <!-- Premium Plan -->
+            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-900 shadow-sm gap-6">
                 <div class="flex flex-col gap-2">
-                    <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">Premium</h4>
+                    <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">💎 Premium</h4>
+                    <p class="text-zinc-500 dark:text-zinc-400 leading-normal"> Works great for medium sized Discord Servers.</p>
+                </div>
+
+                <div class="w-full h-px bg-zinc-200 dark:bg-zinc-700" />
+                <div class="flex items-center gap-2">
+                    <span class="font-bold text-3xl text-primary dark:text-zinc-0 leading-tight">$7</span>
+                    <span class="font-medium text-zinc-500 dark:text-zinc-400 leading-tight">per month</span>
+                </div>
+                <div class="w-full h-px bg-zinc-200 dark:bg-zinc-600" />
+                <ul class="list-none flex flex-col gap-4 flex-1">
+                    <li class="flex items-center gap-2">
+                        <i class="pi pi-check-circle !text-lg text-green-500" />
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Schedule up to 15 daily sessions </span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="pi pi-check-circle !text-lg text-green-500" />
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create up to 5 custom roles per session <br> <p class="ml-6 text-sm"> - max: 10 assigned users per role</p> </span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="pi pi-check-circle !text-lg text-green-500" />
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight flex gap-2"> - Session Insights / Activity Analytics <p class="bg-sky-700/50 font-semibold scale-75 right-2 bottom-0.5 relative rounded-lg ring-1 ring-ring m-auto italic px-2 py-0.5"> BETA </p> </span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="pi pi-check-circle !text-lg text-green-500" />
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight flex gap-2"> - Priority Support Assistance </span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <i class="pi pi-check-circle !text-lg text-green-500" />
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - All features from :  </span>
+                        <span class="bg-zinc-800 py-1 px-1.5 rounded-md">🪙  BASIC </span>
+                    </li>
+                </ul>
+                <Button severity="secondary" disabled rounded class="w-full !cursor-not-allowed">
+                    <i class="font-bold"> Coming Soon </i>
+                </Button>
+            </div>
+
+
+            <!-- Enterprise Plan -->
+            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-900 shadow-sm gap-6">
+                <div class="flex flex-col gap-2">
+                    <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">🏢 Enterprise</h4>
                     <p class="text-zinc-500 dark:text-zinc-400 leading-normal">Lorem ipsum dolor sit, amet
                         consectetur adipisicing elit. Velit numquam eligendi quos.</p>
                 </div>
@@ -56,69 +102,27 @@
                 <ul class="list-none flex flex-col gap-4 flex-1">
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Arcu vitae elementum </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Schedule UNLIMITED daily sessions </span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Dui faucibus in ornare
-                        </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create UNLIMITED roles per session <br> <p class="ml-6 text-sm"> - max: 50 assigned users per role</p> </span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Morbi tincidunt augue
-                        </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight flex gap-2"> - Personalized Session Reminders <p class="bg-sky-700/50 font-semibold scale-75 right-2 bottom-0.5 relative rounded-lg ring-1 ring-ring m-auto italic px-2 py-0.5"> BETA </p> </span>
                     </li>
                     <li class="flex items-center gap-2">
-                        <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Duis ultricies lacus sed
-                        </span>
+
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - All features from :  </span>
+                        <span class="bg-zinc-800 py-1 px-1.5 rounded-md">💎 Premium </span>
                     </li>
                 </ul>
-                <Button label="Buy Now" rounded class="w-full" />
-            </div>
-
-            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col dark:bg-zinc-800 shadow-sm gap-6">
-                <div class="flex flex-col gap-2">
-                    <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">Enterprise</h4>
-                    <p class="text-zinc-500 dark:text-zinc-400 leading-normal">Lorem ipsum dolor sit, amet
-                        consectetur adipisicing elit. Velit numquam eligendi quos.</p>
-                </div>
-
-                <div class="w-full h-px bg-zinc-200 dark:bg-zinc-700" />
-                <div class="flex items-center gap-2">
-                    <span class="font-bold text-3xl text-primary dark:text-zinc-0 leading-tight">$49</span>
-                    <span class="font-medium text-zinc-500 dark:text-zinc-400 leading-tight">per month</span>
-                </div>
-                <div class="w-full h-px bg-zinc-200 dark:bg-zinc-600" />
-                <ul class="list-none flex flex-col gap-4 flex-1">
-                    <li class="flex items-center gap-2">
-                        <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Arcu vitae elementum </span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Dui faucibus in ornare
-                        </span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Morbi tincidunt augue
-                        </span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Duis ultricies lacus sed
-                        </span>
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> Imperdiet proin </span>
-                    </li>
-                </ul>
-                <Button disabled rounded class="w-full !cursor-not-allowed">
+                <Button severity="secondary" disabled rounded class="w-full !cursor-not-allowed">
                     <i class="font-bold"> Coming Soon </i>
                 </Button>
             </div>
+            
 
         </div>
     </div>
