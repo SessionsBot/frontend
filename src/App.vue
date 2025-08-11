@@ -20,9 +20,10 @@
 
 
 <template>
-  <siteHeader />
+  
+    <siteHeader />
 
-  <router-view v-slot="{ Component }" :class="nav.headerVisible ? 'mt-14 sm:mt-16': ''" class="max-w-screen">
+  <router-view v-slot="{ Component }" :class="nav.headerVisible ? 'mt-14 sm:mt-16': ''">
     <transition name="fade" mode="out-in">
       <component :is="Component" :key="$route.fullPath" />
     </transition>
