@@ -22,6 +22,9 @@
 
     // On page load Fn:
     onMounted(() => {
+        // Reset on new page load:
+        timeLeft.value = redirectTime;
+        // Countdown to redirect:
         const countdown = setInterval(() => {
             // Remove 1s from Countdown:
             timeLeft.value -= 1;

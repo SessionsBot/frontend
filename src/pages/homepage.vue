@@ -1,4 +1,6 @@
 <script setup>
+import { defaultWindow } from '@vueuse/core';
+
 
 
 </script>
@@ -26,10 +28,10 @@
                 <!-- Section 1 - Action Buttons -->
                 <div class="gap-5 flex flex-wrap flex-row  justify-center items-center w-full">
 
-                    <Button severity="info">
+                    <Button @click="defaultWindow.open('https://invite.sessionsbot.fyi', '_blank')" severity="secondary">
                         Invite Bot to Your Server
                     </button>
-                    <Button severity="contrast">
+                    <Button hidden severity="secondary">
                         Join Community Server
                     </button>
                     

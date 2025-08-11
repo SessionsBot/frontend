@@ -24,7 +24,7 @@
     const pricingPlans = () => router.push('/info/pricing-plans');
     const myAccount = () => router.push('/user/account');
 
-    // Router Path Checks - Hides Elments if Requested:
+    // Router Path Checks - Hides Elements if Requested:
     const route = useRoute()
     const q = route.query
     const titleOnlyHeader = computed(() => q?.titleOnlyHeader ? true : false);  
@@ -33,13 +33,13 @@
 
 
 <template>
-
-    <header v-if="nav.headerVisible" class="bg-modern-yellow-default z-10 fixed top-0 text-white w-full gap-3 p-2 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
+    <transition name="fade" mode="out-in">
+    <header v-if="nav.headerVisible" class="bg-zinc-900 z-10 fixed top-0 right-0 left-0 text-white min-w-full gap-3 p-2.5 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
 
         <!-- Site Icon & Title: -->
         <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
-            <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../assets/sessionsBot.png">
-            <h1 class="text-2xl sm:text-3xl text-nowrap font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
+            <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-modern-purple-discord/80 ring-1 ring-white/15" draggable="false" src="../assets/sessionsBot.png">
+            <h1 class="text-white/90 text-2xl sm:text-3xl text-nowrap font-stretch-70% font-black text-shadow-md text-shadow-modern-purple-discord/70"> Sessions Bot </h1>
         </div>
 
         <!-- Side Buttons: -->
@@ -91,30 +91,31 @@
 
         </div>
 
-        
-
     </header>
-    
+    </transition>
     
     <!-- Nav Menu Screen: -->
-    <Transition name="navMenu">
-     <nav v-if="navMenuVisible" class="text-white flex fixed z-20 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
+    <Transition name="fade">
+     <nav v-show="navMenuVisible" class="text-white flex fixed z-20 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
         
         
         <!-- Dismiss Area: -->
-        <span @click="closeNav" class="relative bg-black/50 flex flex-1 h-full w-full items-center overflow-visible"> </span>
+        <Transition name="fade">
+        <span @click="closeNav" v-show="navMenuVisible" class="relative bg-black/50 flex flex-1 h-full w-full items-center overflow-visible"> </span>
+        </Transition>
 
-        <!-- Navigaion Menu: -->
-        <div class="relative flex justify-start flex-col right-0 h-full w-65 max-w-[90%] bg-modern-dark-blue-default transition-all overflow-scroll">
+        <!-- Navigation Menu: -->
+        <Transition name="navMenu">
+        <div v-show="navMenuVisible" class="relative flex justify-start flex-col right-0 h-full w-65 max-w-[90%] bg-modern-dark-blue-default transition-all overflow-scroll">
             
             <!-- Nav Header: -->
-            <header class="bg-modern-yellow-default h-14 flex justify-center items-center text-center flex-nowrap">
+            <header class="bg-zinc-900 h-14 sm:h-17 flex justify-center items-center text-center flex-nowrap">
                 <!-- Close Button: -->
-                <div class=" pl-2.5 flex flex-1 gap-1.5 justify-start items-center content-center flex-row">
-                    <img class="w-9 h-9 rounded-2xl shadow-md shadow-black/50" draggable="false" src="../assets/sessionsBot.png">
-                    <h1 class="text-xl font-stretch-70% font-black text-shadow-md text-shadow-black/40"> Sessions Bot </h1>
+                <div class=" pl-2.75 flex flex-1 gap-1.5 justify-start items-center content-center flex-row">
+                    <img class="w-9 h-9 rounded-xl shadow-md shadow-modern-purple-discord/60 ring-1 ring-white/15" draggable="false" src="../assets/sessionsBot.png">
+                    <h1 class="text-xl text-nowrap font-stretch-70% font-black text-shadow-md text-shadow-modern-purple-discord/70"> Sessions Bot </h1>
                 </div>
-                <button @click="closeNav" class="hover:bg-modern-red-default/50 w-12.5 h-14 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">
+                <button @click="closeNav" class="hover:bg-modern-red-default/50 w-12.5 h-14 sm:h-17 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">
                     <svg class="m-2 p-0.5" xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 0 24 24" width="30px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </button>
                 
@@ -233,6 +234,7 @@
             </main>
             
         </div>
+        </Transition>
 
      </nav>
     </Transition>

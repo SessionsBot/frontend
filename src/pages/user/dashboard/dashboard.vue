@@ -180,7 +180,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div id="userDashboardPage" class="flex flex-1 max-w-full flex-col justify-start items-center gap-3">
+    <div id="userDashboardPage" class=" flex flex-1 max-w-full w-full flex-col justify-start items-center gap-3 p-3 flex-wrap">
 
         <!-- Sub-Header - Breadcrumb / Guild Select -->
         <section
@@ -263,7 +263,7 @@ onMounted(async () => {
         
             
             <!-- Todays Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -300,7 +300,7 @@ onMounted(async () => {
 
 
             <!-- Member Outlook: HIDDEN -->
-            <div hidden class="flex relative flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div hidden class="flex relative flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Coming Soon Banner -->
                  <div class="absolute w-[200%] h-10 bg-red-900/50 ring-2 ring-white/70 flex top-[48%] rotate-13 gap-2 p-2 justify-center items-center content-center text-center">
@@ -345,7 +345,7 @@ onMounted(async () => {
 
 
             <!-- Guild Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between min-w-75 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -384,7 +384,7 @@ onMounted(async () => {
 
 
             <!-- Upcoming Sessions - TABLE VIEW -->
-            <div class="flex overflow-clip flex-col justify-between min-w-125 max-w-[80%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-wrap overflow-clip flex-col justify-between w-125 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-between items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -400,7 +400,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- Results -->
-                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1">
+                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1 overflow-x-scroll">
                     
                     <!-- Sessions Tables -->
                     <table v-if="todaysSessionCount >= 1" class="inline-table border-1 border-ring ">
