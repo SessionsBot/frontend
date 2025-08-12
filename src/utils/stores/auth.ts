@@ -3,19 +3,32 @@ import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth as firebaseAuth } from "../firebase";
 import { DateTime } from "luxon";
+import { DecodedUserData } from "@sessionsbot/api-types";
 
+// Types:
+interface AuthStates {
+    /**  Is Authenticated - `Boolean` */
+    isAuthenticated: boolean;
+    /** Current user's authToken - `String` or `null` */
+    authToken: string | null;
+    /** Authenticated User Data - Static - Update by fn `updateUserData()`*/
+    userData: DecodedUserData | null
+}
+
+// Debugging:
 const debugAuth = false;
+
 
 // Exports:
 export const useAuthStore = defineStore('auth', {
    
     // States:
-    state: () => ({
-        /**  Is Authenticated - `Boolean` */
+    state: (): AuthStates => ({
+        // Is Authenticated - Boolean
         isAuthenticated: false,
-        /** Current user's authToken - `String` or `null` */
+        // User Auth Token - JWT String
         authToken: localStorage.getItem('authToken') || null,
-        /** User Data - Static - Update by fn: */
+        // Authed User's Data - Decoded Data Object
         userData: null,
     }),
 

@@ -1,13 +1,13 @@
 <script setup>
     import { ref, computed, onMounted } from 'vue';
-    import { useAuthStore } from '../../utils/stores/auth';
+    import { useAuthStore } from '@/utils/stores/auth';
     import { useRoute } from 'vue-router'
-import router from '@/utils/router';
+    import router from '@/utils/router';
     
     const route = useRoute()
     
     const customSubHeading = computed(() => route.query.message || 'Sign In using Discord to continue...')
-    const customDetailsString = ref('In order to access this page you must be signed in to an account! To proceed, sign in using your Discord account by clicking on the button below.')
+    const customDetailsString = ref('In order to access most pages within our web app, you must be signed in to an account! To proceed, sign in using your Discord account by clicking on the button below.')
 
     const auth = useAuthStore()
     const isAuthenticated = computed(() => auth.isAuthenticated)
@@ -22,8 +22,9 @@ import router from '@/utils/router';
             customDetailsString.value = 'An error occurred when attempting to authenticate with your Discord Account! Please start over and try again, if this issue persists please contact our support team.'
         }
         // Check if already signed in:
-        if(isAuthenticated){
-            return router.push('/dashboard');
+        if(auth.isAuthenticated){
+            console.info('SIGN IN: Already signed in... redirecting to account page')
+            return router.push('/user/account');
         }
     })
 

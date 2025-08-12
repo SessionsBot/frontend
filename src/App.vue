@@ -21,7 +21,7 @@
 
 <template>
   
-    <siteHeader />
+  <siteHeader />
 
   <router-view v-slot="{ Component }" :class="nav.headerVisible ? 'mt-14 sm:mt-16': ''" class="flex flex-1 max-w-full flex-wrap">
     <transition name="fade" mode="out-in">

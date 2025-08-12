@@ -37,7 +37,7 @@ import { defaultWindow } from '@vueuse/core';
                     
                 </div>
                 <!-- Section 1 - Caption -->
-                <p class="pt-1 italic opacity-50 text-xs before:content-['*'] beforeAstricMark"> 
+                <p class="pt-1 italic opacity-50 text-xs before:content-['*'] beforeAstrictMark"> 
                     Certain features are currently only available via slash commands 
                 </p>
                 
@@ -65,7 +65,7 @@ import { defaultWindow } from '@vueuse/core';
                 </p>
                 
                 <!-- Section 2 - Caption -->
-                <p class="italic opacity-50 pb-1 text-xs before:content-['*'] beforeAstricMark"> 
+                <p class="italic opacity-50 pb-1 text-xs before:content-['*'] beforeAstrictMark"> 
                     Certain features are currently only available via slash commands 
                 </p>
                 
@@ -89,7 +89,7 @@ import { defaultWindow } from '@vueuse/core';
                 </p>
                 
                 <!-- Section 3 - Caption -->
-                <p class="italic opacity-50 text-xs before:content-['*'] beforeAstricMark"> 
+                <p class="italic opacity-50 text-xs before:content-['*'] beforeAstrictMark"> 
                     Certain features are currently only available via slash commands 
                 </p>
                 
@@ -114,13 +114,8 @@ import { defaultWindow } from '@vueuse/core';
 
 <style lang="css" scoped>
 
-.divider-graident-white{
-    width: 95%;
-    height: 1.5px;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.01), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.01));
-}
 
-.beforeAstricMark::before {
+.beforeAstrictMark::before {
     font-size: 9px;
     position: relative;
     bottom: 2px;

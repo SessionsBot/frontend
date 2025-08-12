@@ -6,28 +6,27 @@ import { useNavStore } from './stores/nav'
 
 // Top Page Imports:
 import homepage from '../pages/homepage.vue'
-import notFound from '../pages/notFound.vue'
+import notFound from '@/pages/notFound.vue'
 
 // Info Page Imports:
 import pricingPlans from '@/pages/info/pricing.vue'
+import support from '@/pages/info/support.vue'
 
 // User Page Imports:
-import signIntoAccount from '../pages/user/signIntoAccount.vue'
-import dashboard from '../pages/user/dashboard/dashboard.vue'
+import signIntoAccount from '@/pages/user/account/signIn.vue'
+import myAccount from '@/pages/user/account/myAccount.vue'
+import dashboard from '@/pages/user/dashboard/dashboard.vue'
 
 // API Page Imports:
-import signInRedirect from '../pages/api/signInRedirect.vue'
-import guildSetup from '../pages/api/guildSetup/guildSetup.vue'
-
-
-
+import signInRedirect from '@/pages/api/signInRedirect.vue'
+import guildSetup from '@/pages/api/guildSetup/guildSetup.vue'
 
 
 
 
 const routes = [
 
-  // Page Routes:
+  // Main Routes:
   {
     path: '/',
     name: 'homepage',
@@ -46,7 +45,13 @@ const routes = [
     name: 'pricing-plans',
     component: pricingPlans
   },
-  
+  {
+    path: '/support',
+    name: 'support',
+    component: support,
+    alias: ['/help', '/faq']
+  },
+
 
   // User Routes
   {
@@ -62,11 +67,12 @@ const routes = [
     alias: '/dashboard'
 
   },
-  // {
-  //   path: '/user/account',
-  //   name: 'user-account',
-  //   component: MyAccount
-  // },
+  {
+    path: '/user/account',
+    name: 'user-account',
+    component: myAccount,
+    meta: {requiresAuth: true},
+  },
 
 
   // API Routes:
@@ -93,8 +99,9 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
   // Account Restricted Pages:
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+  if (to.meta?.requiresAuth && !auth.isAuthenticated) {
     // Not authenticated, redirect to Sign-In
+    console.info('[Router-Guard] Not authed, redirecting to sign in...')
     next({ path: '/user/sign-in', query: { message: `Please sign in to access ${to.name}` } })
 
   } else if(to.path === '/user/sign-in' && auth.isAuthenticated){
