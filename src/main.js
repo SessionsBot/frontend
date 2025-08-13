@@ -94,7 +94,7 @@ app.use(PrimeVue, {
 app.use(Toast, {
   position: POSITION.BOTTOM_RIGHT,
   transition: "Vue-Toastification__slideBlurred",
-  maxToasts: 10,
+  maxToasts: 4,
   closeOnClick: false
 })
 
