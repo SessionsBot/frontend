@@ -10,7 +10,7 @@ import notFound from '@/pages/notFound.vue'
 
 // Info Page Imports:
 import pricingPlans from '@/pages/info/pricing.vue'
-import support from '@/pages/info/support.vue'
+import support from '@/pages/info/support/support.vue'
 
 // User Page Imports:
 import signIntoAccount from '@/pages/user/account/signIn.vue'

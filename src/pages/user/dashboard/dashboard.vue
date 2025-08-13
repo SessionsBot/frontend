@@ -184,17 +184,17 @@ onMounted(async () => {
 
         <!-- Sub-Header - Breadcrumb / Guild Select -->
         <section
-            class="flex flex-wrap flex-row justify-between items-start content-start gap-3 px-2 py-3 w-full">
+            class="flex flex-wrap flex-row justify-between items-start content-start gap-3 pt-1 w-full">
 
             <!-- Page Breadcrumb: -->
             <Transition name="scale-fade" mode="out-in">
-            <Breadcrumb  class="self-start rounded-md !px-4 !py-3" :model="[
+            <Breadcrumb  class="self-start min-w-fit rounded-md !px-2.75 !py-2.25" :model="[
                     { label: 'Home', href: '/', icon: HomeIcon },
                     { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
                 ]">
                 <template #item="{ item }">
 
-                    <div class="cursor-pointer flex justify-center hover:underline"
+                    <div class="cursor-pointer flex justify-center flex-row items-center content-center hover:underline"
                         @click="(e) => router.push(String(item.href))" :class="String(item.href) === String(route.path) ? '!text-blue-400' : ''">
                         <!-- Icon -->
                         <component class="!inline mx-1" v-if="item?.icon" :is="item?.icon" :size="17" />
