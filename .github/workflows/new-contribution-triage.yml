@@ -1,0 +1,15 @@
+name: "New PR/Issue - Auto Triage"
+run-name: Contribution by ${{ github.actor }} - Auto Triage
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  Triage:
+    uses: SessionsBot/.github/.github/workflows/start-auto-triage.yml@main
+    permissions:
+      pull-requests: write
+      issues: write

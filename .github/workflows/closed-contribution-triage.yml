@@ -1,0 +1,16 @@
+name: "Closed PR/Issue - Auto Triage"
+run-name: Contribution by ${{ github.actor }} - Auto Triage
+description:
+
+on:
+  pull_request:
+    types: [closed, converted_to_draft]
+  issues:
+    types: [closed]
+
+jobs:
+  Triage:
+    uses: SessionsBot/.github/.github/workflows/closed-auto-triage.yml@main
+    permissions:
+      pull-requests: write
+      issues: write

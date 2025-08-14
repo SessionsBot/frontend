@@ -1,0 +1,32 @@
+/* Default Fade Transition */
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
+    .fade-enter-to,
+    .fade-leave-from {
+        opacity: 1;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: all 0.35s ease;
+    }
+
+/* Default Scale Fade Transition */
+    .scale-fade-enter-from,
+    .scale-fade-leave-to {
+    opacity: 0;
+    transform: scale(0.95);
+    }
+    .scale-fade-enter-to,
+    .scale-fade-leave-from {
+    opacity: 1;
+    transform: scale(1);
+    }
+    .scale-fade-enter-active,
+    .scale-fade-leave-active {
+    transition: all 0.35s cubic-bezier(.4,2,.6,1);
+    }
+
