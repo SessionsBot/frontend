@@ -1,7 +1,7 @@
 {
   "name": "sessions-bot-web-app",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -34,11 +34,13 @@
   },
   "devDependencies": {
     "@primevue/auto-import-resolver": "^4.3.7",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@sessionsbot/api-types": "^2.1.2",
     "@tailwindcss/postcss": "^4.1.11",
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
+    "release-it": "^19.0.4",
     "serve": "^14.2.4",
     "shadcn-vue": "^2.2.0",
     "tailwindcss": "^4.1.7",
