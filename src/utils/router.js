@@ -43,7 +43,7 @@ const routes = [
     path: '/info/pricing',
     name: 'pricing-plans',
     component: pricingPlans,
-    alias: ['/pricing-plans', '/solutions']
+    alias: ['/pricing-plans', '/solutions', '/pricing']
   },
   {
     path: '/support',

@@ -2,7 +2,7 @@
     // Imports:
     import { BadgeHelpIcon, FileTextIcon, HomeIcon, LayoutDashboard, MailIcon } from 'lucide-vue-next';
     import supportActionCard from './supportActionCard.vue'
-    import { defaultLocation, defaultWindow } from '@vueuse/core';
+    import { defaultDocument, defaultLocation, defaultWindow } from '@vueuse/core';
     import { useToast } from 'vue-toastification';
 import { useNavStore } from '@/utils/stores/nav';
     
@@ -68,10 +68,10 @@ import { useNavStore } from '@/utils/stores/nav';
     <section class="flex flex-wrap justify-center px-15 items-center gap-3 p-3.5 h-fit w-full">
 
         <supportActionCard :title="'View Documentation'" :emoji="'📙'" :action="(e) => { toaster.warning('Sorry our documentation is still under development! \nPlease check back another time...', {toastClassName: 'font-black !bg-amber-600'}) }" />
-        <supportActionCard :title="'FAQs'" :emoji="'❓'" :action="(e) => {defaultLocation.href = '#faqs'}"/>
+        <supportActionCard :title="'FAQs'" :emoji="'❓'" :action="(e) => { defaultDocument.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) }"/>
         <supportActionCard :title="'Feature Requests'" :emoji="'🙏'" :action="(e) => {defaultWindow.open('https://github.com/orgs/SessionsBot/discussions/categories/ideas', '_blank')}"/>
         <supportActionCard :title="'Report a Bug'" :emoji="'🐛'" :action="(e) => {defaultWindow.open('https://github.com/SessionsBot/backend/issues', '_blank')}"/>
-        <supportActionCard :title="'Contact Support'" :emoji="'📧'" :action="(e) => {defaultLocation.href = '#contact'}"/>
+        <supportActionCard :title="'Contact Support'" :emoji="'📧'" :action="(e) => {defaultLocation.href = 'mailto:support@sessionsbot.fyi'}"/>
         <supportActionCard :title="'Status Page'" :emoji="'📡'" :action="(e) => {defaultWindow.open('https://status.sessionsbot.fyi', '_blank')}"/>
 
     </section>
@@ -113,9 +113,10 @@ import { useNavStore } from '@/utils/stores/nav';
 
     </section>
 
+
     <!-- Contact Support -->
     <h1 id="contact" class="p-3.5 py-4 pb-0 font-stretch-95% font-bold text-start text-shadow-md text-shadow-black/40 text-xl w-full"> Still need help? </h1>
-    <section class=" mb-7 flex flex-wrap flex-col justify-start items-start  gap-3 p-3.5 pt-1.5 w-full">
+    <section class=" mb-7 flex flex-wrap flex-col justify-start md:items-center items-start  gap-3 p-3.5 pt-1.5 w-full">
 
         <p> Feel free to email our Support Team anytime! Please allow up to 48 hours for a response. </p>
 
