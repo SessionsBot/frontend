@@ -23,7 +23,6 @@ import guildSetup from '@/pages/api/guildSetup/guildSetup.vue'
 
 
 
-
 const routes = [
 
   // Main Routes:
@@ -41,9 +40,10 @@ const routes = [
 
   // Info Routes:
   {
-    path: '/info/pricing-plans',
+    path: '/info/pricing',
     name: 'pricing-plans',
-    component: pricingPlans
+    component: pricingPlans,
+    alias: ['/pricing-plans', '/solutions']
   },
   {
     path: '/support',
@@ -57,6 +57,7 @@ const routes = [
   {
     path: '/user/sign-in',
     name: 'sign-in',
+    alias: ['/login', '/log-in', '/signin'],
     component: signIntoAccount
   },
   {
@@ -72,6 +73,7 @@ const routes = [
     name: 'user-account',
     component: myAccount,
     meta: {requiresAuth: true},
+    alias: ['/account'],
   },
 
 
@@ -86,6 +88,14 @@ const routes = [
     name: 'guild-setup',
     component: guildSetup
   },
+  {
+    path: '/invite',
+    name: 'invite',
+    beforeEnter() {
+      useNavStore().externalPaths().inviteBotUsingDiscord()
+    },
+    component: homepage
+  }
   
 ]
 
