@@ -84,7 +84,7 @@
         <!-- Session Row: -->
         <tbody>
             
-            <tr v-for="(value, key) in upcomingSessionsObj" class="text-center text-white font-light" :key="key" @click="(e)=>{console.log('Editing Session:', key)}">
+            <tr v-for="(value, key) in upcomingSessionsObj" class="text-center text-white font-light" :key="key">
                 
                 <!-- Sch Title -->
                 <td class="border-2 border-ring p-2.5">
@@ -150,7 +150,7 @@
 </div>
 
 <!-- View Session - Dialog Frame: -->
-<Dialog v-model:visible="sessionDetailsVisible" class="w-[80%] sm:w-125">
+<Dialog v-model:visible="sessionDetailsVisible" class="w-[80%] sm:w-125" :modal="true">
     <!-- Header -->
     <template #header >
         <div class="flex flex-col gap-1">

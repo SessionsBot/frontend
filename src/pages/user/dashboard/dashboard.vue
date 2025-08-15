@@ -3,13 +3,16 @@
     import { ref, computed, onMounted, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
     import { useAuthStore } from '../../../utils/stores/auth.ts'
-    import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, SettingsIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
+    import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, PlusCircleIcon, PlusSquareIcon, SettingsIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
     import { getGuildData } from '@/utils/modules/backendApi.ts';
     import { useToast } from 'vue-toastification';
     import { objectEntries } from '@vueuse/core';
     import { DateTime } from 'luxon';
     import upcomingSessionsTable from './upcomingSessionsTable.vue'
+    import guildConfigPanel from './guildConfigPanel.vue'
 
+    // Guild Config Panel:
+    const viewGuildConfigurationPanel = ref(true)
 
     // Auth:
     const auth = useAuthStore()
@@ -210,12 +213,12 @@
             </Breadcrumb>
             </Transition>
 
-            <!-- Select Guild Dropdown: -->
+            <!-- Guild Select/Config Buttons: -->
             <Transition name="scale-fade" mode="out-in" duration="1">
             <div class="flex flex-row flex-wrap gap-2 justify-center items-center content-center">
 
-                <!-- Edit Guild Config Button: -->
-                <Button hidden unstyled class="bg-zinc-900 h-9.5 w-9.5 ring-1 ring-ring hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center">
+                <!-- View/Edit Guild Config Button: -->
+                <Button @click="()=>{viewGuildConfigurationPanel = true}" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-black/50 text-xs', root: '!border-black' }}" unstyled class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-ring hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center">
                     <SettingsIcon class="m-auto"/>
                 </Button>
 
@@ -241,6 +244,16 @@
                             <img class="max-w-6 rounded-sm"
                                 :src="manageableGuildsData[slotProps.value]?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
                             <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Loading' }} </p>
+                        </div>
+                    </template>
+
+                    <template #footer>
+                        <div hidden class="mb-1 px-1 !w-full h-fit gap-1 flex flex-wrap flex-col justify-center items-center content-center">
+                            <div class="w-[90%] h-px bg-zinc-700" />
+                            <Button unstyled class="hover:bg-white/5 p-1.75 pl-2.75  rounded-md w-full flex flex-row gap-1.5 justify-start items-center content-center">
+                                <PlusSquareIcon :stroke-width="1.25" class="text-zinc-400/90" />
+                                <p class="text-zinc-400/90 font-stretch-80% italic"> Invite to another server </p>
+                            </Button> 
                         </div>
                     </template>
                 </Select>
@@ -401,9 +414,10 @@
 
         </section>
 
-
         </Transition>
         
+        <!-- GUILD CONFIG DIALOG -->
+        <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
 
         
     </div>

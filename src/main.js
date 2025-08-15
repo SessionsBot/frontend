@@ -12,6 +12,7 @@ import { useNavStore } from './utils/stores/nav'
 
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura'
+import Tooltip from 'primevue/tooltip'
 import { definePreset } from '@primeuix/themes'
 import ConfirmationService from 'primevue/confirmationservice';
 
@@ -88,6 +89,7 @@ app.use(PrimeVue, {
   },
   ripple: true, // ripple effect on buttons
 });
+app.directive('tooltip', Tooltip)
 
 // ---------------------------------[ Toast/Notifications ]--------------------------------- \\
 
