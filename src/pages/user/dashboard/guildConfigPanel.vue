@@ -1,15 +1,26 @@
 <script setup lang="ts">
+    //@ts-ignore
+    import { zodResolver } from '@primevue/forms/resolvers/zod';
+    import { z } from 'zod'
     import { GuildData } from '@sessionsbot/api-types';
-    import { BellRingIcon, CalendarCogIcon, Clock4Icon, LayersIcon, MessageSquareTextIcon, PencilIcon, UserLockIcon, XCircleIcon, XIcon, XSquareIcon } from 'lucide-vue-next';
+    import { BellRingIcon, CalendarCogIcon, Clock4Icon, LayersIcon, MessageSquareTextIcon, UserLockIcon, XIcon } from 'lucide-vue-next';
     import { friendlyTimezones } from '@/utils/modules/friendlyTimezones';
-    import { FormInstance } from '@primevue/forms';
+    import { FormInstance, FormSubmitEvent } from '@primevue/forms';
+    import { useAuthStore } from '@/utils/stores/auth';
+    import { POSITION, useToast } from 'vue-toastification';
+
+    const toaster = useToast()
+    const auth = useAuthStore()
+    const authToken = computed(() => auth.authToken)
 
     const props = defineProps<{
         viewGuildConfigurationPanel: boolean;
         guildSelectedData: GuildData | undefined;
     }>()
 
-    const emits = defineEmits(['closePanel'])
+    const emits = defineEmits(['closePanel', 'updateDashboard'])
+
+    const guildId = computed(() => props?.guildSelectedData?.guildGeneral?.id || null)
 
 
     // Timezone Autocomplete:
@@ -27,8 +38,7 @@
     // Admin/Mention Role Options/Select:
     const adminRoleOptions = ref([]);
     const mentionRoleOptions = ref([]);
-    adminRoleOptions.value = props.guildSelectedData?.guildGeneral?.roles || [];
-    mentionRoleOptions.value = props.guildSelectedData?.guildGeneral?.roles || [];
+    
 
     // Signup Channel Options:
     const guildChannels = computed(() => props.guildSelectedData?.guildChannels || []) // Raw guild channels data
@@ -72,15 +82,15 @@
     // Full confirmation form ref:
     const guildConfigurationForm : Ref<FormInstance | undefined> = ref(null);
 
-    // Initialize confirmation form:
+    // Initialize configuration form values on open/reset:
     async function initializePanelValues() {
-        console.log('INITIALIZING')
         // Timezone
-        guildConfigurationForm.value.setFieldValue('timeZone', props.guildSelectedData?.guildDatabaseData?.timeZone);
+        guildConfigurationForm.value.setFieldValue('timeZone', {label:props.guildSelectedData?.guildDatabaseData?.timeZone, value:props.guildSelectedData?.guildDatabaseData?.timeZone});
         // Accent Color
         guildConfigurationForm.value.setFieldValue('accentColor', props.guildSelectedData?.guildDatabaseData?.accentColor?.replace('0x', '') || '9b42f5');
         selectedAccentColor.value = props.guildSelectedData?.guildDatabaseData?.accentColor.replace('0x', '') || '9b42f5';
         // Admin IDs
+        adminRoleOptions.value = props.guildSelectedData?.guildGeneral?.roles || [];
         guildConfigurationForm.value.setFieldValue('adminIds', props.guildSelectedData?.guildDatabaseData?.adminRoleIds || [])
         // Signup Channel
         guildConfigurationForm.value.setFieldValue('panelChannel', props.guildSelectedData?.guildDatabaseData?.sessionSignup?.panelChannelId || null)
@@ -90,53 +100,106 @@
         guildConfigurationForm.value.setFieldValue('postTime', postTimeDate)
         // Signup Mention Roles:
         guildConfigurationForm.value.setFieldValue('mentionRoles', props.guildSelectedData?.guildDatabaseData?.sessionSignup?.mentionRoleIds)
-
-
-        console.log('Values', guildConfigurationForm.value.states)
+        mentionRoleOptions.value = props.guildSelectedData?.guildGeneral?.roles || [];
     }
+
 
     // Form Validation:
-    const resolver = ({values}) => {
-        const errors = {};
-
-        // Confirm timezone:
-        if (!values.timeZone || String(values.timeZone).trim().length <= 0) {
-            errors['timeZone'] = [{ message: 'Timezone is required!' }];
-        }
-
-        // Confirm accent color:
-        if (!values.accentColor){
-            errors['accentColor'] = [{ message: 'Accent Color is Invalid!' }]
-        }
-
-        return {
-            values,
-            errors
-        };
-    }
+    const resolver = zodResolver(
+        z.object({
+            accentColor: z.string().min(1, {message: 'Accent color is required!'}),
+            timeZone: z.object({label: z.string(), value: z.string()}, {message: 'Invalid Message'}),
+            adminIds: z.array(z.string()).default([]),
+            panelChannel: z.string().min(1, {message: 'Signup Channel is required!'}),
+            postTime: z.coerce.date().refine(val => !isNaN(val.getTime()), {
+                message: 'Post Time is Invalid',
+            }),
+            mentionRoles: z.array(z.string().min(1, {message: 'Mention roles invalid!'}), {message: 'Mention roles invalid!'}).default([]),
+        })
+    )
 
     // Submit Form:
     const submissionLoading = ref(false)
-    const submitGuildConfiguration = (f) => {
+    const submitGuildConfiguration = async (f:FormSubmitEvent) => {
+        // Show loading:
         submissionLoading.value = true
+        let configurationData = {};
         if(f?.valid){
             // Valid - Proceed:
-            console.info('VALID', f);
+            try {
+                // Prepare- Accent Color:
+                const convertedHex = new String().concat('0x', f?.values?.accentColor)
+                
+                // Prepare - Daily Post Time:
+                const requestedHours = new Date(f?.values?.postTime).getHours() || 0
+                const requestedMinuets = new Date(f?.values?.postTime).getMinutes() || 30
+
+                // Prepare - Full Submission:
+                configurationData['accentColor'] = convertedHex || '0x9b42f5'
+                configurationData['timeZone'] = f?.values?.timeZone?.value || 'America/Chicago'
+                configurationData['adminRoleIds'] = f?.values?.adminIds || []
+                configurationData['panelChannelId'] = f?.values?.panelChannel || null
+                configurationData['dailySignupPostTime'] = {hours: requestedHours, minutes: requestedMinuets}
+                configurationData['signupMentionIds'] = f?.values?.mentionRoles || []
+                configurationData['allGuildSchedules'] = props?.guildSelectedData?.guildDatabaseData?.sessionSchedules || []
+
+
+                // 1. Attempt request/save:
+                const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId.value}/configuration`;
+                const response = await fetch(requestUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken.value}`
+                    },
+                    body: JSON.stringify({
+                        configuration: configurationData
+                    })
+                })
+
+                // 2. Get Response:
+                const body = await response.json();
+
+                // 3. Read Response:
+                if(response.ok){
+                    // Success:
+                    // console.log('Success:', response.status, body)
+                    // Close panel & reload:
+                    submissionLoading.value = false
+                    emits('closePanel');
+                    emits('updateDashboard');
+                }else {
+                    // Error:
+                    submissionLoading.value = false
+                    console.warn('Error - Response:', response.status, body)
+                    toaster.error('Failed to save guild configuration, Please try again!', {position: POSITION.TOP_CENTER});
+                }
+
+                
+
+
+            } catch (error) {
+                // Save error - Debug:
+                console.error('Network/Server ERROR', 'Secure Action')
+                console.warn(error)
+                // Complete loading:
+                toaster.error('Failed to save guild configuration, Please try again!', {position: POSITION.TOP_CENTER});
+                submissionLoading.value = false
+            }
 
         } else { 
             // Invalid - Don't Proceed:
-            console.warn('INVALID', f);
-        }
-        setTimeout(() => {
+            console.warn('INVALID - Guild Config Submission', f);
+            toaster.error('Configuration Invalid, Please try again!', {position: POSITION.TOP_CENTER});
+            // Complete loading:
             submissionLoading.value = false
-        }, 1_000);
+        }
     }
-
 
 </script>
 
 <template>
-<Dialog v-bind:visible="viewGuildConfigurationPanel" :draggable="false" :modal="true" @show="initializePanelValues()">
+<Dialog v-bind:visible="viewGuildConfigurationPanel" :draggable="false" :modal="true" @show="initializePanelValues()" class="max-w-[80%]">
     
     <!-- Panel Header -->
     <template #header>
@@ -147,7 +210,7 @@
             </Button>
 
             <!-- Title/Heading -->
-            <div class="flex flex-wrap flex-col gap-1.5 content-center w-full">
+            <div class="flex flex-wrap flex-col gap-2 content-center w-full">
                 <p class="text-xl font-bold w-full text-start"> Guild Configuration </p>
                 <!-- Guild name & icon -->
                 <div class="bg-white/10 ring-1 ring-white/20 p-0.75 w-fit rounded-md flex flex-row gap-1 flex-wrap justify-start items-center">
@@ -160,8 +223,31 @@
 
     <!-- Panel Contents -->
     <template #default>
-    <Form v-slot="$form" ref="guildConfigurationForm" :resolver @submit="submitGuildConfiguration" class="flex flex-col flex-wrap gap-4 mx-4">
-        
+    <Form v-slot="$form" ref="guildConfigurationForm" :resolver @submit="submitGuildConfiguration" class="flex flex-col flex-wrap gap-4 mx-7">
+
+        <!-- Accent Color -->
+        <section class="flex flex-col gap-1">
+
+            <p class="step-heading required-step font-semibold text-primary"> 
+                Guild’s Accent Color:
+            </p>
+
+            <ColorPicker 
+                v-model:model-value="selectedAccentColor"
+                name="accentColor" 
+                format="hex"
+                :pt="{preview: '!w-64 m-1 mx-0.75 ring-1 ring-ring hover:ring-white/30 transition-all'}"
+            />
+
+            <Message v-if="$form.accentColor?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
+                <ul class="flex flex-col gap-1">
+                    <li v-for="(error, index) of $form.accentColor.errors" class="text-red-300" :key="index"> {{ error.message }}
+                    </li>
+                </ul>
+            </Message>
+
+        </section>
+
         <!-- Timezone -->
         <section class="flex flex-col gap-1">
 
@@ -193,31 +279,7 @@
             </Message>
 
         </section>
-
-        <!-- Accent Color -->
-        <section class="flex flex-col gap-1">
-
-            <p class="step-heading required-step font-semibold text-primary"> 
-                Guild’s Accent Color:
-            </p>
-
-            <ColorPicker 
-                v-model:model-value="selectedAccentColor"
-                name="accentColor" 
-                format="hex"
-                class="block"
-                :pt="{preview: '!w-22 m-1 mx-0.75 ring-1 ring-ring hover:ring-white/30 transition-all'}"
-            />
-
-            <Message v-if="$form.accentColor?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-                <ul class="flex flex-col gap-1">
-                    <li v-for="(error, index) of $form.accentColor.errors" class="text-red-300" :key="index"> {{ error.message }}
-                    </li>
-                </ul>
-            </Message>
-
-        </section>
-
+        
         <!-- Admin Ids -->
         <section class="flex flex-col gap-1">
 
@@ -264,7 +326,7 @@
                     name="panelChannel"
                     optionLabel="label" optionValue="value"
                     optionGroupLabel="label" optionGroupChildren="items"
-                    class="min-w-64" filter fluid
+                    class="max-w-64" filter fluid
                     :options="channelOptions" placeholder="Make a selection..."
                 >
                     <template #optiongroup="slotProps">
@@ -300,8 +362,8 @@
             <IftaLabel>
                 <DatePicker
                 name="postTime" 
-                fluid
-                class="!max-w-65"
+                fluid :show-icon="true"
+                class="!max-w-64"
                 time-only
                 :step-minute="5"
                 hour-format="12"
@@ -331,7 +393,7 @@
                 <MultiSelect
                 name="mentionRoles" 
                 fluid filter
-                class="!max-w-65"
+                class="!max-w-64"
                 option-label="name"
                 option-value="id"
                 :options="mentionRoleOptions"
@@ -353,13 +415,7 @@
 
         </section>
 
-        <!-- Footer/Buttons -->
-        <section class="flex justify-end items-center content-center gap-1.5 flex-wrap w-full p-1.5">
-            <!-- Cancel Button -->
-            <Button @click="emits('closePanel'); guildConfigurationForm.reset();" :disabled="submissionLoading" severity="secondary" class="w-fit" label="Cancel" />
-            <!-- Submit Button -->
-            <Button :loading="submissionLoading" type="submit" severity="success" class="w-fit" label="Save" />
-        </section>
+        
     
     </Form>
     </template>
@@ -367,6 +423,18 @@
     <!-- Hide default close button -->
     <template #closebutton>
         <span hidden class="hidden w-px h-px" />
+    </template>
+
+    <!-- Panel Footer -->
+    <template #footer>
+        <!-- Footer/Buttons -->
+        <section class="flex mt-1 justify-end items-center content-center gap-2 flex-wrap w-full p-1.5">
+            <!-- Cancel Button -->
+            <Button @click="emits('closePanel'); guildConfigurationForm.reset();" :disabled="submissionLoading" severity="secondary" class="w-fit" label="Cancel" />
+            <!-- Submit Button -->
+            <Button @click="guildConfigurationForm.submit();" :loading="submissionLoading" type="submit" severity="success" class="w-fit" label="Save" />
+        </section>
+
     </template>
 
 </Dialog>

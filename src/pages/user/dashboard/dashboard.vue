@@ -12,7 +12,7 @@
     import guildConfigPanel from './guildConfigPanel.vue'
 
     // Guild Config Panel:
-    const viewGuildConfigurationPanel = ref(true)
+    const viewGuildConfigurationPanel = ref(false)
 
     // Auth:
     const auth = useAuthStore()
@@ -164,6 +164,7 @@
     /** Reload User Dashboard with `selectedGuildId` to refresh data/view. */
     async function reloadUserDashboard(selectedGuildId) {
         pageReady.value = false;
+        await getManageableGuilds()
         setTimeout(() => pageReady.value = true, 700);
     }
 
@@ -218,8 +219,10 @@
             <div class="flex flex-row flex-wrap gap-2 justify-center items-center content-center">
 
                 <!-- View/Edit Guild Config Button: -->
-                <Button @click="()=>{viewGuildConfigurationPanel = true}" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-black/50 text-xs', root: '!border-black' }}" unstyled class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-ring hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center">
-                    <SettingsIcon class="m-auto"/>
+                <Button @click="()=>{viewGuildConfigurationPanel = true}" :disabled="!pageReady" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-black/50 text-xs', root: '!border-black' }}" unstyled 
+                    class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-white/20 hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center"
+                >
+                    <SettingsIcon class="m-auto text-white/80" :stroke-width="1.25"/>
                 </Button>
 
                 <!-- View Guild Selector -->
@@ -417,7 +420,7 @@
         </Transition>
         
         <!-- GUILD CONFIG DIALOG -->
-        <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
+        <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" @updateDashboard="(e)=>{reloadUserDashboard()}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
 
         
     </div>
