@@ -25,6 +25,7 @@
   "git": {
     "changelog": "git log --pretty=format:\"* %s (%h)\" ${from}...${to}",
     "requireCleanWorkingDir": true,
+    "tagName": "v${version}",
     "tagAnnotation": "Release ${version}",
     "push": true
   },
