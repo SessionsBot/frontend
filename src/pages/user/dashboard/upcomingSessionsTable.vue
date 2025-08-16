@@ -69,17 +69,17 @@
         <table v-if="todaysSessionCount >= 1" class="inline-table  ">
 
         <!-- Heading Row -->
-            <thead>
-                <tr class="border-1 border-ring bg-white/5">
-                    <th 
-                        v-for="heading in ['Session Title', 'Session Time', 'Session Roles', 'Actions']" 
-                        scope="col" 
-                        class="border-2 border-ring p-2 font-medium text-center"
-                    > 
-                        {{ heading }} 
-                    </th>
-                </tr>
-            </thead>
+        <thead>
+            <tr class="border-1 border-ring bg-white/5">
+                <th 
+                    v-for="heading in ['Session Title', 'Session Time', 'Session Roles', 'Actions']" 
+                    scope="col" 
+                    class="border-2 border-ring p-2 font-medium text-center"
+                > 
+                    {{ heading }} 
+                </th>
+            </tr>
+        </thead>
         
         <!-- Session Row: -->
         <tbody>
