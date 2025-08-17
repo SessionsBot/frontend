@@ -4,6 +4,7 @@
     import type { GuildData, UpcomingSession } from "@sessionsbot/api-types";
     import { defaultWindow } from "@vueuse/core";
     import { useToast } from "vue-toastification";
+    import guildSchedulePanel from './viewGuildSchedule.vue'
 
     const props = defineProps<{
         guildSelectedData: GuildData
@@ -11,6 +12,10 @@
 
     const guildSchedulesArray = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules)
     const totalSchedulesCount = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length)
+
+
+    const viewScheduleDetailsPanel : Ref<boolean> = ref(false); // Controls schedule panel visibility
+    const selectedScheduleId : Ref<string> = ref(null)
 
     
 
@@ -44,7 +49,7 @@
             <thead>
                 <tr class="border-1 border-ring bg-white/5">
                     <th 
-                        v-for="heading in ['Title', 'Time', 'Roles', 'Actions']" 
+                        v-for="heading in ['Session Title', 'Session Time', 'Session Roles', 'Actions']" 
                         scope="col" 
                         class="border-2 border-ring p-2 font-medium text-center"
                     > 
@@ -68,7 +73,7 @@
 
                     <!-- Sch Time -->
                     <td class="border-2 border-ring p-2.5">
-                        <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
+                        <p class="bg-zinc-800 text-nowrap p-1 py-0.5 rounded-md w-fit m-auto">
                             {{ DateTime.now().set({hour: schedule?.sessionDateDaily?.hours, minute: schedule?.sessionDateDaily?.minutes, second: 0, millisecond: 0}).toLocaleString(DateTime.TIME_SIMPLE) || '?'}}
                         </p>
                     </td>
@@ -77,18 +82,12 @@
                     <td class="border-2 border-ring p-2.5">
                         <div class="flex flex-col justify-center items-center content-center gap-1.5">
 
-                            <div v-for="role in schedule?.roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
-                                
-                                <p class="text-sm flex justify-center flex-nowrap items-center content-center gap-0.75"> 
-                                    <UserCircleIcon class="inline" :size="15"/>
-                                    {{ role.roleName }}
-                                </p>
+                       
 
-                                <p class="text-sm flex justify-center items-center gap-1 bg-zinc-800 p-1 py-0.25 rounded-md"> 
-                                    desc
-                                </p>
+                            <p class="text-sm flex justify-center items-center gap-1 bg-zinc-800 p-1 py-0.25 rounded-md"> 
+                                {{ schedule?.roles?.length || 0 }} Roles
+                            </p>
 
-                            </div>
 
                         </div>
                     </td>
@@ -97,11 +96,11 @@
                     <td class="border-2 border-ring p-2.5">
                             
                         <Button unstyled 
-                            class="bg-slate-700 rounded-md m-auto px-2 py-1 gap-0.75 flex flex-row justify-center items-center content-center  transition-all cursor-pointer"
-                            @click="()=>{ }"
+                            class="bg-indigo-500/20 rounded-md m-auto px-2 py-1 gap-1.25 flex flex-row justify-center items-center content-center  transition-all cursor-pointer"
+                            @click="()=>{ viewScheduleDetailsPanel = true; selectedScheduleId = schedule?.scheduleId }"
                         >
-                            <EyeIcon :size="15" />
-                            <p class="font-medium text-sm"> View </p>
+                            <PencilIcon :size="15" />
+                            <p class="font-medium text-sm"> Edit </p>
                         </Button>
 
                     </td>
@@ -121,5 +120,12 @@
     </div>
 
 </div>
+
+<guildSchedulePanel 
+    :guildSelectedData="guildSelectedData" 
+    :viewScheduleDetailsPanel="viewScheduleDetailsPanel" 
+    :selectedScheduleId="selectedScheduleId" 
+    @close-panel="(e)=>{ viewScheduleDetailsPanel=false; selectedScheduleId = null }"
+/>
 
 </template>
