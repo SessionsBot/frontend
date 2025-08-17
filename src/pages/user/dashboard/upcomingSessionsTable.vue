@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import { PencilIcon, Trash2Icon, UserCircleIcon, CheckCircle2Icon, ClockIcon, EyeIcon, LinkIcon, MapPinIcon } from "lucide-vue-next"
     import { DateTime } from 'luxon';
-    import { GuildData, UpcomingSession } from "@sessionsbot/api-types";
+    import type { GuildData, UpcomingSession } from "@sessionsbot/api-types";
     import { defaultWindow } from "@vueuse/core";
     import { useToast } from "vue-toastification";
 
@@ -53,11 +53,11 @@
     <div class="flex bg-white/5 flex-row text-center justify-between items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
         <div class="flex flex-row gap-2 justify-between items-center content-center">
             <ClockIcon />
-            <p class="font-medium"> Upcoming Sessions </p>
+            <p class="font-medium"> Today's Sessions </p>
         </div>
 
         <div class="flex flex-row gap-2 justify-between items-center content-center">
-            <p class="font-medium text-sm bg-sky-700/20 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ todaysSessionCount || '%' }} Sessions </p>
+            <p class="font-medium text-sm bg-slate-700 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ todaysSessionCount || '%' }} Sessions </p>
         </div>
         
     </div>

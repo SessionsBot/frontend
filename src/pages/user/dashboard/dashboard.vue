@@ -10,6 +10,7 @@
     import { DateTime } from 'luxon';
     import upcomingSessionsTable from './upcomingSessionsTable.vue'
     import guildConfigPanel from './guildConfigPanel.vue'
+    import guildSchedules from './guildSchedules.vue'
 
     // Guild Config Panel:
     const viewGuildConfigurationPanel = ref(false)
@@ -413,6 +414,9 @@
 
             <!-- Upcoming Sessions - TABLE VIEW -->
             <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="todaysSessionCount" />
+
+            <!-- Guild Schedules - TABLE VIEW -->
+            <guildSchedules :guildSelectedData="guildSelectedData" />
 
 
         </section>

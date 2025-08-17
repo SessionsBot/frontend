@@ -1,6 +1,6 @@
 // Imported TypeScript:
 // import { GuildDataResponse, SecureActionResponse, SecureActionNames } 
-import { APIResponse, GuildDataResponse } from "@sessionsbot/api-types";
+import type { APIResponse, GuildDataResponse } from "@sessionsbot/api-types";
 import axios from "axios";
 
 

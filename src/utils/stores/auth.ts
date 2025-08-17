@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth as firebaseAuth } from "../firebase";
 import { DateTime } from "luxon";
-import { DecodedUserData } from "@sessionsbot/api-types";
+import type { DecodedUserData } from "@sessionsbot/api-types";
 
 // Types:
 interface AuthStates {
