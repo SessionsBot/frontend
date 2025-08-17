@@ -10,7 +10,7 @@
     import { DateTime } from 'luxon';
     import upcomingSessionsTable from './upcomingSessionsTable.vue'
     import guildConfigPanel from './guildConfigPanel.vue'
-    import guildSchedules from './guildSchedules.vue'
+    import guildSchedules from './schedules/guildSchedules.vue'
 
     // Guild Config Panel:
     const viewGuildConfigurationPanel = ref(false)

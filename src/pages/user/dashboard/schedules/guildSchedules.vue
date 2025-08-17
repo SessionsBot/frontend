@@ -4,7 +4,7 @@
     import type { GuildData, UpcomingSession } from "@sessionsbot/api-types";
     import { defaultWindow } from "@vueuse/core";
     import { useToast } from "vue-toastification";
-    import guildSchedulePanel from './viewGuildSchedule.vue'
+    import guildSchedulePanel from './viewGuildSchedule.vue';
 
     const props = defineProps<{
         guildSelectedData: GuildData
