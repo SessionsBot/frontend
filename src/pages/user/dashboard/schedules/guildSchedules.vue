@@ -23,7 +23,7 @@
 
 
 <template>
-<!-- Upcoming Sessions Table: -->
+<!-- Upcoming Schedules Table: -->
 <div class="flex flex-wrap overflow-clip flex-col justify-between w-125 max-w-[100%] h-fit bg-zinc-900 ring-2 ring-ring items-center rounded-md">
 	                
     <!-- Heading -->
@@ -39,7 +39,6 @@
         
     </div>
 
-    <!-- Upcoming Sessions -->
     <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-scroll">
         
         <!-- Schedules table -->
@@ -58,7 +57,7 @@
                 </tr>
             </thead>
 
-            <!-- Session Row: -->
+            <!-- Schedule Row: -->
             <tbody>
                 
                 <tr v-for="(schedule, key) in guildSchedulesArray" class="text-center text-white font-light" :key="key">
@@ -111,7 +110,7 @@
 
         </table>
 
-        <!-- No Sessions Msg -->
+        <!-- No Schedules Msg -->
         <p v-else class="font-light p-2 text-center flex justify-center items-center content-center">
             No guild schedules... <br>
             SessionsBot won't create any sessions for this guild!

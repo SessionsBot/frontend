@@ -439,7 +439,7 @@
                         <IftaLabel>
                             <InputText
                             v-model:modelValue="newRoleForm.newRoleValues.description.value"
-                            maxlength="50"
+                            maxlength="60"
                             minlength="5"
                             fluid
                             >
