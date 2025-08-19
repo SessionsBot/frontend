@@ -96,7 +96,7 @@
         guildConfigurationForm.value.setFieldValue('panelChannel', props.guildSelectedData?.guildDatabaseData?.sessionSignup?.panelChannelId || null)
         // Signup Post Time:
         const postTimeData = props.guildSelectedData?.guildDatabaseData?.sessionSignup?.dailySignupPostTime
-        const postTimeDate = new Date(); postTimeDate.setHours(postTimeData?.hours || 5, postTimeData?.minutes || 30, 0, 0)
+        const postTimeDate = new Date(); postTimeDate.setHours(postTimeData?.hours || 0, postTimeData?.minutes || 30, 0, 0)
         guildConfigurationForm.value.setFieldValue('postTime', postTimeDate)
         // Signup Mention Roles:
         guildConfigurationForm.value.setFieldValue('mentionRoles', props.guildSelectedData?.guildDatabaseData?.sessionSignup?.mentionRoleIds)

@@ -10,7 +10,7 @@
     import { ConfirmDialogSlots, PopoverMethods, useConfirm } from 'primevue';
     import roleDescriptionPopover from './roleDescriptionPopover.vue'
     import NewRolePopover from './newRolePopover.vue';
-    import { deleteSessionSchedule, updateSessionSchedule } from '@/utils/modules/backendApi';
+    import { createSessionSchedule, deleteSessionSchedule, updateSessionSchedule } from '@/utils/modules/backendApi';
     import { auth, toaster } from '@/utils/defaultExports';
     import { POSITION } from 'vue-toastification';
     
@@ -18,22 +18,17 @@
 
     // Incoming Props:
     const props = defineProps<{
+        viewCreateSchedulePanel: boolean,
         guildSelectedData: GuildData,
-        viewScheduleDetailsPanel: boolean
-        selectedScheduleId : string | null
     }>();
 
     // Outgoing Emits:
     const emits = defineEmits(['closePanel', 'updateDashboard']);
 
-    const confirm = useConfirm();
-
-    const scheduleDetailsForm : Ref<FormInstance> = ref(null) // Ref to schedule data form within panel
-
-    const selectedScheduleData = computed(()=> props.guildSelectedData?.guildDatabaseData?.sessionSchedules.find((sch) => sch?.scheduleId == props.selectedScheduleId));
+    const newScheduleForm : Ref<FormInstance> = ref(null) // Ref to schedule data form within panel
 
     // Static Schedule Roles Data:
-    const scheduleRoles = ref<SessionRole[]> ();
+    const scheduleRoles = ref<SessionRole[]> ([]);
 
     // Change/update role description fn:
     const changeRoleDesc = (roleIndex:number, newDesc:string) => {
@@ -73,50 +68,7 @@
             roleCapacity: roleData.roleCapacity
         })
     }
-
-    // Confirm Delete Schedule:
-    const deletionLoading = ref(false)
-    const confirmDeleteSchedule = () => {
-        confirm.require({
-            group: 'headless',
-            header: 'Delete Schedule?',
-            message: 'Are you sure you want to proceed? This cannot be undone!',
-        })
-    }
-    // Attempt Delete Schedule:
-    const attemptDeleteSchedule = async (closeCallback) => {
-        // 0. Prepare
-        deletionLoading.value = true
-        // 1. Attempt delete
-        const results = await deleteSessionSchedule(props.guildSelectedData?.guildGeneral?.id, props.selectedScheduleId)
-        // 2. Read results
-        if(results.success) { // Succeeded:
-            // Alert & Refresh data:
-            toaster.success('Schedule deleted!',{position: POSITION.TOP_CENTER})
-            emits('updateDashboard', true)
-        } else { // Errored:
-            toaster.error('Error deleting schedule, please try again!', {position: POSITION.TOP_CENTER})
-        }
-        // 3. Close / mark finished
-        deletionLoading.value = false
-        closeCallback()
-    }
-
-    // Loads/refreshes panel content once opened
-    async function initializePanelValues() { 
-
-        const schData = selectedScheduleData?.value
-        // Session Title:
-        scheduleDetailsForm.value.setFieldValue('sessionTitle', schData?.sessionTitle)
-        // Session Location:
-        scheduleDetailsForm.value.setFieldValue('sessionUrl', schData?.sessionUrl)
-        // Session Date/Time:
-        const schDate = DateTime.now().set({hour: schData?.sessionDateDaily?.hours, minute: schData?.sessionDateDaily?.minutes, second: 0, millisecond: 0}).toJSDate()
-        scheduleDetailsForm.value.setFieldValue('sessionTime', schDate)
-
-        // Static Session Roles:
-        scheduleRoles.value = JSON.parse(JSON.stringify(schData.roles));
-    }
+    
 
     // Form Resolver:
     const resolver = zodResolver(
@@ -130,10 +82,13 @@
     // Form Sch Edit Submission:
     const submissionLoading = ref(false);
     const submitGuildSchedule = async (f:FormSubmitEvent) => {
-        if(f?.valid){
+        // console.info('CREATE SCHEDULE FORM SUBMIT', f);
+        if(f?.valid){ // Valid Submission:
             submissionLoading.value = true
 
             // 1. Prepare values:
+            // Generate Session Id:
+            const scheduleId = 'shd_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
             // Add 'roles' to values:
             f.values['sessionRoles'] = scheduleRoles.value;
             // Create correct post time format:
@@ -145,17 +100,16 @@
                 sessionUrl: f.values['sessionUrl'],
                 roles: f.values['sessionRoles'],
                 sessionDateDaily: schTimeFormat,
-                scheduleId: props.selectedScheduleId
+                scheduleId: scheduleId
             }
 
-
             // 2. Attempt save:
-            const results = await updateSessionSchedule(props.guildSelectedData?.guildGeneral?.id, props.selectedScheduleId, finalScheduleData)
+            const results = await createSessionSchedule(props.guildSelectedData?.guildGeneral?.id, finalScheduleData)
 
             // 3. Finished:
             // console.log('results', results)
             if(results.success) { // Succeeded:
-                toaster.success('Schedule updated!', {position: POSITION.TOP_CENTER});
+                toaster.success('Schedule created!', {position: POSITION.TOP_CENTER});
                 // Close panel & refresh data:
                 emits('closePanel');
                 emits('updateDashboard', true)
@@ -163,13 +117,15 @@
                 toaster.error('Error updating schedule, please try again!', {position: POSITION.TOP_CENTER})
             }
             submissionLoading.value=false; 
+        } else { // Invalid Submission:
+            return // invalid
         }
     }
 
 </script>
 
 <template>
-<Dialog v-bind:visible="viewScheduleDetailsPanel" :draggable="false" :modal="true" @show="initializePanelValues()" class="max-w-[80%] !max-h-150">
+<Dialog v-bind:visible="viewCreateSchedulePanel" :draggable="false" :modal="true" class="max-w-[80%] !max-h-150">
     
     <!-- Panel Header -->
     <template #header>
@@ -182,7 +138,7 @@
             <!-- Title/Heading -->
             <div class="flex flex-nowrap flex-row gap-1 content-center w-full">
                 <CalendarClockIcon />
-                <p class="text-xl font-bold text-start"> Guild Schedule </p>
+                <p class="text-xl font-bold text-start"> New Schedule </p>
                 
             </div>
         </div>
@@ -190,7 +146,7 @@
 
     <!-- Panel Contents -->
     <template #default>
-    <Form v-slot="$form" ref="scheduleDetailsForm" :resolver @submit="submitGuildSchedule" class="flex flex-col flex-wrap gap-4 px-7 p-1 overflow-scroll">
+    <Form v-slot="$form" ref="newScheduleForm" :resolver @submit="submitGuildSchedule" class="flex flex-col flex-wrap gap-4 px-7 p-1 overflow-scroll">
         
         <!-- Session/Sch Title: -->
         <section class="flex flex-col gap-1">
@@ -327,7 +283,7 @@
 
                     <!-- Role Desc PopOver -->
                     <Popover ref="roleDescPopoverRef">
-                    <roleDescriptionPopover :selectedScheduleData="selectedScheduleData" :selectedRoleIndex="selectedRoleIndex"
+                    <roleDescriptionPopover :selectedScheduleData="{ roles: scheduleRoles }" :selectedRoleIndex="selectedRoleIndex"
                         @change-role-desc="changeRoleDesc" 
                         @close-desc-popover="()=> {roleDescPopoverRef.hide()}"/>
                     </Popover>
@@ -358,31 +314,10 @@
     <template #footer>
         <!-- Footer/Buttons -->
         <section class="flex mt-1 justify-end items-center content-center gap-2 flex-wrap w-full p-1.5">
-            <!-- Duplicate Sch Button -->
-
-            <!-- Delete Sch Button/Confirm -->
-            <ConfirmDialog group="headless">
-                <template #container="{ message, acceptCallback, rejectCallback }">
-                    <div class="flex flex-col items-center p-8 bg-surface-0 dark:bg-surface-900 rounded">
-                        <div class="rounded-full bg-rose-800 !grayscale-50 ring-2 ring-ring text-primary-contrast inline-flex justify-center items-center h-24 w-24 -mt-20">
-                            <Trash2Icon :size="60" />
-                        </div>
-                        <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
-                        <p class="mb-0">{{ message.message }}</p>
-                        <div class="flex items-center gap-2 mt-6">
-                            <Button label="Cancel" @click="rejectCallback" :disabled="deletionLoading" size="small" variant="outlined" severity="secondary"></Button>
-                            <Button label="Delete" @click="(e)=>{attemptDeleteSchedule(acceptCallback)}" :loading="deletionLoading" size="small" variant="filled" class="!bg-rose-800 !grayscale-50 hover:brightness-125 !transition-all" severity="danger"></Button>
-                        </div>
-                    </div>
-                </template>
-            </ConfirmDialog>
-            <Button @click="confirmDeleteSchedule()" unstyled class="bg-rose-800 grayscale-50 w-10 h-10 flex justify-center items-center content-center flex-wrap cursor-pointer rounded-md">
-                <Trash2Icon :size="15" />
-            </Button>
             <!-- Cancel Button -->
-            <Button @click="emits('closePanel'); scheduleDetailsForm.reset();" :disabled="submissionLoading" severity="secondary" class="w-fit" label="Cancel" />
+            <Button @click="emits('closePanel'); newScheduleForm.reset();" :disabled="submissionLoading" severity="secondary" class="w-fit" label="Cancel" />
             <!-- Submit Button -->
-            <Button @click="scheduleDetailsForm.submit();" :loading="submissionLoading" type="submit" severity="success" class="w-fit" label="Save" />
+            <Button @click="newScheduleForm.submit();" :loading="submissionLoading" type="submit" severity="success" class="w-fit" label="Save" />
         </section>
 
     </template>

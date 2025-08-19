@@ -57,7 +57,7 @@
         </div>
 
         <div class="flex flex-row gap-2 justify-between items-center content-center">
-            <p class="font-medium text-sm bg-slate-700 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ todaysSessionCount || '%' }} Sessions </p>
+            <p class="font-medium text-sm bg-slate-700 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ todaysSessionCount || '0' }} {{ todaysSessionCount==1 ? 'Session' : 'Sessions' }} </p>
         </div>
         
     </div>

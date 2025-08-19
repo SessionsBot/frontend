@@ -80,6 +80,24 @@
 
     }
 
+    /** Used to re-fetch a certain manageable guild's data for dashboard 
+     * - Used after certain events that modify data
+     * @param { string } guildId The guild id to refresh data for
+    */
+    const refreshGuildData = async (guildId) => {
+        pageReady.value = false;
+        try {
+            const fetchResults = await getGuildData(guildId)
+            if(!fetchResults.success || !fetchResults.data) throw fetchResults;
+            // Update static data value:
+            manageableGuildsData.value[guildId] = fetchResults?.data
+        } catch (err) {
+            console.warn('[Dashboard] Failed to refresh guild data!', err)
+            
+        }
+        pageReady.value = true;
+    }
+
 
     // Computed Guild Data:
     const todaysSessionCount = computed(() => {
@@ -166,8 +184,10 @@
     /** Reload User Dashboard with `selectedGuildId` to refresh data/view. */
     async function reloadUserDashboard(selectedGuildId) {
         pageReady.value = false;
-        await getManageableGuilds()
-        setTimeout(() => pageReady.value = true, 700);
+        if(selectedGuildId){
+            await refreshGuildData(guildSelectedId.value)
+        } else await getManageableGuilds()
+        pageReady.value = true
     }
 
 
@@ -292,11 +312,12 @@
 
 
         <!-- Dashboard View -->
-        <section v-else-if="pageReady" class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">
+        <section v-else-if="pageReady" class="flex flex-wrap flex-col gap-7 p-5 flex-1 h-full w-full justify-center items-center content-start">
         
-            
+            <!-- Section 1 -->
+            <section class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">
             <!-- Todays Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-col overflow-clip justify-between w-75 lg:w-95 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -333,7 +354,7 @@
 
 
             <!-- Member Outlook: HIDDEN -->
-            <div hidden class="flex relative flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div hidden class="flex relative flex-col overflow-clip justify-between w-75 lg:w-115 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Coming Soon Banner -->
                  <div class="absolute w-[200%] h-10 bg-red-900/50 ring-2 ring-white/70 flex top-[48%] rotate-13 gap-2 p-2 justify-center items-center content-center text-center">
@@ -378,7 +399,7 @@
 
 
             <!-- Guild Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-col overflow-clip justify-between w-75 lg:w-95 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -414,13 +435,14 @@
                 </div>
 
             </div>
+            </section>
 
 
             <!-- Upcoming Sessions - TABLE VIEW -->
             <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="todaysSessionCount" />
 
             <!-- Guild Schedules - TABLE VIEW -->
-            <guildSchedules :guildSelectedData="guildSelectedData" />
+            <guildSchedules :guildSelectedData="guildSelectedData" @updateDashboard="(e)=>{reloadUserDashboard(guildId)}" />
 
 
         </section>

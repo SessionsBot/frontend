@@ -1,23 +1,27 @@
 <script setup lang="ts">
-    import { PencilIcon, Trash2Icon, UserCircleIcon, CheckCircle2Icon, ClockIcon, EyeIcon, LinkIcon, MapPinIcon, CalendarClockIcon } from "lucide-vue-next"
+    import { PencilIcon, CalendarClockIcon, PlusIcon } from "lucide-vue-next"
     import { DateTime } from 'luxon';
     import type { GuildData, UpcomingSession } from "@sessionsbot/api-types";
     import { defaultWindow } from "@vueuse/core";
     import { useToast } from "vue-toastification";
-    import guildSchedulePanel from './viewGuildSchedule.vue';
+    import viewGuildSchedulePanel from './viewGuildSchedule.vue';
+    import CreateGuildSchedulePanel from "./createGuildSchedule.vue";
 
     const props = defineProps<{
         guildSelectedData: GuildData
     }>()
 
+    const emits = defineEmits(['updateDashboard']);
+
     const guildSchedulesArray = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules)
     const totalSchedulesCount = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length)
 
 
-    const viewScheduleDetailsPanel : Ref<boolean> = ref(false); // Controls schedule panel visibility
-    const selectedScheduleId : Ref<string> = ref(null)
+    const viewScheduleDetailsPanel: Ref<boolean> = ref(false); // Controls view/edit schedule panel visibility
+    const selectedScheduleId: Ref<string> = ref(null) // Current sch id in view ^
 
-    
+    const viewCreateSchedulePanel: Ref<boolean> = ref(false) // Controls new schedule panel visibility
+
 
 </script>
 
@@ -34,12 +38,14 @@
         </div>
 
         <div class="flex flex-row gap-2 justify-between items-center content-center">
-            <p class="font-medium text-sm bg-indigo-700/20 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ totalSchedulesCount || '%' }} Schedules </p>
+            <p class="font-medium text-sm bg-indigo-700/30 p-1 px-1.5 rounded-md ring-1 ring-ring"> 
+                {{ totalSchedulesCount || '0' }} {{ totalSchedulesCount==1 ? 'Schedule' : 'Schedules' }} 
+            </p>
         </div>
         
     </div>
 
-    <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-scroll">
+    <div class="flex flex-col text-white/65 gap-3 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-scroll">
         
         <!-- Schedules table -->
         <table v-if="totalSchedulesCount">
@@ -57,7 +63,7 @@
                 </tr>
             </thead>
 
-            <!-- Schedule Row: -->
+            <!-- Schedule Rows: -->
             <tbody>
                 
                 <tr v-for="(schedule, key) in guildSchedulesArray" class="text-center text-white font-light" :key="key">
@@ -106,6 +112,8 @@
 
                 </tr>
 
+
+
             </tbody>
 
         </table>
@@ -116,15 +124,30 @@
             SessionsBot won't create any sessions for this guild!
         </p>
 
+        <!-- New Schedule Button -->
+        <Button @click="(e)=>{ viewCreateSchedulePanel = true }" unstyled 
+            class="bg-zinc-800 rounded-md hover:brightness-150 font-semibold text-sm text-zinc-300 transition-all px-1.75 py-0.75 cursor-pointer flex justify-center items-center content-center max-w-55 flex-1 self-center">
+            <PlusIcon :size="17" /> 
+            <p class="leading-relaxed"> New Schedule </p>
+        </Button>
+
     </div>
 
 </div>
 
-<guildSchedulePanel 
+<viewGuildSchedulePanel 
     :guildSelectedData="guildSelectedData" 
     :viewScheduleDetailsPanel="viewScheduleDetailsPanel" 
     :selectedScheduleId="selectedScheduleId" 
     @close-panel="(e)=>{ viewScheduleDetailsPanel=false; selectedScheduleId = null }"
+    @update-dashboard=" (guildId) => emits('updateDashboard', guildId)"
+/>
+
+<CreateGuildSchedulePanel
+    :guildSelectedData="guildSelectedData"
+    :view-create-schedule-panel="viewCreateSchedulePanel"
+    @close-panel="(e)=>{ viewCreateSchedulePanel=false }"
+    @update-dashboard=" (guildId) => emits('updateDashboard', guildId)"
 />
 
 </template>

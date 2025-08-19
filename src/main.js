@@ -97,7 +97,10 @@ app.use(Toast, {
   position: POSITION.BOTTOM_RIGHT,
   transition: "Vue-Toastification__slideBlurred",
   maxToasts: 4,
-  closeOnClick: false
+  closeOnClick: false,
+  hideProgressBar: true, 
+  showCloseButtonOnHover: true,
+  bodyClassName: 'font-semibold'
 })
 
 
