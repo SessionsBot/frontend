@@ -6,6 +6,10 @@
     import { useToast } from "vue-toastification";
     import viewGuildSchedulePanel from './viewGuildSchedule.vue';
     import CreateGuildSchedulePanel from "./createGuildSchedule.vue";
+    import { toaster } from "@/utils/defaultExports";
+
+    // PRICING PLANS - LIMITS:
+    const maxSchedules = ref(7)
 
     const props = defineProps<{
         guildSelectedData: GuildData
@@ -13,7 +17,7 @@
 
     const emits = defineEmits(['updateDashboard']);
 
-    const guildSchedulesArray = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules)
+    const guildSchedulesArray = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules.sort((schA, schB) => (schA.sessionDateDaily.hours*100+schA.sessionDateDaily.minutes) - (schB.sessionDateDaily.hours*100+schB.sessionDateDaily.minutes)))
     const totalSchedulesCount = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length)
 
 
@@ -21,7 +25,16 @@
     const selectedScheduleId: Ref<string> = ref(null) // Current sch id in view ^
 
     const viewCreateSchedulePanel: Ref<boolean> = ref(false) // Controls new schedule panel visibility
-
+    const openCreateSchedule = (e:Event) => {
+        // Check pricing plan limits:
+        if(props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length >= maxSchedules.value){
+            // Max schedules reached:
+            toaster.warning(`Maximum amount of schedules reached! (limit: ${maxSchedules.value})`)
+        }else{
+            // Allowed - Open new schedule panel:
+            viewCreateSchedulePanel.value = true;
+        }
+    }
 
 </script>
 
@@ -125,7 +138,7 @@
         </p>
 
         <!-- New Schedule Button -->
-        <Button @click="(e)=>{ viewCreateSchedulePanel = true }" unstyled 
+        <Button @click="(e)=>openCreateSchedule(e)" unstyled 
             class="bg-zinc-800 rounded-md hover:brightness-150 font-semibold text-sm text-zinc-300 transition-all px-1.75 py-0.75 cursor-pointer flex justify-center items-center content-center max-w-55 flex-1 self-center">
             <PlusIcon :size="17" /> 
             <p class="leading-relaxed"> New Schedule </p>

@@ -7,6 +7,9 @@
     import { SessionRole } from '@sessionsbot/api-types';
     import { LetterTextIcon, SmilePlusIcon, UsersIcon } from 'lucide-vue-next';
 
+    // PRICING PLANS - LIMITS:
+    const maxRoleCapacity = ref(10)
+
     // Incoming Props:
     const props = defineProps<{
         scheduleRoles: SessionRole[]
@@ -27,7 +30,7 @@
             roleName: string().trim().min(2).max(14),
             roleDescription: string().trim().min(5).max(60),
             roleEmoji: string().emoji().length(2),
-            roleCapacity: number().min(1).max(10)
+            roleCapacity: number().min(1).max(maxRoleCapacity.value)
         })
     )
 

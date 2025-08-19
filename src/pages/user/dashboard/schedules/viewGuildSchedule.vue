@@ -14,7 +14,8 @@
     import { auth, toaster } from '@/utils/defaultExports';
     import { POSITION } from 'vue-toastification';
     
-
+    // PRICING PLANS - LIMITS:
+    const maxRoles = ref(3)
 
     // Incoming Props:
     const props = defineProps<{
@@ -59,19 +60,33 @@
 
     // Duplicate role data/form fn:
     async function duplicateRoleData(e:Event, roleData:SessionRole) {
-        // Show new role form:
-        newRolePopoverRef.value.show(e); 
+        // Check max roles - plan limits
+        if(scheduleRoles.value.length >= maxRoles.value){
+            toaster.warning(`Maximum amount of roles reached! (limit: ${maxRoles.value})`)
+        } else {
+            // Show new role form:
+            newRolePopoverRef.value.show(e); 
 
-        await nextTick();
-        await nextTick();
+            await nextTick();
+            await nextTick();
 
-        // Assign form values:
-        innerNewRolePopoverRef.value.newRoleFormRef.setValues({
-            roleName: roleData.roleName,
-            roleDescription: roleData.roleDescription,
-            roleEmoji: roleData.roleEmoji,
-            roleCapacity: roleData.roleCapacity
-        })
+            // Assign form values:
+            innerNewRolePopoverRef.value.newRoleFormRef.setValues({
+                roleName: roleData.roleName,
+                roleDescription: roleData.roleDescription,
+                roleEmoji: roleData.roleEmoji,
+                roleCapacity: roleData.roleCapacity
+            })
+        }
+        
+    }
+
+    // Create new role - open panel:
+    const openNewRolePanel = (e:Event) => {
+        // Check max roles - plan limits
+        if(scheduleRoles.value.length >= maxRoles.value){
+            toaster.warning(`Maximum amount of roles reached! (limit: ${maxRoles.value})`)
+        } else newRolePopoverRef.value.show(e)
     }
 
     // Confirm Delete Schedule:
@@ -280,7 +295,7 @@
                     </div>
 
                     <!-- Add Role Button -->
-                    <Button @click="(e)=>newRolePopoverRef.show(e)" unstyled class="flex justify-center items-center content-center rounded-md gap-0.75 w-fit h-fit py-[3.5px] px-0.75 bg-zinc-900/80 cursor-pointer">
+                    <Button @click="(e)=>{openNewRolePanel(e)}" unstyled class="flex justify-center items-center content-center rounded-md gap-0.75 w-fit h-fit py-[3.5px] px-0.75 bg-zinc-900/80 cursor-pointer">
                         <PlusCircleIcon class="ml-0.25" :size="12"/>
                         <p class="text-[10px] font-stretch-85% font-medium leading-snug"> Add Role </p>
                     </Button>

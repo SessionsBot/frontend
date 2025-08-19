@@ -11,12 +11,24 @@
         guildSelectedData: GuildData
     }>()
 
+    // SORTED array of upcoming sessions:
+    // Sorted entries
+    const sortedUpcomingSessions = computed(() => {
+    return Object.entries(props.upcomingSessionsObj)
+        .sort(([keyA, a], [keyB, b]) => {
+        const timeA = (a.date?.hours ?? 0) * 100 + (a.date?.minutes ?? 0);
+        const timeB = (b.date?.hours ?? 0) * 100 + (b.date?.minutes ?? 0);
+        return timeA - timeB;
+        });
+    });
+
+
     /** Boolean value to control wether the 'Sessions Details' panel is visible*/
     const sessionDetailsVisible = ref(false)
     /** The _data_ of the current session being viewed */
     const sessionsDetailsData : Ref<UpcomingSession> = ref(null)
     /** The id of the current session being viewed */
-    const sessionsDetailsKey = ref(null)
+    const sessionsDetailsId = ref(null)
 
     /** Current selected sessions date e.g: 9:00 AM */
     const sessionsDetailsDate = computed(() => {
@@ -84,12 +96,12 @@
         <!-- Session Row: -->
         <tbody>
             
-            <tr v-for="(value, key) in upcomingSessionsObj" class="text-center text-white font-light" :key="key">
+            <tr v-for="(value, key) in sortedUpcomingSessions" class="text-center text-white font-light" :key="value[0]">
                 
                 <!-- Sch Title -->
                 <td class="border-2 border-ring p-2.5">
                     <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
-                        {{ value.title }}
+                        {{ value[1].title }}
                     </p>
                 </td>
                 
@@ -97,7 +109,7 @@
                 <!-- Sch Time -->
                 <td class="border-2 border-ring p-2.5">
                     <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
-                        {{ DateTime.fromSeconds(Number(value.date.discordTimestamp)).toLocaleString(DateTime.TIME_SIMPLE) }}
+                        {{ DateTime.fromSeconds(Number(value[1].date.discordTimestamp)).toLocaleString(DateTime.TIME_SIMPLE) }}
                     </p>
                 </td>
 
@@ -105,7 +117,7 @@
                 <td class="border-2 border-ring p-2.5">
                     <div class="flex flex-col justify-center items-center content-center gap-1.5">
 
-                        <div v-for="role in value.roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
+                        <div v-for="role in value[1].roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
                             
                             <p class="text-sm flex justify-center flex-nowrap items-center content-center gap-0.75"> 
                                 <UserCircleIcon class="inline" :size="15"/>
@@ -126,7 +138,7 @@
                         
                     <Button unstyled 
                         class="bg-slate-700 rounded-md m-auto px-2 py-1 gap-0.75 flex flex-row justify-center items-center content-center  transition-all cursor-pointer"
-                        @click="()=>{ sessionDetailsVisible = true; sessionsDetailsData = value; sessionsDetailsKey = key}"
+                        @click="()=>{ sessionDetailsVisible = true; sessionsDetailsData = value[1]; sessionsDetailsId = value[0]}"
                     >
                         <EyeIcon :size="15" />
                         <p class="font-medium text-sm"> View </p>
@@ -210,7 +222,7 @@
 
     <!-- Footer -->
     <template #footer>
-        <p class="text-xs text-zinc-600"> {{ sessionsDetailsKey }} </p>
+        <p class="text-xs text-zinc-600"> {{ sessionsDetailsId }} </p>
     </template>
 
 </Dialog>

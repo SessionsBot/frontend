@@ -4,6 +4,7 @@
     import { LogOutIcon, Trash2Icon, UserCircleIcon, ViewIcon } from 'lucide-vue-next';
     import defaultProfileIcon from '@/assets/profile-icon-default.jpg'
     import router from '@/utils/router';
+import { toaster } from '@/utils/defaultExports';
     
 
     const auth = useAuthStore()
