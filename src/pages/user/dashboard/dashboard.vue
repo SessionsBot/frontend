@@ -1,181 +1,210 @@
 <script setup>
-// Imports:
-import { ref, computed, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../../../utils/stores/auth.ts'
-import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
-import { getGuildData } from '@/utils/modules/backendApi.ts';
-import { useToast } from 'vue-toastification';
-import { objectEntries } from '@vueuse/core';
-import { DateTime } from 'luxon';
+    // Imports:
+    import { ref, computed, onMounted, watch } from 'vue';
+    import { useRoute, useRouter } from 'vue-router'
+    import { useAuthStore } from '../../../utils/stores/auth.ts'
+    import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, PlusCircleIcon, PlusSquareIcon, SettingsIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
+    import { getGuildData } from '@/utils/modules/backendApi.ts';
+    import { useToast } from 'vue-toastification';
+    import { objectEntries } from '@vueuse/core';
+    import { DateTime } from 'luxon';
+    import upcomingSessionsTable from './sessions/upcomingSessions.vue'
+    import guildConfigPanel from './guildConfigPanel.vue'
+    import guildSchedules from './schedules/guildSchedules.vue'
+
+    // Guild Config Panel:
+    const viewGuildConfigurationPanel = ref(false)
+
+    // Auth:
+    const auth = useAuthStore()
+    const userLoggedIn = computed(() => auth.isAuthenticated)
+    const userData = computed(() => auth.userData)
+    const userData_manageableGuilds = computed(() => auth.userData?.Firebase?.claims?.manageableGuilds)
+    const userId = computed(() => auth.userData?.Firebase?.uid)
+
+    // Router:
+    const router = useRouter()
+    const route = useRoute()
+
+    const toast = useToast()
 
 
-// Auth:
-const auth = useAuthStore()
-const userLoggedIn = computed(() => auth.isAuthenticated)
-const userData = computed(() => auth.userData)
-const userData_manageableGuilds = computed(() => auth.userData?.Firebase?.claims?.manageableGuilds)
-const userId = computed(() => auth.userData?.Firebase?.uid)
+    /** Array for __ALL__ 'Guild Select' options that controls dashboard view. */
+    const manageableGuildSelectOptions = ref([])
 
-// Router:
-const router = useRouter()
-const route = useRoute()
+    /** __Current Guild__ Id Selected to manage/view within dashboard. */
+    const guildSelectedId = ref(null)
 
-const toast = useToast()
+    /** __Current Selected Guild's__ Data Object to manage/view within dashboard. 
+     * @type  { import('vue').ComputedRef <import('@sessionsbot/api-types').GuildData>}
+    */
+    const guildSelectedData = computed(() => manageableGuildsData.value[guildSelectedId.value]);
 
 
-/** Array for __ALL__ 'Guild Select' options that controls dashboard view. */
-const manageableGuildSelectOptions = ref([])
+    /** Static -- All Manageable Guilds Data */
+    const manageableGuildsData = ref({})
 
-/** __Current Guild__ Id Selected to manage/view within dashboard. */
-const guildSelectedId = ref(null)
+    /** Used to fetch all manageable guild data for dashboard 
+     * - Used on initial page load
+     * - Also auto selects `guildSelectedId` by first fetched
+    */
+    const getManageableGuilds = async () => { // Fetched on page load
 
-/** __Current Guild's__ Data Object Selected to manage within dashboard. 
- * @type  { import('vue').ComputedRef <import('@sessionsbot/api-types').GuildData>}
-*/
-const guildSelectedData = computed(() => new Object(manageableGuildsData.value[guildSelectedId.value]));
+        // Reset previous options:
+        manageableGuildSelectOptions.value = [];
 
-/** Static -- All Manageable Guilds Data */
-const manageableGuildsData = ref({})
-
-/** Used to fetch all manageable guild data for dashboard 
- * - Used on initial page load
- * - Also auto selects `guildSelectedId` by first fetched
-*/
-const getManageableGuilds = async () => { // Fetched on page load
-
-    // Reset previous options:
-    manageableGuildSelectOptions.value = [];
-
-    // Get guild data from backend:
-    for (const guildId of userData_manageableGuilds.value) {
-        // Fetch guild data
-        const fetchedData = await getGuildData(guildId);
-        // On fetch error:
-        if (!fetchedData.success || !fetchedData.data ) return console.warn(`Failed to fetch guild ${guildId}:`, fetchedData);
-        // Add guild to 'static' manageable guilds data:
-        manageableGuildsData.value[guildId] = fetchedData.data
-        // Check if SessionsBot is a member of this guild:
-        if(fetchedData?.data?.sessionsBotInGuild){
-            // Add manageable guild select option:
-            manageableGuildSelectOptions.value.push({
-                guildName: fetchedData?.data?.guildGeneral?.name,
-                guildId: fetchedData?.data?.guildGeneral?.id,
-                guildIcon: fetchedData?.data?.guildIcon,
-            });
-            // Select as guild if non selected:
-            if(!guildSelectedId.value) guildSelectedId.value = fetchedData?.data?.guildGeneral?.id;
-        } else{
-            // Bot not in guild:
-            console.info('SessionsBot is not a member within manageable guild:', guildId);
+        // Get guild data from backend:
+        for (const guildId of userData_manageableGuilds.value) {
+            // Fetch guild data
+            const fetchedData = await getGuildData(guildId);
+            // On fetch error:
+            if (!fetchedData.success || !fetchedData.data ) return console.warn(`Failed to fetch guild ${guildId}:`, fetchedData);
+            // Add guild to 'static' manageable guilds data:
+            manageableGuildsData.value[guildId] = fetchedData.data
+            // Check if SessionsBot is a member of this guild:
+            if(fetchedData?.data?.sessionsBotInGuild){
+                // Add manageable guild select option:
+                manageableGuildSelectOptions.value.push({
+                    guildName: fetchedData?.data?.guildGeneral?.name,
+                    guildId: fetchedData?.data?.guildGeneral?.id,
+                    guildIcon: fetchedData?.data?.guildIcon,
+                });
+                // Select as guild if non selected:
+                if(!guildSelectedId.value) guildSelectedId.value = fetchedData?.data?.guildGeneral?.id;
+            } else{
+                // Bot not in guild:
+                console.info('SessionsBot is not a member within manageable guild:', guildId);
+            }
+            
         }
-        
+
     }
 
-}
-
-
-// Computed Guild Data:
-const todaysSessionCount = computed(() => {
-    const upcomingSessionsObj = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
-    return upcomingSessionsObj ? objectEntries(upcomingSessionsObj).length : `ERROR`;
-});
-
-const availableRolesCount = computed(() => {
-    let totalAvailable = 0;
-    const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
-    if (!upcomingSessions) return 0;
-
-    objectEntries(upcomingSessions).forEach((session) => {
-
-        if (!session[1]?.roles) 
-            return console.log('No roles?');
-        else {
-            Array.from(session[1]?.roles).forEach(role => {
-                const availInRole = role?.roleCapacity - role?.users.length
-                totalAvailable += availInRole
-            })
+    /** Used to re-fetch a certain manageable guild's data for dashboard 
+     * - Used after certain events that modify data
+     * @param { string } guildId The guild id to refresh data for
+    */
+    const refreshGuildData = async (guildId) => {
+        pageReady.value = false;
+        try {
+            const fetchResults = await getGuildData(guildId)
+            if(!fetchResults.success || !fetchResults.data) throw fetchResults;
+            // Update static data value:
+            manageableGuildsData.value[guildId] = fetchResults?.data
+        } catch (err) {
+            console.warn('[Dashboard] Failed to refresh guild data!', err)
+            
         }
+        pageReady.value = true;
+    }
+
+
+    // Computed Guild Data:
+    const todaysSessionCount = computed(() => {
+        const upcomingSessionsObj = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+        return upcomingSessionsObj ? objectEntries(upcomingSessionsObj).length : `ERROR`;
+    });
+
+    const availableRolesCount = computed(() => {
+        let totalAvailable = 0;
+        const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+        if (!upcomingSessions) return 0;
+
+        objectEntries(upcomingSessions).forEach((session) => {
+
+            if (!session[1]?.roles) 
+                return console.log('No roles?');
+            else {
+                Array.from(session[1]?.roles).forEach(role => {
+                    const availInRole = role?.roleCapacity - role?.users.length
+                    totalAvailable += availInRole
+                })
+            }
+            
+        })
+
+        return totalAvailable
+
+    });
+
+    const rolesAssignedCount = computed(() => {
+        let totalAssigned = 0;
+        const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+        if (!upcomingSessions) return 0;
+
+        objectEntries(upcomingSessions).forEach((session) => {
+
+            if (!session[1]?.roles) 
+                return
+            else {
+                Array.from(session[1]?.roles).forEach(role => {
+                    totalAssigned += role?.users?.length || 0;
+                })
+            }
+            
+        })
+
+        return totalAssigned
+
+    });
+
+    const schedulesSetupCount = computed(() => {
+        let totalSetup = 0;
+        const sessionSchedules = guildSelectedData.value?.guildDatabaseData?.sessionSchedules
+        if (!sessionSchedules) return 0;
+
+        totalSetup = objectEntries(sessionSchedules).length
+
+        return totalSetup
+
+    });
+
+    const dailyPostTime = computed(() => {
+        let result = '00:00 AM';
+
+        const time = guildSelectedData.value?.guildDatabaseData?.sessionSignup?.dailySignupPostTime;
+        if (!time) return '?';
+
+        const timezone = guildSelectedData.value?.guildDatabaseData?.timeZone || 'America/Chicago';
+        
+        const date = DateTime.fromObject({hour: time.hours, minute: time.minutes}, {zone: timezone})
+        if (!date.isValid) return '?';
+
+        result = date.toLocaleString(DateTime.TIME_SIMPLE)
+
+        return result
+
+    });
+
+    const upcomingSessionsObj = computed(() =>  {
+        return guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+    });
+
+
+    /** Reload User Dashboard with `selectedGuildId` to refresh data/view. */
+    async function reloadUserDashboard(selectedGuildId) {
+        pageReady.value = false;
+        if(selectedGuildId){
+            await refreshGuildData(guildSelectedId.value)
+        } else await getManageableGuilds()
+        pageReady.value = true
+    }
+
+
+    // On page load:
+    const pageReady = ref(false)
+    onMounted(async () => {
+        
+        // Show loading:
+        pageReady.value = false;
+        // Fetch Manageable Guilds Data:
+        await getManageableGuilds()
+        // Show dashboard:
+        pageReady.value = true;
+
         
     })
 
-    return totalAvailable
-
-});
-
-const rolesAssignedCount = computed(() => {
-    let totalAssigned = 0;
-    const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
-    if (!upcomingSessions) return 0;
-
-    objectEntries(upcomingSessions).forEach((session) => {
-
-        if (!session[1]?.roles) 
-            return
-        else {
-            Array.from(session[1]?.roles).forEach(role => {
-                totalAssigned += role?.users?.length || 0;
-            })
-        }
-        
-    })
-
-    return totalAssigned
-
-});
-
-const schedulesSetupCount = computed(() => {
-    let totalSetup = 0;
-    const sessionSchedules = guildSelectedData.value?.guildDatabaseData?.sessionSchedules
-    if (!sessionSchedules) return 0;
-
-    totalSetup = objectEntries(sessionSchedules).length
-
-    return totalSetup
-
-});
-
-const dailyPostTime = computed(() => {
-    let result = '00:00 AM';
-
-    const time = guildSelectedData.value?.guildDatabaseData?.sessionSignup?.dailySignupPostTime;
-    if (!time) return '?';
-
-    const timezone = guildSelectedData.value?.guildDatabaseData?.timeZone || 'America/Chicago';
-    
-    const date = DateTime.fromObject({hour: time.hours, minute: time.minutes}, {zone: timezone})
-    if (!date.isValid) return '?';
-
-    result = date.toLocaleString(DateTime.TIME_SIMPLE)
-
-    return result
-
-});
-
-const upcomingSessionsObj = computed(() =>  {
-    return guildSelectedData.value?.guildDatabaseData?.upcomingSessions
-});
-
-
-/** Reload User Dashboard with `selectedGuildId` to refresh data/view. */
-async function reloadUserDashboard(selectedGuildId) {
-    pageReady.value = false;
-    setTimeout(() => pageReady.value = true, 700);
-}
-
-
-// On page load:
-const pageReady = ref(false)
-onMounted(async () => {
-    
-    // Show loading:
-    pageReady.value = false;
-    // Fetch Manageable Guilds Data:
-    await getManageableGuilds()
-    // Show dashboard:
-    pageReady.value = true;
-
-})
 
 </script>
 
@@ -188,52 +217,76 @@ onMounted(async () => {
 
             <!-- Page Breadcrumb: -->
             <Transition name="scale-fade" mode="out-in">
-            <Breadcrumb  class="self-start min-w-fit rounded-md !px-2.75 !py-2.25" :model="[
-                    { label: 'Home', href: '/', icon: HomeIcon },
-                    { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
-                ]">
-                <template #item="{ item }">
+            <Breadcrumb  class="rounded-md !min-w-fit !px-2.75 !py-2.25" 
+            :model="[
+                { label: 'Home', href: '/', icon: HomeIcon },
+                { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
+            ]">
+            <template #item="{ item }">
 
-                    <div class="cursor-pointer flex justify-center flex-row items-center content-center hover:underline"
-                        @click="(e) => router.push(String(item.href))" :class="String(item.href) === String(route.path) ? '!text-blue-400' : ''">
-                        <!-- Icon -->
-                        <component class="!inline mx-1" v-if="item?.icon" :is="item?.icon" :size="17" />
-                        <!-- Crumb Label -->
-                        <span class="text-sm"> {{ item.label }} </span>
-                    </div>
-                </template>
+                <div 
+                  class="cursor-pointer flex justify-center flex-row items-center content-center hover:underline"
+                  @click="(e) => router.push(String(item.href))" 
+                  :class=" String(item.href) === String(route.path) ? '!text-sky-400' : '',
+                  String(item.href) == String(route?.matched[0]?.aliasOf?.path) ? 'text-sky-400' : ''">
+                    <!-- Icon -->
+                    <component class="!inline mx-1" v-if="item?.icon" :is="item?.icon" :size="17" />
+                    <!-- Crumb Label -->
+                    <span class="text-sm"> {{ item.label }} </span>
+                </div>
+
+            </template>
             </Breadcrumb>
             </Transition>
 
-            <!-- Select Guild Dropdown: -->
+            <!-- Guild Select/Config Buttons: -->
             <Transition name="scale-fade" mode="out-in" duration="1">
-            <Select 
-                :loading="!pageReady"
-                :options="manageableGuildSelectOptions" 
-                option-label="guildName" 
-                option-value="guildId"
-                v-model="guildSelectedId"
-                @update:model-value="reloadUserDashboard"
-                
-            >
+            <div class="flex flex-row flex-wrap gap-2 justify-center items-center content-center">
 
-                <template #option="slotProps">
-                    <div class="flex gap-2 justify-center items-center ">
-                        <img class="max-w-6 rounded-sm"
-                            :src="slotProps.option?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
-                        <p> {{ slotProps.option?.guildName }}</p>
-                    </div>
-                </template>
+                <!-- View/Edit Guild Config Button: -->
+                <Button @click="()=>{viewGuildConfigurationPanel = true}" :disabled="!pageReady" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-black/50 text-xs', root: '!border-black' }}" unstyled 
+                    class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-white/20 hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center"
+                >
+                    <SettingsIcon class="m-auto text-white/80" :stroke-width="1.25"/>
+                </Button>
 
-                <template #value="slotProps">
-                    <div class="flex gap-2 justify-center items-center ">
-                        <img class="max-w-6 rounded-sm"
-                            :src="manageableGuildsData[slotProps.value]?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
-                        <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Loading' }} </p>
-                    </div>
-                </template>
+                <!-- View Guild Selector -->
+                <Select 
+                    :loading="!pageReady"
+                    :options="manageableGuildSelectOptions" 
+                    option-label="guildName" 
+                    option-value="guildId"
+                    v-model="guildSelectedId"
+                    @update:model-value="reloadUserDashboard"
+                >
+                    <template #option="slotProps">
+                        <div class="flex gap-2 justify-center items-center ">
+                            <img class="max-w-6 rounded-sm"
+                                :src="slotProps.option?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
+                            <p> {{ slotProps.option?.guildName }}</p>
+                        </div>
+                    </template>
 
-            </Select>
+                    <template #value="slotProps">
+                        <div class="flex gap-2 justify-center items-center ">
+                            <img class="max-w-6 rounded-sm"
+                                :src="manageableGuildsData[slotProps.value]?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
+                            <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Loading' }} </p>
+                        </div>
+                    </template>
+
+                    <template #footer>
+                        <div hidden class="mb-1 px-1 !w-full h-fit gap-1 flex flex-wrap flex-col justify-center items-center content-center">
+                            <div class="w-[90%] h-px bg-zinc-700" />
+                            <Button unstyled class="hover:bg-white/5 p-1.75 pl-2.75  rounded-md w-full flex flex-row gap-1.5 justify-start items-center content-center">
+                                <PlusSquareIcon :stroke-width="1.25" class="text-zinc-400/90" />
+                                <p class="text-zinc-400/90 font-stretch-80% italic"> Invite to another server </p>
+                            </Button> 
+                        </div>
+                    </template>
+                </Select>
+
+            </div>
             </Transition>
 
         </section>
@@ -259,11 +312,12 @@ onMounted(async () => {
 
 
         <!-- Dashboard View -->
-        <section v-else-if="pageReady" class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">
+        <section v-else-if="pageReady" class="flex flex-wrap flex-col gap-7 p-5 flex-1 h-full w-full justify-center items-center content-start">
         
-            
+            <!-- Section 1 -->
+            <section class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">
             <!-- Todays Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-col overflow-clip justify-between w-75 lg:w-95 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -300,7 +354,7 @@ onMounted(async () => {
 
 
             <!-- Member Outlook: HIDDEN -->
-            <div hidden class="flex relative flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div hidden class="flex relative flex-col overflow-clip justify-between w-75 lg:w-115 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Coming Soon Banner -->
                  <div class="absolute w-[200%] h-10 bg-red-900/50 ring-2 ring-white/70 flex top-[48%] rotate-13 gap-2 p-2 justify-center items-center content-center text-center">
@@ -345,7 +399,7 @@ onMounted(async () => {
 
 
             <!-- Guild Outlook: -->
-            <div class="flex flex-col overflow-clip justify-between w-75 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
+            <div class="flex flex-col overflow-clip justify-between w-75 lg:w-95 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
@@ -381,104 +435,22 @@ onMounted(async () => {
                 </div>
 
             </div>
+            </section>
 
 
             <!-- Upcoming Sessions - TABLE VIEW -->
-            <div class="flex flex-wrap overflow-clip flex-col justify-between w-125 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
-                
-                <!-- Heading -->
-                <div class="flex bg-white/5 flex-row text-center justify-between items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
-                    <div class="flex flex-row gap-2 justify-between items-center content-center">
-                        <ClockIcon />
-                        <p class="font-medium"> Upcoming Sessions </p>
-                    </div>
+            <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="todaysSessionCount" />
 
-                    <div class="flex flex-row gap-2 justify-between items-center content-center">
-                        <p class="font-medium text-sm bg-sky-700/20 p-1 px-1.5 rounded-md ring-1 ring-ring"> {{ todaysSessionCount | '%' }} Sessions </p>
-                    </div>
-                    
-                </div>
-
-                <!-- Results -->
-                <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full flex-1 overflow-x-scroll">
-                    
-                    <!-- Sessions Tables -->
-                    <table v-if="todaysSessionCount >= 1" class="inline-table border-1 border-ring ">
-
-                    <!-- Heading Row -->
-                     <thead>
-                        <tr class="border-1 border-ring bg-white/5">
-                            <th 
-                                v-for="item in ['Session Title', 'Session Time', 'Session Roles']" 
-                                scope="col" 
-                                class="border-2 border-ring p-2 font-medium text-center"
-                            > 
-                                {{ item }} 
-                            </th>
-                        </tr>
-                    </thead>
-                    
-                    <!-- Session Row: -->
-                    <tbody>
-                      
-                        <tr v-for="(value, key) in upcomingSessionsObj" class="text-center text-white font-light">
-                            
-                            <!-- Sch Title -->
-                            <td class="border-2 border-ring p-2.5">
-                                <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
-                                    {{ value.title }}
-                                </p>
-                            </td>
-                            
-
-                            <!-- Sch Time -->
-                            <td class="border-2 border-ring p-2.5">
-                                <p class="bg-zinc-800 p-1 py-0.5 rounded-md w-fit m-auto">
-                                    {{ DateTime.fromSeconds(Number(value.date.discordTimestamp)).toLocaleString(DateTime.TIME_SIMPLE) }}
-                                </p>
-                            </td>
-
-                            <!-- Sch Roles -->
-                            <td class="border-2 border-ring p-2.5">
-                                <div class="flex flex-col justify-center items-center content-center gap-1.5">
-
-                                    <div v-for="role in value.roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
-                                        
-                                        <p class="text-sm flex justify-center flex-nowrap items-center content-center gap-0.75"> 
-                                            <UserCircleIcon class="inline" size="15"/>
-                                            {{ role.roleName }}
-                                        </p>
-
-                                        <p class="text-sm flex justify-center items-center gap-1 bg-zinc-800 p-1 py-0.25 rounded-md"> 
-                                            {{ role?.users?.length | '0' }}/{{ role?.roleCapacity | '?' }}
-                                        </p>
-
-                                    </div>
-
-                                </div>
-                            </td>
-
-                        </tr>
-
-                    </tbody>
-
-                    </table>
-
-                    <!-- No Sessions Msg -->
-                    <p v-else class="font-light p-2 text-center flex justify-center items-center content-center">
-                        No upcoming sessions...
-                    </p>
-
-                </div>
-
-            </div>
+            <!-- Guild Schedules - TABLE VIEW -->
+            <guildSchedules :guildSelectedData="guildSelectedData" @updateDashboard="(e)=>{reloadUserDashboard(guildId)}" />
 
 
         </section>
 
-
         </Transition>
         
+        <!-- GUILD CONFIG DIALOG -->
+        <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" @updateDashboard="(e)=>{reloadUserDashboard(true)}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
 
         
     </div>
@@ -499,35 +471,5 @@ onMounted(async () => {
     color: white;
     font-weight: 500;
     text-align: center;
-}
-
-.upcomingSch_actionBtnEdit{
-    background: var(--color-zinc-700);
-    filter: grayscale(.5);
-    font-weight: 600;
-    padding: 4px 8px;
-    font-size: small;
-    border-radius: 6px;
-    display: flex;
-    gap: 3px;
-    cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-}
-
-.upcomingSch_actionBtnDelete{
-    background: var(--color-rose-800);
-    filter: grayscale(.55);
-    font-weight: 600;
-    padding: 4px 8px;
-    font-size: small;
-    border-radius: 6px;
-    display: flex;
-    gap: 3px;
-    cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
 }
 </style>

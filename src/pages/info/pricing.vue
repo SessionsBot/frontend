@@ -29,7 +29,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create up to 3 custom roles per session <br> <p class="ml-6 text-sm"> - max: 5 assigned users per role</p> </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create up to 3 custom roles per session <br> <p class="ml-6 text-sm"> - max: 10 assigned users per role</p> </span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
@@ -63,7 +63,7 @@
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
-                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create up to 5 custom roles per session <br> <p class="ml-6 text-sm"> - max: 10 assigned users per role</p> </span>
+                        <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Create up to 5 custom roles per session <br> <p class="ml-6 text-sm"> - max: 20 assigned users per role</p> </span>
                     </li>
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />

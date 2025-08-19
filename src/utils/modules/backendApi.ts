@@ -1,7 +1,9 @@
 // Imported TypeScript:
 // import { GuildDataResponse, SecureActionResponse, SecureActionNames } 
-import { GuildDataResponse, SecureActionResponse, SecureActionNames } from "@sessionsbot/api-types";
-import axios from "axios";
+import type { APIResponse, GuildDataResponse, SessionSchedule } from "@sessionsbot/api-types";
+import axios, { AxiosResponse } from "axios";
+import { useAuthStore } from "../stores/auth";
+
 
 
 /** Fetches guild data from backend API.
@@ -12,7 +14,7 @@ import axios from "axios";
  * + and more...
  * @param guildId Discord Guild ID to fetch data for
  */
-export async function getGuildData(guildId) : Promise <GuildDataResponse> {
+export async function getGuildData(guildId:string) : Promise <GuildDataResponse> {
     const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/' + guildId;
 
     let responseData : GuildDataResponse;
@@ -35,5 +37,68 @@ export async function getGuildData(guildId) : Promise <GuildDataResponse> {
                 error
             };
         return responseData;
+    }
+}
+
+
+/** Updates guild schedule by id using backend API. */
+export async function updateSessionSchedule(guildId:string, scheduleId:string, scheduleData:SessionSchedule) {
+    const authToken = useAuthStore().authToken
+    const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/schedules/${scheduleId}`;
+
+    try {
+        const responseData: AxiosResponse<APIResponse<any>> = await axios.patch(requestUrl, {scheduleData}, {
+            headers: {
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+
+        return responseData?.data
+    } catch (err) {
+        const originResponseData: APIResponse<any> = err?.response?.data
+        console.warn('API ERROR', 'Update Guild Schedule', err);
+        return originResponseData || {success: false, data: null, error: err};
+    }
+}
+
+
+/** Create guild schedule by id using backend API. */
+export async function createSessionSchedule(guildId:string, scheduleData:SessionSchedule) {
+    const authToken = useAuthStore().authToken
+    const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/schedules`;
+
+    try {
+        const responseData: AxiosResponse<APIResponse<any>> = await axios.post(requestUrl, {scheduleData}, {
+            headers: {
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+
+        return responseData?.data
+    } catch (err) {
+        const originResponseData: APIResponse<any> = err?.response?.data
+        console.warn('API ERROR', 'Update Guild Schedule', err);
+        return originResponseData || {success: false, data: null, error: err};
+    }
+}
+
+
+/** Deletes guild schedule by id using backend API. */
+export async function deleteSessionSchedule(guildId:string, scheduleId:string) {
+    const authToken = useAuthStore().authToken
+    const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/schedules/${scheduleId}`;
+
+    try {
+        const responseData: AxiosResponse<APIResponse<any>> = await axios.delete(requestUrl, {
+            headers: {
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+
+        return responseData?.data
+    } catch (err) {
+        const originResponseData: APIResponse<any> = err?.response?.data
+        console.warn('API ERROR', 'Update Guild Schedule', err);
+        return originResponseData || {success: false, data: null, error: err};
     }
 }
