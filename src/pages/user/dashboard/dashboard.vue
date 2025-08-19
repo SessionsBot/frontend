@@ -8,7 +8,7 @@
     import { useToast } from 'vue-toastification';
     import { objectEntries } from '@vueuse/core';
     import { DateTime } from 'luxon';
-    import upcomingSessionsTable from './upcomingSessionsTable.vue'
+    import upcomingSessionsTable from './sessions/upcomingSessions.vue'
     import guildConfigPanel from './guildConfigPanel.vue'
     import guildSchedules from './schedules/guildSchedules.vue'
 
@@ -471,35 +471,5 @@
     color: white;
     font-weight: 500;
     text-align: center;
-}
-
-.upcomingSch_actionBtnEdit{
-    background: var(--color-zinc-700);
-    filter: grayscale(.5);
-    font-weight: 600;
-    padding: 4px 8px;
-    font-size: small;
-    border-radius: 6px;
-    display: flex;
-    gap: 3px;
-    cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-}
-
-.upcomingSch_actionBtnDelete{
-    background: var(--color-rose-800);
-    filter: grayscale(.55);
-    font-weight: 600;
-    padding: 4px 8px;
-    font-size: small;
-    border-radius: 6px;
-    display: flex;
-    gap: 3px;
-    cursor: pointer;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
 }
 </style>

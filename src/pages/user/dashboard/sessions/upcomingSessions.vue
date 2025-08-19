@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { PencilIcon, Trash2Icon, UserCircleIcon, CheckCircle2Icon, ClockIcon, EyeIcon, LinkIcon, MapPinIcon } from "lucide-vue-next"
+    import { PencilIcon, Trash2Icon, UserCircleIcon, CheckCircle2Icon, ClockIcon, EyeIcon, LinkIcon, MapPinIcon, FileUserIcon } from "lucide-vue-next"
     import { DateTime } from 'luxon';
     import type { GuildData, UpcomingSession } from "@sessionsbot/api-types";
     import { defaultWindow } from "@vueuse/core";
@@ -186,9 +186,17 @@
                 <UserCircleIcon :size="15" />
                 Session Roles:
             </p>
-            <div v-for="role in sessionsDetailsData?.roles" class="w-[85%] text-center ring-ring ring-1 p-1.5 flex justify-between items-center">
-                <p class="font-medium"> {{ role?.roleName }} </p>
-                <p class="text-xs w-7 py-0.5 h-full bg-white/20 rounded-lg"> {{ role?.users?.length || 0 }}/{{ role?.roleCapacity || 0 }}</p>
+            <div v-for="role in sessionsDetailsData?.roles" class="w-full h-fit p-1 flex flex-row flex-nowrap justify-start items-center content-center">
+                <!-- Session Details -->
+                <div class="w-[85%] flex-1 text-center ring-ring ring-1 p-1.5 flex justify-between items-center">
+                    <p class="font-medium"> {{ role?.roleName }} </p>
+                    <p class="text-xs w-7 py-0.5 h-full bg-white/20 rounded-lg"> {{ role?.users?.length || 0 }}/{{ role?.roleCapacity || 0 }}</p>
+                </div>
+
+                <!-- View Session Button -->
+                <Button hidden unstyled class="bg-zinc-700 hover:brightness-150 transition-all w-6.5 h-6.5 ml-3 rounded-md flex justify-center items-center content-center p-0.5 cursor-pointer flex-wrap">
+                    <FileUserIcon  />
+                </Button>
             </div>
         </div>
 
