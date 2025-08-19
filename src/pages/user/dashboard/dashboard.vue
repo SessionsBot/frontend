@@ -450,7 +450,7 @@
         </Transition>
         
         <!-- GUILD CONFIG DIALOG -->
-        <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" @updateDashboard="(e)=>{reloadUserDashboard()}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
+        <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" @updateDashboard="(e)=>{reloadUserDashboard(true)}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
 
         
     </div>
