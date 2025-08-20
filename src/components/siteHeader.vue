@@ -5,6 +5,7 @@
     import { useAuthStore } from '../utils/stores/auth'
     import { BadgeHelpIcon, PlusCircle } from 'lucide-vue-next';
     import { useNavStore } from '@/utils/stores/nav';
+import { defaultWindow } from '@vueuse/core';
     
     // Auth:
     const auth = useAuthStore()
@@ -211,17 +212,17 @@
                         <div class="h-[1.5px] w-[95%] bg-gray-500/50"> </div>
                     </li>
 
-                    <li class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="defaultWindow.open('https://github.com/SessionsBot')" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 2.21c-.13 0-.26.05-.35.15l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.8-.8c-.2-.2-.51-.2-.71 0l-.79.8c-.2.2-.51.2-.71 0l-.79-.8c-.2-.2-.51-.2-.71 0l-.79.8c-.2.2-.51.2-.71 0l-.79-.8c-.09-.09-.22-.14-.35-.14V21.8c.13 0 .26-.05.35-.15l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.1.1.23.15.35.15V2.21zM17 17H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>
                         <p> Credits & About </p>
                     </li>
 
-                    <li class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="$router.push('/privacy'), closeNav()" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><path d="M11.3,2.26l-6,2.25C4.52,4.81,4,5.55,4,6.39v4.7c0,5.05,3.41,9.76,8,10.91c4.59-1.15,8-5.86,8-10.91v-4.7 c0-0.83-0.52-1.58-1.3-1.87l-6-2.25C12.25,2.09,11.75,2.09,11.3,2.26z M12,16L12,16c-0.55,0-1-0.45-1-1v0c0-0.55,0.45-1,1-1h0 c0.55,0,1,0.45,1,1v0C13,15.55,12.55,16,12,16z M12,12L12,12c-0.55,0-1-0.45-1-1V8c0-0.55,0.45-1,1-1h0c0.55,0,1,0.45,1,1v3 C13,11.55,12.55,12,12,12z"/></g></svg>
                         <p> Privacy Policy </p>
                     </li>
 
-                    <li class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+                    <li @click="$router.push('/terms'), closeNav()" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
                         <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><rect fill="none" height="24" width="24"/><path d="M15.83,10.29l-2.12-2.12c-0.39-0.39-0.39-1.02,0-1.41l0,0c0.39-0.39,1.02-0.39,1.41,0l1.41,1.41l3.54-3.54 c0.39-0.39,1.02-0.39,1.41,0l0,0c0.39,0.39,0.39,1.02,0,1.41l-4.24,4.24C16.85,10.68,16.22,10.68,15.83,10.29z M10,7H3 C2.45,7,2,7.45,2,8v0c0,0.55,0.45,1,1,1h7c0.55,0,1-0.45,1-1v0C11,7.45,10.55,7,10,7z M20.29,12.71L20.29,12.71 c-0.39-0.39-1.02-0.39-1.41,0L17,14.59l-1.88-1.88c-0.39-0.39-1.02-0.39-1.41,0l0,0c-0.39,0.39-0.39,1.02,0,1.41L15.59,16 l-1.88,1.88c-0.39,0.39-0.39,1.02,0,1.41l0,0c0.39,0.39,1.02,0.39,1.41,0L17,17.41l1.88,1.88c0.39,0.39,1.02,0.39,1.41,0l0,0 c0.39-0.39,0.39-1.02,0-1.41L18.41,16l1.88-1.88C20.68,13.73,20.68,13.1,20.29,12.71z M10,15H3c-0.55,0-1,0.45-1,1v0 c0,0.55,0.45,1,1,1h7c0.55,0,1-0.45,1-1v0C11,15.45,10.55,15,10,15z"/></g></svg>
                         <p> Terms & Conditions </p>
                     </li>

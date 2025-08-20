@@ -11,6 +11,8 @@ import notFound from '@/pages/notFound.vue'
 // Info Page Imports:
 import pricingPlans from '@/pages/info/pricing.vue'
 import support from '@/pages/info/support/support.vue'
+import privacyPolicy from '@/pages/info/privacy.vue'
+import termsAndConditions from '@/pages/info/terms.vue'
 
 // User Page Imports:
 import signIntoAccount from '@/pages/user/account/signIn.vue'
@@ -50,6 +52,18 @@ const routes = [
     name: 'support',
     component: support,
     alias: ['/help', '/faq']
+  },
+  {
+    path: '/privacy',
+    name: 'privacy-policy',
+    component: privacyPolicy,
+    alias: ['/privacy-policy', '/security']
+  },
+  {
+    path: '/terms',
+    name: 'terms-and-conditions',
+    component: termsAndConditions,
+    alias: ['/terms-and-conditions', '/usage-policy']
   },
 
 

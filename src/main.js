@@ -104,7 +104,7 @@ app.use(Toast, {
 })
 
 
-// ---------------------------------[ Router/Analytics ]--------------------------------- \\
+// ---------------------------------[ After Route/Analytics ]--------------------------------- \\
 
 // Log route/page changes to Google Analytics:
 router.afterEach((to, from) => {
