@@ -1,95 +1,96 @@
 // ---------------------------------[ Imports/Variables ]--------------------------------- \\
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from './App.vue'
-import router from './utils/router.js'
-import './styles/style.css' // or your Tailwind import
+import { createApp } from "vue";
+import { createPinia } from "pinia";
+import App from "./App.vue";
+import router from "./utils/router.js";
+
+import "./styles/style.css"; // MAIN css
+import "vue-toastification/dist/index.css"; // vue-toastification css
 
 import { useAuthStore } from "./utils/stores/auth.ts";
-import { auth } from './utils/firebase.js'
-import { useNavStore } from './utils/stores/nav'
+import { auth } from "./utils/firebase.js";
 
-import PrimeVue from 'primevue/config';
-import Aura from '@primeuix/themes/aura'
-import Tooltip from 'primevue/tooltip'
-import { definePreset } from '@primeuix/themes'
-import ConfirmationService from 'primevue/confirmationservice';
+
+import PrimeVue from "primevue/config";
+import Aura from "@primeuix/themes/aura";
+import Tooltip from "primevue/tooltip";
+import { definePreset } from "@primeuix/themes";
+import ConfirmationService from "primevue/confirmationservice";
 
 import Toast, { POSITION } from "vue-toastification";
-// Import the CSS or use your own!
-import "vue-toastification/dist/index.css";
 
 
-const app = createApp(App)
+
+const app = createApp(App);
 
 // ---------------------------------[ Prime Vue - Theme Config ]--------------------------------- \\
 
-Aura.semantic.colorScheme.dark.formField.background = 'var(--muted)';
-
+// Aura.semantic.colorScheme.dark.formField.background = "var(--muted)";
 const PrimeVue_CustomTheme = definePreset(Aura, {
   semantic: {
     primary: {
-      50: '{indigo.50}',
-      100: '{indigo.100}',
-      200: '{indigo.200}',
-      300: '{indigo.300}',
-      400: '{indigo.400}',
-      500: '{indigo.500}',
-      600: '{indigo.600}',
-      700: '{indigo.700}',
-      800: '{indigo.800}',
-      900: '{indigo.900}',
-      950: '{indigo.950}'
+      50: "{indigo.50}",
+      100: "{indigo.100}",
+      200: "{indigo.200}",
+      300: "{indigo.300}",
+      400: "{indigo.400}",
+      500: "{indigo.500}",
+      600: "{indigo.600}",
+      700: "{indigo.700}",
+      800: "{indigo.800}",
+      900: "{indigo.900}",
+      950: "{indigo.950}",
+    },
+    colorScheme: {
+      dark: {
+        formField: { background: "var(--muted)" }
+      },
     },
   },
 
   components: {
-    
     button: {
       colorScheme: {
         dark: {
           root: {
-
             danger: {
-              background: '#d12626',
-              hoverBackground: '#e83f3f',
-              activeBackground: '#eb5757',
-              borderColor: '#940c0c',
-              hoverBorderColor: '#940c0c',
-              activeBorderColor: '#940c0c',
-              color: '#ffffff',
-              hoverColor: '#ffffff',
-              activeColor: '#ffffff',
+              background: "#d12626",
+              hoverBackground: "#e83f3f",
+              activeBackground: "#eb5757",
+              borderColor: "#940c0c",
+              hoverBorderColor: "#940c0c",
+              activeBorderColor: "#940c0c",
+              color: "#ffffff",
+              hoverColor: "#ffffff",
+              activeColor: "#ffffff",
             },
-
           },
           outlined: {
             danger: {
-              borderColor: '#db0909',
-              color: '#ed2626',
+              borderColor: "#db0909",
+              color: "#ed2626",
               hoverBackground: "color-mix(in srgb, #db0909, transparent 92%)",
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     },
-
-  }
-  
+  },
 });
 
 // Initialize Prime Vue:
 app.use(PrimeVue, {
-  theme: { // theme customization
+  theme: {
+    // theme customization
     preset: PrimeVue_CustomTheme,
     options: {
-      darkModeSelector: '.dark', // force dark mode via class
-    }
+      darkModeSelector: ".dark", // force dark mode via class
+    },
   },
   ripple: true, // ripple effect on buttons
 });
-app.directive('tooltip', Tooltip)
+app.directive("tooltip", Tooltip);
 
 // ---------------------------------[ Toast/Notifications ]--------------------------------- \\
 
@@ -98,18 +99,17 @@ app.use(Toast, {
   transition: "Vue-Toastification__slideBlurred",
   maxToasts: 4,
   closeOnClick: false,
-  hideProgressBar: true, 
+  hideProgressBar: true,
   showCloseButtonOnHover: true,
-  bodyClassName: 'font-semibold'
-})
-
+  bodyClassName: "font-semibold",
+});
 
 // ---------------------------------[ After Route/Analytics ]--------------------------------- \\
 
 // Log route/page changes to Google Analytics:
 router.afterEach((to, from) => {
   if (window.gtag) {
-    window.gtag('event', 'page_view', {
+    window.gtag("event", "page_view", {
       page_path: to.fullPath,
       page_title: to.name,
       from_path: from.name,
@@ -119,11 +119,9 @@ router.afterEach((to, from) => {
 
 // ---------------------------------[ Initialize Auth/App/Plugins ]--------------------------------- \\
 
-
-
 // Init Plugins:
-app.use(createPinia())
-app.use(ConfirmationService)
+app.use(createPinia());
+app.use(ConfirmationService);
 
 // wait for auth - promise:
 function waitForAuthReady() {
@@ -136,17 +134,12 @@ function waitForAuthReady() {
       unsubscribe(); // Stop listening after first event
       resolve();
     });
-  })
+  });
 }
-
 
 // after auth prepared - mount app:
 waitForAuthReady().then(() => {
-
   // Mount App:
-  app.use(router)
-  app.mount('#app')
-
-})
-
-
+  app.use(router);
+  app.mount("#app");
+});
