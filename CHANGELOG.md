@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.1](https://github.com/SessionsBot/frontend/compare/v0.2.0...v0.2.1) (2025-08-20)
+
+### ⚡️ Features
+
+* privacy & terms ([5a23d61](https://github.com/SessionsBot/frontend/commit/5a23d61c5f5b5ba83a86dc5c14f8e87439c88e5a))
+
+### 🐞 Bug Fixes
+
+* router scroll behavior ([24afe1b](https://github.com/SessionsBot/frontend/commit/24afe1b44cb95cd3452b3d208eb69d15024a1957))
+
+### 🧹 Chores
+
+* **deps:** bump the npm-dependencies group across 1 directory with 51 updates ([aeefccb](https://github.com/SessionsBot/frontend/commit/aeefccbcac3de0103a87a20ec06dfca7263ab6e9))
+
+### 📄 Documentation
+
+* readme contents ([a5ee157](https://github.com/SessionsBot/frontend/commit/a5ee157591ac469fd3d267cfa560803dd94c7ff0))
+
+### ♻️ Refactoring
+
+* main.js ([25eb771](https://github.com/SessionsBot/frontend/commit/25eb771f15ec338968a18abc5ebf2f636306264d))
+* router.js ([de5fa3b](https://github.com/SessionsBot/frontend/commit/de5fa3b17d4139050a01b3033c4ea729c73d22c9))
+
 ## [0.2.0](https://github.com/SessionsBot/frontend/compare/v0.1.1...v0.2.0) (2025-08-19)
 
 ### ⚡️ Features
