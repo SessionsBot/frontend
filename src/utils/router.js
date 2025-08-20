@@ -116,7 +116,15 @@ const routes = [
 // Create Router:
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    // If user used browser back/forward buttons
+    if (savedPosition) {
+      return savedPosition
+    }
+    // Always scroll to top for new navigation
+    return { top: 0 }
+  }
 })
 
 // Create 'Account Restricted' navigation guard:
