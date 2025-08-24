@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth as firebaseAuth } from "../firebase";
 import { DateTime } from "luxon";
-import type { DecodedUserData } from "@sessionsbot/api-types";
+import type { FullUserData } from "@sessionsbot/api-types";
 
 // Types:
 interface AuthStates {
@@ -12,7 +12,7 @@ interface AuthStates {
     /** Current user's authToken - `String` or `null` */
     authToken: string | null;
     /** Authenticated User Data - Static - Update by fn `updateUserData()`*/
-    userData: DecodedUserData | null
+    userData: FullUserData | null
 }
 
 // Debugging:
