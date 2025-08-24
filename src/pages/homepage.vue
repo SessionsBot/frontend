@@ -22,7 +22,7 @@ import { defaultWindow } from '@vueuse/core';
                 </h1>
                 <!-- Section 1 - Details -->
                 <p class="text-left p-3 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your Discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 1 - Action Buttons -->
@@ -61,7 +61,7 @@ import { defaultWindow } from '@vueuse/core';
                 </h1>
                 <!-- Section 2 - Details -->
                 <p class="text-left p-3 pt-1 xl:w-[55%]"> 
-                    Utilizing our new Web Dashboard makes managing your discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your Discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 2 - Caption -->
@@ -85,7 +85,7 @@ import { defaultWindow } from '@vueuse/core';
                 </h1>
                 <!-- Section 3 - Details -->
                 <p class="text-left pb-0 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your Discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 3 - Caption -->
