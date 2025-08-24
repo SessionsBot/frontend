@@ -18,11 +18,11 @@ import { defaultWindow } from '@vueuse/core';
             <div class="bg-modern-purple-discord/40 gap-2 p-3 w-screen lg:w-[65%] lg:max-w-180 lg:rounded-md h-fit flex justify-center items-center flex-wrap ring-2 ring-white/10">
                 <!-- Section 1 - Heading -->
                 <h1 class="font-bold text-3xl p-1 pb-0"> 
-                    Roblox Group Sessions management has never been easier!
+                    Discord Group Session management has never been easier!
                 </h1>
                 <!-- Section 1 - Details -->
                 <p class="text-left p-3 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 1 - Action Buttons -->
@@ -57,11 +57,11 @@ import { defaultWindow } from '@vueuse/core';
             <div class="bg-modern-green-default/40 gap-2 p-3 w-screen h-fit flex justify-center items-center flex-wrap flex-col ring-2 ring-white/10">
                 <!-- Section 2 - Heading -->
                 <h1 class="font-bold text-3xl p-1"> 
-                    Roblox Group Sessions management has never been easier!
+                    Discord Group Session management has never been easier!
                 </h1>
                 <!-- Section 2 - Details -->
                 <p class="text-left p-3 pt-1 xl:w-[55%]"> 
-                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 2 - Caption -->
@@ -81,11 +81,11 @@ import { defaultWindow } from '@vueuse/core';
             <div class="bg-modern-red-default/40 gap-2 p-3 w-screen lg:w-[65%] lg:max-w-130 lg:rounded-md h-fit flex justify-center items-center flex-wrap ring-2 ring-white/10">
                 <!-- Section 3 - Heading -->
                 <h1 class="font-bold text-3xl p-1 pb-0"> 
-                    Roblox Group Sessions management has never been easier!
+                    Discord Group Session management has never been easier!
                 </h1>
                 <!-- Section 3 - Details -->
                 <p class="text-left pb-0 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your roblox group sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
+                    Utilizing our new Web Dashboard makes managing your discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
                 </p>
                 
                 <!-- Section 3 - Caption -->
