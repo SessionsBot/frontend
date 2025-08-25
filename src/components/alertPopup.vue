@@ -26,7 +26,7 @@
 <template>
   
 
-    <!-- Default Popup -->
+    <!-- Default - Popup -->
     <Transition name="overlay" @after-leave="$emit('closed')">
     <div v-show="defaultAlert && popupVisible" class="popup-overlay">
       
@@ -94,7 +94,7 @@
     </Transition>
 
 
-    <!-- Sign In Popup -->
+    <!-- Sign In - Popup -->
     <Transition name="overlay" @after-leave="$emit('closed')">
     <div v-show="signInAlert && popupVisible" class="popup-overlay">
       

@@ -5,7 +5,7 @@
     import { useAuthStore } from '../utils/stores/auth'
     import { BadgeHelpIcon, PlusCircle } from 'lucide-vue-next';
     import { useNavStore } from '@/utils/stores/nav';
-import { defaultWindow } from '@vueuse/core';
+    import { defaultWindow } from '@vueuse/core';
     
     // Auth:
     const auth = useAuthStore()

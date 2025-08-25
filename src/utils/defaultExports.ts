@@ -2,6 +2,7 @@
 import { useToast } from 'vue-toastification';
 import { useNavStore } from './stores/nav';
 import { useAuthStore } from './stores/auth';
+import { usePopupSystem } from './stores/popup';
 
 // Toast Notifications
 const toast = useToast()

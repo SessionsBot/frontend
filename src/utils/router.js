@@ -11,6 +11,7 @@ import pricingPlans from "@/pages/info/pricing.vue";
 import support from "@/pages/info/support/support.vue";
 import privacyPolicy from "@/pages/info/privacy.vue";
 import termsAndConditions from "@/pages/info/terms.vue";
+import backendOffline from "@/pages/info/backendOffline.vue";
 // User Page Imports:
 import signIntoAccount from "@/pages/user/account/signIn.vue";
 import myAccount from "@/pages/user/account/myAccount.vue";
@@ -18,6 +19,7 @@ import dashboard from "@/pages/user/dashboard/dashboard.vue";
 // API Page Imports:
 import signInRedirect from "@/pages/api/signInRedirect.vue";
 import guildSetup from "@/pages/api/guildSetup/guildSetup.vue";
+import { usePopupSystem } from "./stores/popup";
 
 
 // All Routes:
@@ -53,6 +55,17 @@ const routes = [
     name: "terms-and-conditions",
     component: termsAndConditions,
     alias: ["/terms-and-conditions", "/usage-policy"],
+  },
+  {
+    path: "/offline",
+    name: "backend-offline",
+    component: backendOffline,
+    alias: ["/backend-offline"],
+    beforeEnter() {
+      const nav = useNavStore();
+      nav.headerVisible = false;
+      nav.footerVisible = false;
+    }
   },
 
   // User Routes
@@ -125,6 +138,17 @@ const router = createRouter({
 // Before Each Route - Navigation Guards:
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore();
+  const nav = useNavStore();
+  const popups = usePopupSystem();
+  const backendOffline = popups.backendOffline
+
+  // Confirm Backend Available:
+  if (backendOffline && to.path != '/offline') {
+    // console.info('ROUTER-BEFORE', 'Backend is offline, redirecting');
+    return next({path: "/offline"})
+  }else if(to.path == '/offline' && !backendOffline) {
+    return next({path: '/'})
+  }
 
   // 'Account Restricted' navigation guard:
   if (to.meta?.requiresAuth && !auth.isAuthenticated) {
@@ -142,7 +166,6 @@ router.beforeEach((to, from, next) => {
   }
 
   // Re-enable Header if/was hidden:
-  const nav = useNavStore();
   nav.headerVisible = true;
   next();
 });
