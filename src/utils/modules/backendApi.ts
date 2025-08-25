@@ -1,10 +1,64 @@
 // Imported TypeScript:
 // import { GuildDataResponse, SecureActionResponse, SecureActionNames } 
-import type { APIResponse, GuildDataResponse, SessionSchedule } from "@sessionsbot/api-types";
+import type { APIErrorData, APIResponse, GuildDataResponse, SessionSchedule } from "@sessionsbot/api-types";
 import axios, { AxiosResponse } from "axios";
 import { useAuthStore } from "../stores/auth";
 
+export interface systemStatusObject {
+    /** The identifier for this system on the status page. */
+    id: string,
+    /** The name of this system on the status page. */
+    name: string,
+    /** The current status for this system on the status page. */
+    status: string,
+}
 
+/** Fetch current system statuses from Better Stack.
+ * @returns Array of objects containing data of the system and status.
+ */
+export async function getSystemStatuses(): Promise<APIResponse<systemStatusObject[]>> {
+    let responseData : APIResponse<systemStatusObject[]>
+    const requestUrl = 'https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/system/status';
+
+    try {
+        const sysStatusFetchResults = await axios.get(requestUrl);
+        if(!sysStatusFetchResults?.data) throw 'No system status data provided, please try again!';
+        
+        // return fetched data:
+        responseData = sysStatusFetchResults.data
+        return responseData
+
+    } catch (error) {
+        console.warn('API ERROR', 'Fetch System Statuses', error);
+        // return error:
+        if(error?.response?.data) return error?.response?.data // Return response error data if possible
+        else responseData = {
+                success: false,
+                data: null,
+                error
+            };
+        return responseData;
+    }
+}
+/** Module function to check and alert for backend system status incidents. */
+export async function checkBackendStatus() {
+    // Get all system statuses:
+    const systemStatuses = await getSystemStatuses()
+    if(systemStatuses.success){
+        // Get main backend status:
+        const backendStatus = systemStatuses.data.find(sys => sys.name.includes('Backend'));
+        if(!backendStatus || backendStatus?.status != 'operational'){ 
+            // Backend degraded/offline:
+            console.warn('Backend is not fully operational! Please see status page at https://status.sessiosnbot.fyi.', backendStatus)
+            // usePopupSystem().showPopup('Uh oh!', 'It appears our Discord Bot / Backend systems are experiencing a service outage! Please visit our status page for more details...', false, [{label: 'Visit Status Page', fn: () => {defaultWindow.open('https://status.sessionsbot.fyi')}}, {label: 'Dismiss', fn: () => { usePopupSystem().closePopup() }}])
+        } else { 
+            // Backend operational
+            console.info('Backend operational!', backendStatus)
+        }
+    }else{
+        console.warn('System Status', 'FAILURE', systemStatuses)
+    }
+}
 
 /** Fetches guild data from backend API.
  * @details

@@ -19,9 +19,11 @@ export const usePopupSystem = defineStore('popup', {
         popupDescription: 'No details provided...',
 
         // Popup Action Buttons:
-        buttonActions: [] 
-        
-        
+        buttonActions: [],
+
+        // Backend Status States:
+        backendOffline: false,
+        backendDegraded: false,
     }),
 
 

@@ -19,6 +19,9 @@ import { definePreset } from "@primeuix/themes";
 import ConfirmationService from "primevue/confirmationservice";
 
 import Toast, { POSITION } from "vue-toastification";
+import { checkBackendStatus, getSystemStatuses } from "./utils/modules/backendApi.ts";
+import { usePopupSystem } from "./utils/stores/popup.js";
+import { defaultWindow } from "@vueuse/core";
 
 
 
@@ -123,6 +126,7 @@ router.afterEach((to, from) => {
 app.use(createPinia());
 app.use(ConfirmationService);
 
+
 // wait for auth - promise:
 function waitForAuthReady() {
   return new Promise((resolve) => {
@@ -138,8 +142,12 @@ function waitForAuthReady() {
 }
 
 // after auth prepared - mount app:
-waitForAuthReady().then(() => {
+waitForAuthReady().then(async () => {
   // Mount App:
   app.use(router);
   app.mount("#app");
+
+  // Run system status check:
+  checkBackendStatus()
+
 });

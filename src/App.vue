@@ -20,6 +20,10 @@
 
 
 <template>
+
+  <div class="flex flex-1 justify-center items-center w-full h-full">
+    BACKEND OFFLINE!
+  </div>
   
   <siteHeader />
 
