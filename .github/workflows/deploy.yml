@@ -28,7 +28,7 @@ jobs:
               ref: context.sha,
               required_contexts: [],
               auto_merge: false,
-              environment: "Discord Bot - Backend",
+              environment: "Website - Sessions Bot",
               production_environment: true
             });
 
@@ -45,7 +45,7 @@ jobs:
         env:
           KOYEB_API_KEY: ${{ secrets.KOYEB_API_KEY }}
         run: |
-          koyeb deploy . brilliant-austina/sessions-bot --token $KOYEB_API_KEY --env GIT_SHA=$GITHUB_SHA
+          koyeb deploy . painful-peri/app --token $KOYEB_API_KEY --env GIT_SHA=$GITHUB_SHA
 
       - name: Update Deployment Status
         if: always()
@@ -63,7 +63,7 @@ jobs:
               repo: context.repo.repo,
               deployment_id: deploymentId,
               state: status,
-              environment: "Discord Bot - Backend",
-              environment_url: "https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/",
+              environment: "Website - Sessions Bot",
+              environment_url: "https://sessionsbot.fyi/",
               log_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             });
