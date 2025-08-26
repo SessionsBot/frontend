@@ -2,16 +2,15 @@
     // Imports:
     // @ts-ignore
     import { zodResolver } from '@primevue/forms/resolvers/zod';
-    import { array, date, string, z } from 'zod'
+    import { date, string, z } from 'zod'
     import { DailySignupPostTime, GuildData, SessionRole, SessionSchedule } from '@sessionsbot/api-types';
     import { FormInstance, FormSubmitEvent } from '@primevue/forms';
-    import { CalendarClockIcon, Clock4Icon, ExternalLinkIcon, HardHatIcon, Layers2Icon, LetterTextIcon, PlusCircleIcon, Trash2Icon, UserCircle2Icon, UserCircleIcon, XIcon } from 'lucide-vue-next';
-    import { DateTime } from 'luxon';
-    import { ConfirmDialogSlots, PopoverMethods, useConfirm } from 'primevue';
+    import { CalendarClockIcon, Clock4Icon, ExternalLinkIcon, HardHatIcon, Layers2Icon, LetterTextIcon, PlusCircleIcon, Trash2Icon, UserCircleIcon, XIcon } from 'lucide-vue-next';
+    import { PopoverMethods } from 'primevue';
     import roleDescriptionPopover from './roleDescriptionPopover.vue'
     import NewRolePopover from './newRolePopover.vue';
-    import { createSessionSchedule, deleteSessionSchedule, updateSessionSchedule } from '@/utils/modules/backendApi';
-    import { auth, toaster } from '@/utils/defaultExports';
+    import { createSessionSchedule } from '@/utils/modules/backendApi';
+    import { toaster } from '@/utils/defaultExports';
     import { POSITION } from 'vue-toastification';
     
 
@@ -238,7 +237,7 @@
                     <!-- Add Role Button -->
                     <Button @click="(e)=>newRolePopoverRef.show(e)" unstyled class="flex justify-center items-center content-center rounded-md gap-0.75 w-fit h-fit py-[3.5px] px-0.75 bg-zinc-900/80 cursor-pointer">
                         <PlusCircleIcon class="ml-0.25" :size="12"/>
-                        <p class="text-[10px] font-stretch-85% font-medium leading-snug"> Add Role </p>
+                        <p class="text-[10px] mx-0.5 font-stretch-85% font-medium leading-snug"> Add Role </p>
                     </Button>
                 </div>
 

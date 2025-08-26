@@ -1,9 +1,7 @@
 <script setup lang="ts">
     import { PencilIcon, CalendarClockIcon, PlusIcon } from "lucide-vue-next"
     import { DateTime } from 'luxon';
-    import type { GuildData, UpcomingSession } from "@sessionsbot/api-types";
-    import { defaultWindow } from "@vueuse/core";
-    import { useToast } from "vue-toastification";
+    import type { GuildData } from "@sessionsbot/api-types";
     import viewGuildSchedulePanel from './viewGuildSchedule.vue';
     import CreateGuildSchedulePanel from "./createGuildSchedule.vue";
     import { toaster } from "@/utils/defaultExports";
