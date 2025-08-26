@@ -23,7 +23,7 @@
     // Setup Step Components:
     import TimezoneSetup from './steps/guildSettings.vue'
     import DailySignupSetup from './steps/signupPanels.vue'
-    import SessionSchedules from './steps/sessionSchedules.vue'
+    import SessionSchedules from './steps/schedules/sessionSchedules.vue'
     import { getGuildData } from '@/utils/modules/backendApi';
 
 

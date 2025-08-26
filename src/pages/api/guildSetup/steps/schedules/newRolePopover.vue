@@ -49,11 +49,12 @@
             // Add blank users[] to role
             newRole['users'] = []
             // Add role to static stack:
-            props.scheduleRoles.push(newRole)
+            props.scheduleRoles.push(newRole);
             emits('closePopover')
 
         } else { // Valid Submission
-            console.warn('INVALID', f)
+            // console.warn('INVALID', f)
+            return
         }
     }
 
