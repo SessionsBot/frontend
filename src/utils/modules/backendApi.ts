@@ -93,15 +93,15 @@ export async function getGuildData(guildId:string) : Promise <GuildDataResponse>
         return responseData;
         
     } catch (error) {
-        
-        console.warn('API ERROR', 'Fetch Guild Data', error);
-        if(error?.response?.data) return error?.response?.data // Return response error data if possible
-        else responseData = {
-                success: false,
-                data: null,
-                error
-            };
-        return responseData;
+        const defaultErrResponse = { success: false, data: null, error };
+
+        if(error?.response?.status == 404) { // Org Response - Guild not Found
+            return error?.response?.data || defaultErrResponse
+        } else { // Unknown error:
+            console.warn('API ERROR', 'Fetch Guild Data', error);
+            if(error?.response?.data) return error?.response?.data // Return response error data if possible
+            else return defaultErrResponse;
+        }
     }
 }
 
