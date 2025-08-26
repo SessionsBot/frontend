@@ -7,22 +7,42 @@
     import { FormInstance, FormSubmitEvent } from '@primevue/forms';
     import { CalendarClockIcon, Clock4Icon, ExternalLinkIcon, HardHatIcon, Layers2Icon, LetterTextIcon, PlusCircleIcon, Trash2Icon, UserCircleIcon, XIcon } from 'lucide-vue-next';
     import { PopoverMethods } from 'primevue';
-    import roleDescriptionPopover from './roleDescriptionPopover.vue'
-    import NewRolePopover from './newRolePopover.vue';
-    import { createSessionSchedule } from '@/utils/modules/backendApi';
-    import { toaster } from '@/utils/defaultExports';
-    import { POSITION } from 'vue-toastification';
+    import roleDescriptionPopover from './roleDescriptionPopover.vue';
+    import newRolePopover from './newRolePopover.vue';
     
-
 
     // Incoming Props:
     const props = defineProps<{
         viewCreateSchedulePanel: boolean,
-        guildSelectedData: GuildData,
+        scheduleToDuplicate: SessionSchedule | null,
     }>();
 
     // Outgoing Emits:
-    const emits = defineEmits(['closePanel', 'updateDashboard']);
+    const emits = defineEmits(['closePanel', 'addSchedule']);
+
+    // Watch for Duplicating Schedule:
+    watch(() => props.scheduleToDuplicate, (schedule) => {
+        if(schedule){
+            // Get Date from sessionDateDaily:
+            const schDate = new Date()
+            schDate.setHours(schedule?.sessionDateDaily?.hours ?? 0, schedule?.sessionDateDaily?.minutes ?? 0, 0, 0)
+            // Set Form Values:
+            newScheduleForm.value.setValues({
+                sessionTitle: schedule.sessionTitle,
+                sessionUrl: schedule.sessionUrl,
+                sessionTime: schDate,
+            })
+            // Set Sch Roles:
+            scheduleRoles.value = [...(schedule.roles || [])]
+        }
+    }, {immediate: true})
+
+    // Reset Roles on New Open:
+    watch(() => props.viewCreateSchedulePanel, (isOpen) => {
+        if(isOpen) {
+            scheduleRoles.value = [];
+        }
+    })
 
     const newScheduleForm : Ref<FormInstance> = ref(null) // Ref to schedule data form within panel
 
@@ -43,13 +63,14 @@
         // console.log(scheduleRoles.value)
     }
 
+
     // roleDescPopoverRef
     const roleDescPopoverRef = ref<PopoverMethods>()
     const selectedRoleIndex = ref() // index number passed to role desc form
 
     // newRolePopoverRef
     const newRolePopoverRef = ref<PopoverMethods>()
-    const innerNewRolePopoverRef = ref<InstanceType<typeof NewRolePopover>>()
+    const innerNewRolePopoverRef = ref<InstanceType<typeof newRolePopover>>()
 
     // Duplicate role data/form fn:
     async function duplicateRoleData(e:Event, roleData:SessionRole) {
@@ -89,7 +110,7 @@
             // Generate Session Id:
             const scheduleId = 'shd_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
             // Add 'roles' to values:
-            f.values['sessionRoles'] = scheduleRoles.value;
+            f.values['sessionRoles'] = JSON.parse(JSON.stringify(scheduleRoles.value));
             // Create correct post time format:
             const rawSchDate:Date = f.values['sessionTime']
             const schTimeFormat:DailySignupPostTime = {hours: rawSchDate.getHours(), minutes: rawSchDate.getMinutes()}
@@ -102,19 +123,10 @@
                 scheduleId: scheduleId
             }
 
-            // 2. Attempt save:
-            const results = await createSessionSchedule(props.guildSelectedData?.guildGeneral?.id, finalScheduleData)
+            // 2. Finished:
+            emits('addSchedule', finalScheduleData);
+            emits('closePanel');
 
-            // 3. Finished:
-            // console.log('results', results)
-            if(results.success) { // Succeeded:
-                toaster.success('Schedule created!', {position: POSITION.TOP_CENTER});
-                // Close panel & refresh data:
-                emits('closePanel');
-                emits('updateDashboard', true)
-            } else { // Errored:
-                toaster.error('Error updating schedule, please try again!', {position: POSITION.TOP_CENTER})
-            }
             submissionLoading.value=false; 
         } else { // Invalid Submission:
             return // invalid
@@ -289,7 +301,7 @@
 
                     <!-- New Role PopOver -->
                     <Popover ref="newRolePopoverRef">
-                        <NewRolePopover ref="innerNewRolePopoverRef" @close-popover="newRolePopoverRef.hide" :schedule-roles="scheduleRoles" />
+                        <newRolePopover ref="innerNewRolePopoverRef" @close-popover="newRolePopoverRef.hide" :schedule-roles="scheduleRoles" />
                     </Popover>
                 </div>
 
@@ -316,7 +328,7 @@
             <!-- Cancel Button -->
             <Button @click="emits('closePanel'); newScheduleForm.reset();" :disabled="submissionLoading" severity="secondary" class="w-fit" label="Cancel" />
             <!-- Submit Button -->
-            <Button @click="newScheduleForm.submit();" :loading="submissionLoading" type="submit" severity="success" class="w-fit" label="Save" />
+            <Button @click="newScheduleForm.submit();" :loading="submissionLoading" type="submit" severity="success" class="w-fit" label="Create" />
         </section>
 
     </template>

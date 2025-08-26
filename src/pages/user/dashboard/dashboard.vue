@@ -58,6 +58,7 @@
             // Fetch guild data
             const fetchedData = await getGuildData(guildId);
             // On fetch error:
+            if (!fetchedData.success && fetchedData.error.code == 404) return
             if (!fetchedData.success || !fetchedData.data ) return console.warn(`Failed to fetch guild ${guildId}:`, fetchedData);
             // Add guild to 'static' manageable guilds data:
             manageableGuildsData.value[guildId] = fetchedData.data

@@ -1,12 +1,10 @@
 <script setup>
     // Imports:
-    import { zodResolver } from '@primevue/forms/resolvers/zod';
-    import { z } from 'zod';
-    import { ArrowBigDownDash, BellRingIcon, ChevronDown, ChevronDownCircle, Clock4Icon, EyeOffIcon, FileCheck, FilePlus2, FileWarning, InfoIcon, LayersIcon, ListStartIcon, Loader2, LockKeyholeIcon, MegaphoneIcon, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
+    import { BellRingIcon, ChevronDown, Clock4Icon, FileCheck, FilePlus2, FileWarning, LayersIcon, ListStartIcon, Loader2, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
     import { ref, computed, onMounted, warn, watch } from 'vue';
     import { useAuthStore } from '@/utils/stores/auth';
     import { Select } from 'primevue';
-
+    import axios from 'axios';
 
     // Variables:
     const auth = useAuthStore()
@@ -16,7 +14,6 @@
         const user = await auth.userData
         return user?.Firebase?.uid
     }
-
 
     // Incoming Props:
     const props = defineProps({
@@ -29,7 +26,6 @@
         ['updateDraft']
     )
     
-
     // Auto Channel Creation:
     const channelCreationStatus = ref(0)
     const createChannelLabel = computed(() => {
@@ -48,83 +44,52 @@
         }
     })
     const createAutoSignupChannel = async () => {
-
-        // Set viewable status:
+        const guildId = props.guildData?.guildGeneral?.id
+        const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/channels/auto-signup`;
+        // Set status - loading
         channelCreationStatus.value = 100
-
-        // Attempt request:
-        try {
-            // 1. Attempt fetch:
-            const guildId = props.guildData?.guildGeneral?.id
-            if(!guildId) throw 'No guild id provided!';
-            const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/channels/auto-signup`;
-            const adminId = await userId();
-            const response = await fetch(requestUrl, {
-                method: 'POST',
+        // Attempt API POST:
+        try{
+            
+            /** @type { import('axios').AxiosResponse< import('@sessionsbot/api-types').APIResponse<any> > } */
+            const results = await axios.post(requestUrl, null, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${userWebToken.value}`
+                    Authorization: `Bearer ${userWebToken.value}`
                 }
+            });
+
+            // If API Error:
+            if(!results?.data?.success) throw results.data
+
+            // Get results:
+            const newCategory = results.data?.data?.sessionsCategory?.sessionsCategory
+            const newChannel = results.data?.data?.signupChannel?.signupChannel
+            if(!newCategory || !newChannel) throw {message: `Missing either newCategory or newChannel from API response.`, data: results?.data?.data}
+
+            // Add NEW CHANNEL to select options:
+            channelOptions.value.push({ 
+                label: newCategory?.name, 
+                items: [ { label: newChannel?.name, value: newChannel?.id } ]
             })
 
-            // 2. Get response:
-            let body;
-            try{ 
-                body = await response.json(); 
-            }catch{ 
-                response.status = 400;
-                body = {
-                    success: false,
-                    data: null,
-                    error: 'Front-end received no response body!'
-                } 
-            }
-            
-            // 3. Read response/body:
-            if(!response.ok){
-                // Error from Backend:
-                const debugObject = {
-                    errorCode: response.status,
-                    errorMessage: body?.message,
-                    errorData: body?.data
-                }
-                // Set viewable status:
-                channelCreationStatus.value = 400
-                // Debug:
-                console.warn('Responded - Error!', 'Secure Action', body)
-            } else{
-                // Success from Backend:
-                const creationData = body?.data?.creationResult?.data
-                const newCategory = creationData?.sessionsCategory?.sessionsCategory
-                const newChannel = creationData?.signupChannel?.signupChannel
-                // Add NEW CHANNEL to select options:
-                channelOptions.value.push( 
-                    { 
-                        label: newCategory?.name, 
-                        items: [ { label: newChannel?.name, value: newChannel?.id } ]
-                    } 
-                )
-                // Set as selection:
-                dailySignupForm.value?.setFieldValue('panelChannel', newChannel?.id)
-                // Set viewable status:
-                channelCreationStatus.value = 200
-                // Switch cards:
-                setTimeout(() => {
-                    channelSelectType.value = 'select'
-                }, 500);
-            }
+            // Set as selection:
+            dailySignupForm.value?.setFieldValue('panelChannel', newChannel?.id)
+            // Set status - success
+            channelCreationStatus.value = 200
+            // Switch cards:
+            setTimeout(() => {
+                channelSelectType.value = 'select'
+            }, 500);
 
-        } catch (error) {
-            // Set viewable status:
+        } catch(e) {
+            // Set status - error
             channelCreationStatus.value = 400
-            // Debug error:
-            console.error('Error!', 'Secure Action', {error, response})
+            console.warn('[!] Failed to create signup channel!', e)
         }
         
-        
+
 
     }
-
 
     // Existing Guild Channels Selection:
     const channelSelectType = ref('') // create or select
@@ -167,7 +132,6 @@
             }));
     }
 
-
     // Set Default Post Time:
     const setDefaultPostTime = () => {
         const defaultPostTime = new Date()
@@ -175,12 +139,10 @@
         dailySignupForm.value?.setFieldValue('postTime', defaultPostTime)
     }
 
-
     // Mentionable Role Options/Select:
     const mentionRoleOptions = ref([]);
     const guildRoles = computed(() => props.guildData?.guildGeneral?.roles || []) // Raw guild roles data
     mentionRoleOptions.value = guildRoles.value
-
 
     // Form Validation:
     const customResolver = ({values}) => {
@@ -202,7 +164,6 @@
         };
     }
 
-
     // Form Submission:
     const dailySignupForm = ref(null)
     const submitDailySignup = (f) => {
@@ -222,7 +183,6 @@
             props.changeStep('2')
         }
     }
-
 
     // On Mount:
     onMounted(() => {

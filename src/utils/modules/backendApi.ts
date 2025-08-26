@@ -47,11 +47,11 @@ export async function getSystemStatuses(): Promise<APIResponse<systemStatusObjec
 export async function checkBackendStatus() {
     // Get all system statuses:
     const systemStatuses = await getSystemStatuses()
+
     if(systemStatuses.success){
-        // Get main backend status:
+        // Get Backend Status:
         const backendStatus = systemStatuses.data.find(sys => sys.name.includes('Backend'));
-        if(!backendStatus || backendStatus?.status != 'operational'){ 
-            // Backend degraded/offline:
+        if(!backendStatus || backendStatus?.status != 'operational'){ // Backend degraded/offline:
             const popupSystem = usePopupSystem()
             console.warn('Backend server is not fully operational! Please see status page at https://status.sessiosnbot.fyi.', backendStatus)
             if(backendStatus?.status == 'downgraded') { 
@@ -61,13 +61,13 @@ export async function checkBackendStatus() {
                 popupSystem.backendOffline = true; 
                 router.push('/offline');
             }
-            // usePopupSystem().showPopup('Uh oh!', 'It appears our Discord Bot / Backend systems are experiencing a service outage! Please visit our status page for more details...', false, [{label: 'Visit Status Page', fn: () => {defaultWindow.open('https://status.sessionsbot.fyi')}}, {label: 'Dismiss', fn: () => { usePopupSystem().closePopup() }}])
-        } else { 
-            // Backend operational
-            console.info('Backend operational!', backendStatus)
         }
     }else{
-        console.warn('System Status', 'FAILURE', systemStatuses)
+        console.warn('System Status', 'FAILURE', systemStatuses);
+        // Assume Backend Failure:
+        const popupSystem = usePopupSystem()
+        popupSystem.backendOffline = true; 
+        router.push('/offline');
     }
 }
 
@@ -93,15 +93,15 @@ export async function getGuildData(guildId:string) : Promise <GuildDataResponse>
         return responseData;
         
     } catch (error) {
-        
-        console.warn('API ERROR', 'Fetch Guild Data', error);
-        if(error?.response?.data) return error?.response?.data // Return response error data if possible
-        else responseData = {
-                success: false,
-                data: null,
-                error
-            };
-        return responseData;
+        const defaultErrResponse = { success: false, data: null, error };
+
+        if(error?.response?.status == 404) { // Org Response - Guild not Found
+            return error?.response?.data || defaultErrResponse
+        } else { // Unknown error:
+            console.warn('API ERROR', 'Fetch Guild Data', error);
+            if(error?.response?.data) return error?.response?.data // Return response error data if possible
+            else return defaultErrResponse;
+        }
     }
 }
 
