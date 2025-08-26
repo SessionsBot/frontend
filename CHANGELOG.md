@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.2.2](https://github.com/SessionsBot/frontend/compare/v0.2.1...v0.2.2) (2025-08-26)
+
+### ⚡️ Features
+
+* system status checker fns ([5b64a98](https://github.com/SessionsBot/frontend/commit/5b64a98d26cb56c45973c31fd03ce4a3ddf69c1c))
+
+### 🐞 Bug Fixes
+
+* auth user type names ([866fb21](https://github.com/SessionsBot/frontend/commit/866fb2144fe2aafc452a3a2e19774888c7374940))
+* dependabot config ([49a68a3](https://github.com/SessionsBot/frontend/commit/49a68a328c8064c22030743ab1944cc10e76fb52))
+* generalize homepage content ([607e35f](https://github.com/SessionsBot/frontend/commit/607e35f4e20c14f0fe8ea21a39a3a121765c449c))
+* **guild setup:** auto create signup channel ([0a92478](https://github.com/SessionsBot/frontend/commit/0a92478f189e6567b178b207f5d5f637eacde5f3))
+* **guild setup:** major re-vamp of schedule setup ([d37d376](https://github.com/SessionsBot/frontend/commit/d37d37664bca515ce10f92e2beefc3088050acd8))
+* **guild setup:** manageable guild access ([a9e563e](https://github.com/SessionsBot/frontend/commit/a9e563eb6d6984800cb3337b3d0fb59304ed6d13))
+* ignore type pkg on dev build ([ffdc214](https://github.com/SessionsBot/frontend/commit/ffdc214b7b4f77633c6bfde04b0a8489afe6a149))
+* manageable guild fetching ([5382732](https://github.com/SessionsBot/frontend/commit/538273224cdecbff39bd1f86b7f5a5b0a0f8b918))
+* status alert method ([fcfa062](https://github.com/SessionsBot/frontend/commit/fcfa0621134c9bd31235f26a72c86baeb91c692f))
+* system status check ([b1bafce](https://github.com/SessionsBot/frontend/commit/b1bafcede5194b668a3160b13e863ea321345c5a))
+
+### 🧹 Chores
+
+* **deps:** bump the npm-dependencies group across 1 directory with 19 updates ([32eb37b](https://github.com/SessionsBot/frontend/commit/32eb37b54bd8664a6b750a3fd5919de9efaf1a2c))
+
+### 🎨 Styling
+
+* status alert styles ([6913098](https://github.com/SessionsBot/frontend/commit/6913098f6dfad887f464d80728bab80b7da0abde))
+
+### ♻️ Refactoring
+
+* minor improvements ([ed24e6c](https://github.com/SessionsBot/frontend/commit/ed24e6c280a6cd4d3927669ebcfce980fc5f71ac))
+
 ## [0.2.1](https://github.com/SessionsBot/frontend/compare/v0.2.0...v0.2.1) (2025-08-20)
 
 ### ⚡️ Features
