@@ -26,7 +26,7 @@ onMounted(async () => {
         console.warn(`{!} Sign in attempt failed! - from: 'Backend'`)
         statusMessage.value = 'Sign In - Failed';
         auth.signOut()
-        return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})
+        return router.push({path:'/sign-in', query: {discordAuthError: 'true'}})
     }
     
 
