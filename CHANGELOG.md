@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.3](https://github.com/SessionsBot/frontend/compare/v0.2.2...v0.2.3) (2025-08-27)
+
+### ⚡️ Features
+
+* **auth:** refresh user data logic ([314aa72](https://github.com/SessionsBot/frontend/commit/314aa72ffab2c8488b739bf929ae9916c965904f))
+* deploy pipeline ([22b5d9a](https://github.com/SessionsBot/frontend/commit/22b5d9ac0418a665613da6765d4126769d6dbf83))
+
+### 🐞 Bug Fixes
+
+* deploy pipeline ([576f447](https://github.com/SessionsBot/frontend/commit/576f447f9e443a0c020d8fef093f45c85494c240))
+* deployment trigger ([88bb0ea](https://github.com/SessionsBot/frontend/commit/88bb0eaff11e9f2b892e29f9c9ebd0459091a751))
+* **release-pipeline:** config ([5eb06d7](https://github.com/SessionsBot/frontend/commit/5eb06d7de0b3836237d207389d7095e6fdfdc779))
+* sign in path and redirects ([f807cad](https://github.com/SessionsBot/frontend/commit/f807cad1debc2b421b3f284c62f2bf0cbe558cc1))
+
 ## [0.2.2](https://github.com/SessionsBot/frontend/compare/v0.2.1...v0.2.2) (2025-08-26)
 
 ### ⚡️ Features
