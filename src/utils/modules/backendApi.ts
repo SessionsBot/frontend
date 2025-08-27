@@ -105,7 +105,6 @@ export async function getGuildData(guildId:string) : Promise <GuildDataResponse>
     }
 }
 
-
 /** Updates guild schedule by id using backend API. */
 export async function updateSessionSchedule(guildId:string, scheduleId:string, scheduleData:SessionSchedule) {
     const authToken = useAuthStore().authToken
@@ -126,7 +125,6 @@ export async function updateSessionSchedule(guildId:string, scheduleId:string, s
     }
 }
 
-
 /** Create guild schedule by id using backend API. */
 export async function createSessionSchedule(guildId:string, scheduleData:SessionSchedule) {
     const authToken = useAuthStore().authToken
@@ -146,7 +144,6 @@ export async function createSessionSchedule(guildId:string, scheduleData:Session
         return originResponseData || {success: false, data: null, error: err};
     }
 }
-
 
 /** Deletes guild schedule by id using backend API. */
 export async function deleteSessionSchedule(guildId:string, scheduleId:string) {

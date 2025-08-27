@@ -72,7 +72,7 @@ const routes = [
   {
     path: "/user/sign-in",
     name: "sign-in",
-    alias: ["/login", "/log-in", "/signin", "sign-in"],
+    alias: ["/login", "/log-in", "/signin", "/sign-in"],
     component: signIntoAccount,
   },
   {

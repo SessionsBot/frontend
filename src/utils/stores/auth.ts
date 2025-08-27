@@ -3,7 +3,10 @@ import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth as firebaseAuth } from "../firebase";
 import { DateTime } from "luxon";
-import type { FullUserData } from "@sessionsbot/api-types";
+import type { APIResponse, FullUserData } from "@sessionsbot/api-types";
+import axios, { AxiosResponse } from "axios";
+import { defaultLocation } from "@vueuse/core";
+import LzString from 'lz-string'
 
 // Types:
 interface AuthStates {
@@ -45,6 +48,7 @@ export const useAuthStore = defineStore('auth', {
 
             // Validate custom JWT
             if (this.authToken) {
+                if(debugAuth) console.log('Auth token found - Initializing!')
                 try {
                     // Check Token Expiration:
                     const payload = JSON.parse(atob(this.authToken.split('.')[1]));
@@ -165,7 +169,7 @@ export const useAuthStore = defineStore('auth', {
             console.warn(`'[Firebase]: Failed to sign out of account! \n Error:  ${e}`)
         }},
 
-        /** Update User Data - Updates State: */
+        /** Update User Data Object / Decodes Token(s) - Updates State: */
         async updateUserData() { try {
             if (!this.authToken) throw new Error('Missing authentication token! - Cannot fetch user data...');
 
@@ -188,6 +192,35 @@ export const useAuthStore = defineStore('auth', {
         } catch(e) {
             console.info('Failed to update user data!', e)
             return null;
+        }},
+
+        async refreshAuthToken() { try {
+            if(defaultLocation.host == 'localhost:5173') return // don't refresh in dev env
+            
+            // Make backend call to refresh users auth token:
+            if(debugAuth) console.log('Refreshing user auth token/data...', {fromHost: defaultLocation.host});
+            const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/users/auth/refresh`;
+            const authToken = useAuthStore().authToken
+            if(!authToken) throw 'Cannot refresh token - Token undefined';
+            const refreshResults:AxiosResponse<APIResponse<any>> = await axios.get(requestUrl, {headers: { Authorization: `Bearer ${authToken}` }})
+
+            if(refreshResults.data.success){ // Success!
+                if(debugAuth) console.log('Refresh success!', {result: refreshResults.data.data});
+                const encodedTokens = refreshResults.data?.data?.encodedTokens;
+                if(!encodedTokens) throw 'No encoded tokens provided during refresh!'
+                const decodedTokensString = LzString.decompressFromEncodedURIComponent(String(encodedTokens));
+                const {jwt, firebase} = JSON.parse(decodedTokensString);
+                
+                // Save new token:
+                localStorage.setItem('authToken', jwt);
+                this.authToken = jwt;
+                
+                this.updateUserData();
+            } else throw refreshResults;
+
+        } catch (err) {
+            console.warn('[Auth] Failed to refresh auth token / data')
+            console.log(err)
         }},
 
     }
