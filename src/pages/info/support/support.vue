@@ -121,14 +121,18 @@ import { useNavStore } from '@/utils/stores/nav';
 
     <!-- Contact Support -->
     <h1 id="contact" class="p-3.5 py-4 pb-0 font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/40 text-xl w-full"> Still need help? </h1>
-    <section class=" mb-7 flex flex-wrap flex-col justify-start md:items-center items-start  gap-3 p-3.5 pt-1.5 w-full">
+    <section class=" mb-2 flex flex-wrap flex-col justify-center items-center text-center gap-3 p-3.5 pt-1.5 w-full">
 
-        <p> Feel free to email our Support Team anytime! Please allow up to 48 hours for a response. </p>
+        <p class="max-w-[75%]"> Feel free to email our Support Team anytime! </p>
 
-        <Button @click="(e) => {defaultLocation.assign('mailto:support@sessionsbot.fyi')}" unstyled class="bg-amber-600/80 mt-2 hover:brightness-115 px-2 py-1.5 rounded-md flex flex-row gap-1 items-center justify-center transition-all">
+        <Button @click="(e) => {defaultLocation.assign('mailto:support@sessionsbot.fyi')}" unstyled class="bg-amber-600/80 my-2 hover:brightness-115 px-2 py-1.5 rounded-md flex flex-row gap-1 items-center justify-center transition-all">
             <MailIcon size="19" stroke-width="2.5" />
             <p class="font-medium">Contact Support</p>
         </Button>
+
+        <p class="italic text-sm text-zinc-700 font-medium px-5">
+            A member of our Support Team will respond to your request as soon as possible!
+        </p>
 
     </section>
 

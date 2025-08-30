@@ -1,6 +1,7 @@
 <script setup>
     import { defaultWindow } from '@vueuse/core';
     import discordIcon from '@/assets/svgs/discord-icon.vue'
+    import { auth, nav } from '@/utils/defaultExports';
 
 </script>
 
@@ -18,7 +19,7 @@
 
             <div class="mt-0.5 text-zinc-300/60 italic font-semibold p-1 px-2.5 rounded-sm flex flex-col gap-1.5 justify-center items-center self-center">
             
-                <div class="my-3 bg-zinc-900 brightness-115 text-zinc-400 rounded-md px-2 py-0.5 flex flex-row gap-1.75 items-center">
+                <div class="my-3 ring-1 ring-ring bg-zinc-900 brightness-115 text-zinc-400 rounded-md px-2 py-0.5 flex flex-row gap-1.75 items-center">
                     <p> Made For Discord </p>
                     <discordIcon class="size-5" />
                 </div>
@@ -32,11 +33,11 @@
             <!-- Buttons: -->
             <div class="mt-8 flex flex-wrap gap-3.5 justify-center">
 
-                <Button unstyled
+                <Button unstyled @click="nav().externalPaths().inviteBotUsingDiscord()"
                     class="bg-emerald-700 px-3.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:brightness-115 transition-all"
                 > Invite the Bot </Button>
 
-                <Button unstyled
+                <Button unstyled @click="$router.push('/dashboard')"
                     class="bg-zinc-700 px-3.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:brightness-115 transition-all"
                 > Bot Dashboard </Button>
 
