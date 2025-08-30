@@ -14,7 +14,6 @@
     const nav =  useNavStore()
     const navMenuVisible = computed(() => nav.navVisible)
     const closeNav = () => nav.closeNav()
-    const openNav = () => nav.openNav()
 
     // Redirect Fns:
     const router = useRouter()
@@ -109,7 +108,7 @@
 	                            <div class="h-[1.5px] w-[95%] bg-gray-500/50"> </div>
 	                        </li>
 	
-	                        <!-- User Account Page: -->
+	                        <!-- User Account: -->
 	                        <li v-if="userLoggedIn" @click="()=>{myAccount(), closeNav()}" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
 	                            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><rect fill="none" height="24" width="24"/><rect fill="none" height="24" width="24"/></g><g><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"/></g></svg>
 	                            <p> My Account </p>

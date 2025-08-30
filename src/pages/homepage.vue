@@ -50,7 +50,7 @@
 
         <!-- Img Section -->
         <div class="flex m-5 flex-col gap-2 flex-wrap justify-center items-center content-center">
-            <img class="rounded-4xl drop-shadow-modern-purple-discord drop-shadow-xl overflow-clip size-80 ring-2 ring-ring/40" src="../assets/sessionsBot.png" />
+            <img class="rounded-4xl drop-shadow-modern-purple-discord drop-shadow-xl overflow-clip size-50 sm:size-80 ring-2 ring-ring/40" src="../assets/sessionsBot.png" />
         </div>
         
         
@@ -60,7 +60,7 @@
     <!-- Features -->
     <section class="bg-black/15 m-10 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
         <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
-            Bot Commands
+            🤖 Bot Commands
         </p>
         <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
             <img class="w-110 my-3 ring-1 ring-ring" src="../assets/availableCommands.png" />

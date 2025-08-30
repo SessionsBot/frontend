@@ -55,7 +55,7 @@ onMounted(async () => {
                     router.push(stickyReRoute)
                     localStorage.removeItem('stickySignIn')
                 }
-                else {router.push('/user/dashboard')}
+                else {router.push('/dashboard')}
             }
         }
        

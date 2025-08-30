@@ -221,7 +221,7 @@
             <Breadcrumb  class="rounded-md ring-1 ring-ring !min-w-fit !px-2.75 !py-2.25" 
             :model="[
                 { label: 'Home', href: '/', icon: HomeIcon },
-                { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
+                { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
             ]">
             <template #item="{ item }">
 
