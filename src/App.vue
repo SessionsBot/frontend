@@ -3,7 +3,7 @@
   // Imports:
   import { ref } from 'vue';
   // Components:
-  import siteHeader from './components/siteHeader.vue';
+  import siteHeader from './components/header/siteHeader.vue';
   import siteFooter from './components/siteFooter.vue';
 
   import alertPopup from './components/alertPopup.vue'
