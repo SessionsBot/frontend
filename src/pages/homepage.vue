@@ -1,111 +1,71 @@
 <script setup>
-import { defaultWindow } from '@vueuse/core';
-
-
+    import { defaultWindow } from '@vueuse/core';
+    import discordIcon from '@/assets/svgs/discord-icon.vue'
 
 </script>
 
 
 <template> 
-<div class="text-white flex justify-start items-center flex-col w-full h-full flex-1 ">
-    <!-- Homepage: -->
-    <main class="p-5 gap-5 min-w-screen flex justify-center items-center text-center flex-col w-full h-full">
-        
-        <!-- Section 1: -->
-        <div class="flex flex-nowrap lg:flex-row flex-col xl:justify-between justify-center items-center gap-5">
-            
-            <!-- Section 1 - Text: -->
-            <div class="bg-modern-purple-discord/40 gap-2 p-3 w-screen lg:w-[65%] lg:max-w-180 lg:rounded-md h-fit flex justify-center items-center flex-wrap ring-2 ring-white/10">
-                <!-- Section 1 - Heading -->
-                <h1 class="font-bold text-3xl p-1 pb-0"> 
-                    Discord Group Session management has never been easier!
-                </h1>
-                <!-- Section 1 - Details -->
-                <p class="text-left p-3 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your Discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
-                </p>
-                
-                <!-- Section 1 - Action Buttons -->
-                <div class="gap-5 flex flex-wrap flex-row  justify-center items-center w-full">
+<div class="flex justify-start items-center flex-col w-full h-full flex-1 ">
+    
+    <!-- Hero/Landing Section -->
+    <section class="flex bg-black/30 w-full py-10 justify-evenly items-center content-center flex-wrap text-center">
 
-                    <Button @click="defaultWindow.open('https://invite.sessionsbot.fyi', '_blank')" severity="secondary">
-                        Invite Bot to Your Server
-                    </button>
-                    <Button hidden severity="secondary">
-                        Join Community Server
-                    </button>
-                    
+        <!-- Text/Action -->
+        <div class="flex m-5 flex-col gap-0.5 flex-wrap justify-center items-center content-center">
+
+            <h1 class="text-5xl font-black text-shadow-md text-shadow-modern-purple-discord/70"> Sessions Bot </h1>
+
+            <div class="mt-0.5 text-zinc-300/60 italic font-semibold p-1 px-2.5 rounded-sm flex flex-col gap-1.5 justify-center items-center self-center">
+            
+                <div class="my-3 bg-zinc-900 brightness-115 text-zinc-400 rounded-md px-2 py-0.5 flex flex-row gap-1.75 items-center">
+                    <p> Made For Discord </p>
+                    <discordIcon class="size-5" />
                 </div>
-                <!-- Section 1 - Caption -->
-                <p class="pt-1 italic opacity-50 text-xs before:content-['*'] beforeAstrictMark"> 
-                    Certain features are currently only available via slash commands 
-                </p>
                 
+                <p> A powerful Discord application for managing group events/sessions. </p>
+                <p class="mt-1"> Streamlined, Automated, and Reliable </p>
+
+
             </div>
 
-            <!-- Section 1 - Image: -->
-            <div class=" flex px-0 py-2 sm:w-auto w-[90%] h-full justify-center items-center flex-wrap">
-                <img draggable="false" class="max-h-70 ring-2 ring-white/10 rounded-md" src="../assets/signupEmbedExample.png">
+            <!-- Buttons: -->
+            <div class="mt-8 flex flex-wrap gap-3.5 justify-center">
+
+                <Button unstyled
+                    class="bg-emerald-700 px-3.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:brightness-115 transition-all"
+                > Invite the Bot </Button>
+
+                <Button unstyled
+                    class="bg-zinc-700 px-3.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:brightness-115 transition-all"
+                > Bot Dashboard </Button>
+
             </div>
 
-        </div>
-
-        <!-- Section 2: -->
-        <div class="flex flex-nowrap flex-col justify-center items-center gap-5">
             
-            <!-- Section 2 - Text: -->
-            <div class="bg-modern-green-default/40 gap-2 p-3 w-screen h-fit flex justify-center items-center flex-wrap flex-col ring-2 ring-white/10">
-                <!-- Section 2 - Heading -->
-                <h1 class="font-bold text-3xl p-1"> 
-                    Discord Group Session management has never been easier!
-                </h1>
-                <!-- Section 2 - Details -->
-                <p class="text-left p-3 pt-1 xl:w-[55%]"> 
-                    Utilizing our new Web Dashboard makes managing your Discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
-                </p>
-                
-                <!-- Section 2 - Caption -->
-                <p class="italic opacity-50 pb-1 text-xs before:content-['*'] beforeAstrictMark"> 
-                    Certain features are currently only available via slash commands 
-                </p>
-                
-            </div>
-
-        </div>
-
-
-        <!-- Section 3: -->
-        <div class="flex flex-nowrap flex-col-reverse lg:flex-row-reverse xl:justify-between justify-center items-center gap-5">
             
-            <!-- Section 3 - Text: -->
-            <div class="bg-modern-red-default/40 gap-2 p-3 w-screen lg:w-[65%] lg:max-w-130 lg:rounded-md h-fit flex justify-center items-center flex-wrap ring-2 ring-white/10">
-                <!-- Section 3 - Heading -->
-                <h1 class="font-bold text-3xl p-1 pb-0"> 
-                    Discord Group Session management has never been easier!
-                </h1>
-                <!-- Section 3 - Details -->
-                <p class="text-left pb-0 pt-2"> 
-                    Utilizing our new Web Dashboard makes managing your Discord events/sessions a total breeze! Edit session schedules, modify existing event details, configure admin abilities/usage, and much more! 
-                </p>
-                
-                <!-- Section 3 - Caption -->
-                <p class="italic opacity-50 text-xs before:content-['*'] beforeAstrictMark"> 
-                    Certain features are currently only available via slash commands 
-                </p>
-                
-            </div>
-
-            <!-- Section 3 - Image: -->
-            <div class=" flex px-0 py-2 sm:w-auto lg:w-[45%] w-[90%] h-full justify-center items-center flex-wrap">
-                <img draggable="false" class="max-h-70 ring-2 ring-white/10 rounded-md" src="../assets/availableCommands.png">
-            </div>
 
         </div>
 
+        <!-- Img Section -->
+        <div class="flex m-5 flex-col gap-2 flex-wrap justify-center items-center content-center">
+            <img class="rounded-4xl drop-shadow-modern-purple-discord drop-shadow-xl overflow-clip size-80 ring-2 ring-ring/40" src="../assets/sessionsBot.png" />
+        </div>
+        
+        
 
-       
-    </main>
+    </section>
 
+    <!-- Features -->
+    <section class="bg-black/15 m-10 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+        <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
+            Bot Commands
+        </p>
+        <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
+            <img class="w-110 my-3 ring-1 ring-ring" src="../assets/availableCommands.png" />
+            <p class="text-zinc-300"> Use bot commands for features like modifying session assignees, viewing your currently assigned sessions, adjusting notifications, and more! </p>
+        </div>
+    </section>
 
 </div> 
 </template>
