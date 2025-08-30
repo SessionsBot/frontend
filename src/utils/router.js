@@ -76,18 +76,18 @@ const routes = [
     component: signIntoAccount,
   },
   {
-    path: "/user/dashboard",
+    path: "/dashboard",
     name: "dashboard",
     component: dashboard,
     meta: { requiresAuth: true },
-    alias: "/dashboard",
+    alias: "/user/dashboard",
   },
   {
-    path: "/user/account",
+    path: "/account",
     name: "user-account",
     component: myAccount,
     meta: { requiresAuth: true },
-    alias: ["/account"],
+    alias: ["/user/account"],
   },
 
   // API Routes:
@@ -162,7 +162,7 @@ router.beforeEach((to, from, next) => {
 
   // Prevent access to Sign-In page if already signed in:
   if (to.path === "/user/sign-in" && auth.isAuthenticated) {
-    next({ path: "/user/dashboard" });
+    next({ path: "/dashboard" });
   }
 
   // Re-enable Header if/was hidden:
