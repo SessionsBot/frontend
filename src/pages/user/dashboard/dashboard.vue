@@ -214,11 +214,11 @@
 
         <!-- Sub-Header - Breadcrumb / Guild Select -->
         <section
-            class="flex flex-wrap flex-row justify-between items-start content-start gap-3 pt-1 w-full">
+            class="flex flex-wrap flex-row justify-between items-center content-start gap-3 w-full">
 
             <!-- Page Breadcrumb: -->
             <Transition name="scale-fade" mode="out-in">
-            <Breadcrumb  class="rounded-md !min-w-fit !px-2.75 !py-2.25" 
+            <Breadcrumb  class="rounded-md ring-1 ring-ring !min-w-fit !px-2.75 !py-2.25" 
             :model="[
                 { label: 'Home', href: '/', icon: HomeIcon },
                 { label: 'Dashboard', href: '/user/dashboard', icon: LayoutDashboard },
@@ -245,8 +245,8 @@
             <div class="flex flex-row flex-wrap gap-2 justify-center items-center content-center">
 
                 <!-- View/Edit Guild Config Button: -->
-                <Button @click="()=>{viewGuildConfigurationPanel = true}" :disabled="!pageReady" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-black/50 text-xs', root: '!border-black' }}" unstyled 
-                    class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-white/20 hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center"
+                <Button @click="()=>{viewGuildConfigurationPanel = true}" :disabled="!pageReady" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-zinc-800 text-xs', root: '!border-black' }}" unstyled 
+                    class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-zinc-600 hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center"
                 >
                     <SettingsIcon class="m-auto text-white/80" :stroke-width="1.25"/>
                 </Button>

@@ -16,58 +16,63 @@ import { useNavStore } from '@/utils/stores/nav';
     
         
 <main class="flex flex-1 justify-start items-center flex-col max-w-full">
+
     
     <!-- Sub-Header - Breadcrumb -->
-    <section class="flex flex-wrap justify-between items-center flex-row gap-3 px-2 pt-3 pb-0 w-full h-fit">
-        
-        <!-- Page Breadcrumb: -->
-        <Breadcrumb  class="rounded-md !min-w-fit !px-2.75 !py-2.25" 
-            :model="[
-                { label: 'Home', href: '/', icon: HomeIcon },
-                { label: 'Support', href: '/support', icon: BadgeHelpIcon },
-            ]">
-            <template #item="{ item }">
+    <section class="bg-black/30 py-1.5 pb-8 flex flex-wrap flex-col w-full h-fit gap-2">
+        <div class="flex flex-wrap justify-between items-center flex-row pb-3 sm:pb-0 px-2.5 py-0 w-full h-fit">
+            
+            <!-- Page Breadcrumb: -->
+            <Breadcrumb  class="rounded-md ring-1 ring-ring !min-w-fit !px-2.75 !py-2.25 relative top-3" 
+                :model="[
+                    { label: 'Home', href: '/', icon: HomeIcon },
+                    { label: 'Support', href: '/support', icon: BadgeHelpIcon },
+                ]">
+                <template #item="{ item }">
 
-                <div 
-                  class="cursor-pointer flex justify-center flex-row items-center content-center hover:underline"
-                  @click="(e) => router.push(String(item.href))" 
-                  :class=" String(item.href) === String(route.path) ? '!text-sky-400' : '',
-                  String(item.href) == String(route?.matched[0]?.aliasOf?.path) ? 'text-sky-400' : ''">
-                    <!-- Icon -->
-                    <component class="!inline mx-1" v-if="item?.icon" :is="item?.icon" :size="17" />
-                    <!-- Crumb Label -->
-                    <span class="text-sm"> {{ item.label }} </span>
+                    <div 
+                    class="cursor-pointer flex justify-center flex-row items-center content-center hover:underline"
+                    @click="(e) => router.push(String(item.href))" 
+                    :class=" String(item.href) === String(route.path) ? '!text-sky-400' : '',
+                    String(item.href) == String(route?.matched[0]?.aliasOf?.path) ? 'text-sky-400' : ''">
+                        <!-- Icon -->
+                        <component class="!inline mx-1" v-if="item?.icon" :is="item?.icon" :size="17" />
+                        <!-- Crumb Label -->
+                        <span class="text-sm"> {{ item.label }} </span>
+                    </div>
+
+                </template>
+            </Breadcrumb>
+
+        </div>
+
+        <!-- Hero Section -->
+        <div class="flex flex-row w-full h-fit">
+
+            <section class="flex flex-col justify-center items-center p-3.5 pt-2.5 w-full h-fit ">
+
+                <!-- Page Heading -->
+                <div class="flex w-full pb-2 pt-0 mb-3 gap-1.5 items-center justify-center content-center flex-row">
+                    <BadgeHelpIcon size="38" stroke-width="2.5" class="drop-shadow-md drop-shadow-black/50" />
+                    <h1 class="w-fit max-w-fit font-bold text-center text-shadow-md text-shadow-black/30 text-4xl"> Support Center </h1>
                 </div>
 
-            </template>
-        </Breadcrumb>
+                <i>
+                <h1 class="font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/30 text-xl"> Need help with Sessions Bot? </h1>
+                <p class="mt-0.75 leading-snug sm:w-fit px-5 text-center text-zinc-400/70"> We’re here to make your events run smoothly. Let’s get your issue resolved! </p>
+                </i>
 
+            </section>
+
+        </div>
     </section>
-
-    <!-- Hero Section -->
-    <div class="flex flex-row w-full h-fit">
-
-        <section class="flex flex-col justify-center items-center p-3.5 pt-2.5 w-full h-fit ">
-
-            <!-- Page Heading -->
-            <div class="flex w-full py-2 mb-3 gap-1.5 items-center justify-center content-center flex-row">
-                <BadgeHelpIcon size="38" stroke-width="2.5" class="drop-shadow-md drop-shadow-black/50" />
-                <h1 class="w-fit max-w-fit font-bold text-center text-shadow-md text-shadow-black/30 text-4xl"> Support Center </h1>
-            </div>
-
-            <h1 class="font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/30 text-xl"> Need help with Sessions Bot? </h1>
-            <p class="leading-snug sm:w-fit w-[80%] text-center"> We’re here to make your events run smoothly. Let’s get your issue! </p>
-
-        </section>
-
-    </div>
 
 
     <!-- Action Cards -->
-    <h1 class="p-3.5 py-4 pb-0 font-stretch-95% font-bold text-start text-shadow-md text-shadow-black/40 text-xl w-full"> Quick Links: </h1>
+    <h1 class="p-3.5 py-4 pb-0 font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/40 text-xl w-full"> Quick Links </h1>
     <section class="flex flex-wrap justify-center px-15 items-center gap-3 p-3.5 h-fit w-full">
 
-        <supportActionCard :title="'View Documentation'" :emoji="'📙'" :action="(e) => { toaster.warning('Sorry our documentation is still under development! \nPlease check back another time...', {toastClassName: 'font-black !bg-amber-600'}) }" />
+        <supportActionCard :title="'View Documentation'" :emoji="'📙'" :action="(e) => { defaultWindow.open('https://docs.sessionsbot.fyi', '_blank') }" />
         <supportActionCard :title="'FAQs'" :emoji="'❓'" :action="(e) => { defaultDocument.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) }"/>
         <supportActionCard :title="'Feature Requests'" :emoji="'🙏'" :action="(e) => {defaultWindow.open('https://github.com/orgs/SessionsBot/discussions/categories/ideas', '_blank')}"/>
         <supportActionCard :title="'Report a Bug'" :emoji="'🐛'" :action="(e) => {defaultWindow.open('https://github.com/SessionsBot/backend/issues', '_blank')}"/>
@@ -78,7 +83,7 @@ import { useNavStore } from '@/utils/stores/nav';
 
 
     <!-- FAQs -->
-    <h1 id="faqs" class="p-3.5 py-4 font-stretch-95% font-bold text-start text-shadow-md text-shadow-black/40 text-xl w-full"> FAQs: </h1>
+    <h1 id="faqs" class="p-3.5 py-4 font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/40 text-xl w-full"> FAQs </h1>
     <section class="bg-zinc-900 mb-2 flex flex-wrap justify-start items-start gap-3 h-fit w-full">
 
         <Accordion class="w-full">
@@ -115,7 +120,7 @@ import { useNavStore } from '@/utils/stores/nav';
 
 
     <!-- Contact Support -->
-    <h1 id="contact" class="p-3.5 py-4 pb-0 font-stretch-95% font-bold text-start text-shadow-md text-shadow-black/40 text-xl w-full"> Still need help? </h1>
+    <h1 id="contact" class="p-3.5 py-4 pb-0 font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/40 text-xl w-full"> Still need help? </h1>
     <section class=" mb-7 flex flex-wrap flex-col justify-start md:items-center items-start  gap-3 p-3.5 pt-1.5 w-full">
 
         <p> Feel free to email our Support Team anytime! Please allow up to 48 hours for a response. </p>

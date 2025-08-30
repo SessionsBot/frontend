@@ -10,7 +10,7 @@
         <div class="flex lg:flex-row flex-col gap-8 max-w-7xl mx-auto">
             
             <!-- Free Plan -->
-            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-400 dark:bg-zinc-900 shadow-sm gap-6">
+            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-400 dark:bg-zinc-800 shadow-sm gap-6">
                 <div class="flex flex-col gap-2">
                     <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">🪙 Basic</h4>
                     <p class="text-zinc-500 dark:text-zinc-400 leading-normal"> Works best for smaller Discord Servers.</p>
@@ -40,11 +40,13 @@
                         <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - Manage your sessions from the web dashboard </span>
                     </li>
                 </ul>
-                <Button @click="defaultWindow.open('https://invite.sessionsbot.fyi', '_blank')" label="Get Started" rounded class="w-full" />
+                <Button @click="defaultWindow.open('https://invite.sessionsbot.fyi', '_blank')" rounded class="w-full !bg-emerald-600 !border-emerald-700/50" >
+                    <i class="font-bold"> Get Started </i>
+                </Button>
             </div>
 
             <!-- Premium Plan -->
-            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-900 shadow-sm gap-6">
+            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-800 shadow-sm gap-6">
                 <div class="flex flex-col gap-2">
                     <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">💎 Premium</h4>
                     <p class="text-zinc-500 dark:text-zinc-400 leading-normal"> Works great for medium sized Discord Servers.</p>
@@ -79,14 +81,14 @@
                         <span class="bg-zinc-800 py-1 px-1.5 rounded-md">🪙  BASIC </span>
                     </li>
                 </ul>
-                <Button severity="secondary" disabled rounded class="w-full !cursor-not-allowed">
+                <Button severity="secondary" disabled rounded class="w-full !bg-zinc-900 !cursor-not-allowed">
                     <i class="font-bold"> Coming Soon </i>
                 </Button>
             </div>
 
 
             <!-- Enterprise Plan -->
-            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-900 shadow-sm gap-6">
+            <div class="w-full flex-1 p-8 flex rounded-2xl flex-col bg-zinc-0 dark:bg-zinc-800 shadow-sm gap-6">
                 <div class="flex flex-col gap-2">
                     <h4 class="text-primary dark:text-zinc-0 font-medium text-xl leading-tight">🏢 Enterprise</h4>
                     <p class="text-zinc-500 dark:text-zinc-400 leading-normal"> Designed for larger Discord Servers.</p>
@@ -117,7 +119,7 @@
                         <span class="bg-zinc-800 py-1 px-1.5 rounded-md">💎 Premium </span>
                     </li>
                 </ul>
-                <Button severity="secondary" disabled rounded class="w-full !cursor-not-allowed">
+                <Button severity="secondary" disabled rounded class="w-full !bg-zinc-900 !cursor-not-allowed">
                     <i class="font-bold"> Coming Soon </i>
                 </Button>
             </div>
