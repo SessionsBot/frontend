@@ -194,8 +194,8 @@ export const useAuthStore = defineStore('auth', {
             return null;
         }},
 
-        async refreshAuthToken() { try {
-            if(defaultLocation.host == 'localhost:5173') return // don't refresh in dev env
+        async refreshAuthToken(skipDev:boolean) { try {
+            if(skipDev && defaultLocation.host == 'localhost:5173') return // don't refresh in dev env
             
             // Make backend call to refresh users auth token:
             if(debugAuth) console.log('Refreshing user auth token/data...', {fromHost: defaultLocation.host});
@@ -215,12 +215,15 @@ export const useAuthStore = defineStore('auth', {
                 localStorage.setItem('authToken', jwt);
                 this.authToken = jwt;
                 
-                this.updateUserData();
+                await this.updateUserData();
+
+                return{success: true, data: this.userData}
             } else throw refreshResults;
 
         } catch (err) {
             console.warn('[Auth] Failed to refresh auth token / data')
             console.log(err)
+            return{success: false, data: err}
         }},
 
     }
