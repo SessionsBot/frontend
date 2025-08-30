@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.3.0](https://github.com/SessionsBot/frontend/compare/v0.2.3...v0.3.0) (2025-08-30)
+
+### ⚡️ Features
+
+* final improvements ([333a5a3](https://github.com/SessionsBot/frontend/commit/333a5a3fd9fdf3580ae99b3cded6d2ac8facef5b))
+* new homepage style ([12002a7](https://github.com/SessionsBot/frontend/commit/12002a7cba5cb9b71708640eb12aeb2c74e19850))
+
+### 🐞 Bug Fixes
+
+* add acc data refresh ([f66bbd5](https://github.com/SessionsBot/frontend/commit/f66bbd5fd611f8698594dc1392b80fa051a2cba0))
+* main route shortening ([aea7203](https://github.com/SessionsBot/frontend/commit/aea720313d97d5aeab80ed85a733286b6bfe327c))
+* minor improvements ([d00b5c2](https://github.com/SessionsBot/frontend/commit/d00b5c252da1165ee6d1612f6ad38dfea3ac99aa))
+
+### 🎨 Styling
+
+* major style upgrades ([fed0f74](https://github.com/SessionsBot/frontend/commit/fed0f745c5d9e4d9e3531747373d1eed2757d9c0))
+* switch app bg color ([c4c7ff8](https://github.com/SessionsBot/frontend/commit/c4c7ff88da0e4791933c9e4dd98cb3c2c008bccd))
+
+### ♻️ Refactoring
+
+* remove unused UI ([0251b17](https://github.com/SessionsBot/frontend/commit/0251b176a6713bb30c4ab6426cf0caa06ea8a5f0))
+* separate header logic ([1d64c0b](https://github.com/SessionsBot/frontend/commit/1d64c0b0318538551b2a8cf517249c2060944d40))
+
 ## [0.2.3](https://github.com/SessionsBot/frontend/compare/v0.2.2...v0.2.3) (2025-08-27)
 
 ### ⚡️ Features
