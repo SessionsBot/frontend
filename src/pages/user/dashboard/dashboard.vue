@@ -5,12 +5,12 @@
     import { useAuthStore } from '../../../utils/stores/auth.ts'
     import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, PlusCircleIcon, PlusSquareIcon, SettingsIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
     import { getGuildData } from '@/utils/modules/backendApi.ts';
-    import { useToast } from 'vue-toastification';
     import { objectEntries } from '@vueuse/core';
     import { DateTime } from 'luxon';
     import upcomingSessionsTable from './sessions/upcomingSessions.vue'
     import guildConfigPanel from './guildConfigPanel.vue'
     import guildSchedules from './schedules/guildSchedules.vue'
+import guildNotSetupCard from './guildNotSetupCard.vue'
 
     // Guild Config Panel:
     const viewGuildConfigurationPanel = ref(false)
@@ -20,13 +20,10 @@
     const userLoggedIn = computed(() => auth.isAuthenticated)
     const userData = computed(() => auth.userData)
     const userData_manageableGuilds = computed(() => auth.userData?.Firebase?.claims?.manageableGuilds)
-    const userId = computed(() => auth.userData?.Firebase?.uid)
 
     // Router:
     const router = useRouter()
     const route = useRoute()
-
-    const toast = useToast()
 
 
     /** Array for __ALL__ 'Guild Select' options that controls dashboard view. */
@@ -181,6 +178,9 @@
         return guildSelectedData.value?.guildDatabaseData?.upcomingSessions
     });
 
+    const guildSetupComplete = computed(() => {
+        return guildSelectedData.value?.guildDatabaseData?.setupCompleted
+    })
 
     /** Reload User Dashboard with `selectedGuildId` to refresh data/view. */
     async function reloadUserDashboard(selectedGuildId) {
@@ -190,7 +190,6 @@
         } else await getManageableGuilds()
         pageReady.value = true
     }
-
 
     // On page load:
     const pageReady = ref(false)
@@ -311,9 +310,16 @@
 
         </section>
 
+        <!-- Guild NOT Setup Screen: -->
+        <section v-else-if="pageReady && !guildSetupComplete" class="flex flex-col justify-center items-center flex-1 h-full w-full">
+
+            <guildNotSetupCard :selected-guild-id="guildSelectedId" />
+
+        </section>
+
 
         <!-- Dashboard View -->
-        <section v-else-if="pageReady" class="flex flex-wrap flex-col gap-7 p-5 flex-1 h-full w-full justify-center items-center content-start">
+        <section v-else-if="pageReady && guildSetupComplete" class="flex flex-wrap flex-col gap-7 p-5 flex-1 h-full w-full justify-center items-center content-start">
         
             <!-- Section 1 -->
             <section class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">

@@ -72,10 +72,10 @@ async function refreshUserData(){
          <!-- Integration Info -->
          <p class="text-white/70 max-w-[70%] text-center"> Your user account was created with Discord. </p>
 
-         <Button @click="refreshUserData()" :disabled="accRefreshStatus != 0" :loading="accRefreshStatus == 300" class="px-2.5 py-1.5 gap-1 rounded-md flex flex-row disabled:bg-zinc-700/60 disabled:cursor-not-allowed flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled
+         <Button @click="refreshUserData()" :disabled="accRefreshStatus != 0" :loading="accRefreshStatus == 300" class="px-2.5 py-1.5 gap-1 rounded-md flex flex-row disabled:opacity-60 disabled:cursor-not-allowed flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled
             :class="{
                'bg-purple-900/60': accRefreshStatus == 0,
-               'bg-emerald-700/60': accRefreshStatus == 200,
+               'bg-emerald-700/60': accRefreshStatus <= 200,
                'bg-amber-600/60': accRefreshStatus >= 201,
                'bg-rose-800/60': accRefreshStatus >= 301,
             }">
