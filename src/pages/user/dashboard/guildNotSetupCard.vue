@@ -2,7 +2,7 @@
 import { LayoutDashboardIcon, Wrench, WrenchIcon } from 'lucide-vue-next';
 
 const props = defineProps<{
-    selectedGuildId: string
+    selectedGuildId: string | null
 }>()
 
 </script>

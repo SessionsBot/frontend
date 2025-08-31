@@ -1,16 +1,18 @@
-<script setup>
+<script setup lang="ts">
     // Imports:
     import { ref, computed, onMounted, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router'
     import { useAuthStore } from '../../../utils/stores/auth.ts'
-    import { Calendar1Icon, CheckCircle2Icon, ClockIcon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PencilIcon, PlusCircleIcon, PlusSquareIcon, SettingsIcon, Trash2Icon, UserCircleIcon } from 'lucide-vue-next';
+    import { Calendar1Icon, ContactRoundIcon, Globe2Icon, HomeIcon, LayoutDashboard, PlusSquareIcon, SettingsIcon } from 'lucide-vue-next';
     import { getGuildData } from '@/utils/modules/backendApi.ts';
     import { objectEntries } from '@vueuse/core';
     import { DateTime } from 'luxon';
     import upcomingSessionsTable from './sessions/upcomingSessions.vue'
     import guildConfigPanel from './guildConfigPanel.vue'
     import guildSchedules from './schedules/guildSchedules.vue'
-import guildNotSetupCard from './guildNotSetupCard.vue'
+    import guildNotSetupCard from './guildNotSetupCard.vue'
+    import noManageableGuild from './noManageableGuild.vue'
+    import { GuildData, UpcomingSession } from '@sessionsbot/api-types';
 
     // Guild Config Panel:
     const viewGuildConfigurationPanel = ref(false)
@@ -20,7 +22,7 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
     const userLoggedIn = computed(() => auth.isAuthenticated)
     const userData = computed(() => auth.userData)
     const userData_manageableGuilds = computed(() => auth.userData?.Firebase?.claims?.manageableGuilds)
-
+ 
     // Router:
     const router = useRouter()
     const route = useRoute()
@@ -32,10 +34,8 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
     /** __Current Guild__ Id Selected to manage/view within dashboard. */
     const guildSelectedId = ref(null)
 
-    /** __Current Selected Guild's__ Data Object to manage/view within dashboard. 
-     * @type  { import('vue').ComputedRef <import('@sessionsbot/api-types').GuildData>}
-    */
-    const guildSelectedData = computed(() => manageableGuildsData.value[guildSelectedId.value]);
+    /** __Current Selected Guild's__ Data Object to manage/view within dashboard.*/
+    const guildSelectedData = computed<GuildData>(() => manageableGuildsData.value[guildSelectedId.value]);
 
 
     /** Static -- All Manageable Guilds Data */
@@ -75,7 +75,6 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
             }
             
         }
-
     }
 
     /** Used to re-fetch a certain manageable guild's data for dashboard 
@@ -105,7 +104,7 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
 
     const availableRolesCount = computed(() => {
         let totalAvailable = 0;
-        const upcomingSessions = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
+        const upcomingSessions:Record<string, UpcomingSession> = guildSelectedData.value?.guildDatabaseData?.upcomingSessions
         if (!upcomingSessions) return 0;
 
         objectEntries(upcomingSessions).forEach((session) => {
@@ -165,7 +164,7 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
 
         const timezone = guildSelectedData.value?.guildDatabaseData?.timeZone || 'America/Chicago';
         
-        const date = DateTime.fromObject({hour: time.hours, minute: time.minutes}, {zone: timezone})
+        const date = DateTime.now().set({hour: time.hours, minute: time.minutes}).setZone(timezone)
         if (!date.isValid) return '?';
 
         result = date.toLocaleString(DateTime.TIME_SIMPLE)
@@ -219,18 +218,18 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
             <Transition name="scale-fade" mode="out-in">
             <Breadcrumb  class="rounded-md ring-1 ring-ring !min-w-fit !px-2.75 !py-2.25" 
             :model="[
-                { label: 'Home', href: '/', icon: HomeIcon },
-                { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+                { label: 'Home', href: '/', pageIcon: HomeIcon },
+                { label: 'Dashboard', href: '/dashboard', pageIcon: LayoutDashboard },
             ]">
             <template #item="{ item }">
 
                 <div 
                   class="cursor-pointer flex justify-center flex-row items-center content-center hover:underline"
                   @click="(e) => router.push(String(item.href))" 
-                  :class=" String(item.href) === String(route.path) ? '!text-sky-400' : '',
-                  String(item.href) == String(route?.matched[0]?.aliasOf?.path) ? 'text-sky-400' : ''">
+                  :class="{'!text-sky-400': String(item.href) === String(route.path) || String(item.href) == String(route?.matched[0]?.aliasOf?.path)}"
+                  >
                     <!-- Icon -->
-                    <component class="!inline mx-1" v-if="item?.icon" :is="item?.icon" :size="17" />
+                    <component class="!inline mx-1" v-if="item?.pageIcon" :is="item?.pageIcon" :size="17" />
                     <!-- Crumb Label -->
                     <span class="text-sm"> {{ item.label }} </span>
                 </div>
@@ -240,12 +239,12 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
             </Transition>
 
             <!-- Guild Select/Config Buttons: -->
-            <Transition name="scale-fade" mode="out-in" duration="1">
+            <Transition name="scale-fade" mode="out-in" :duration="1">
             <div class="flex flex-row flex-wrap gap-2 justify-center items-center content-center">
 
                 <!-- View/Edit Guild Config Button: -->
-                <Button @click="()=>{viewGuildConfigurationPanel = true}" :disabled="!pageReady" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-zinc-800 text-xs', root: '!border-black' }}" unstyled 
-                    class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-zinc-600 hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center"
+                <Button @click="()=>{viewGuildConfigurationPanel = true}" :disabled="!pageReady || !guildSelectedId" v-tooltip.left="{value: 'Modify Guild Configuration', pt: { text: '!bg-zinc-800 text-xs', root: '!border-black' }}" unstyled 
+                    class="bg-zinc-900 cursor-pointer h-9.5 w-9.5 ring-1 ring-zinc-600 disabled:opacity-65 hover:ring-white/35 rounded-md transition-all flex items-center justify-center content-center"
                 >
                     <SettingsIcon class="m-auto text-white/80" :stroke-width="1.25"/>
                 </Button>
@@ -271,7 +270,7 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
                         <div class="flex gap-2 justify-center items-center ">
                             <img class="max-w-6 rounded-sm"
                                 :src="manageableGuildsData[slotProps.value]?.guildIcon || 'https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg'">
-                            <p> {{ manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Loading' }} </p>
+                            <p>{{manageableGuildsData[slotProps.value]?.guildGeneral?.name || 'Select Server'}}</p>
                         </div>
                     </template>
 
@@ -310,13 +309,17 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
 
         </section>
 
+        <!-- No Manageable Guild Screen: -->
+        <section v-else-if="pageReady && !manageableGuildSelectOptions.length" class="flex flex-col justify-center items-center flex-1 h-full w-full">
+            <noManageableGuild />
+        </section>
+
         <!-- Guild NOT Setup Screen: -->
         <section v-else-if="pageReady && !guildSetupComplete" class="flex flex-col justify-center items-center flex-1 h-full w-full">
 
             <guildNotSetupCard :selected-guild-id="guildSelectedId" />
 
         </section>
-
 
         <!-- Dashboard View -->
         <section v-else-if="pageReady && guildSetupComplete" class="flex flex-wrap flex-col gap-7 p-5 flex-1 h-full w-full justify-center items-center content-start">
@@ -338,21 +341,21 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
                     <!-- Todays Sessions Count -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Todays Sessions: </p>
-                        <p class="outlookRowValue"> {{ todaysSessionCount | '?' }} </p>
+                        <p class="outlookRowValue"> {{ todaysSessionCount || '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Available Roles: </p>
-                        <p class="outlookRowValue"> {{ availableRolesCount | '?' }} </p>
+                        <p class="outlookRowValue"> {{ availableRolesCount || '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Roles Assigned: </p>
-                        <p class="outlookRowValue"> {{ rolesAssignedCount | '?' }} </p>
+                        <p class="outlookRowValue"> {{ rolesAssignedCount || '?' }} </p>
                     </div>
 
                 </div>
@@ -420,7 +423,7 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
                     <!-- Schedules Setup -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Schedules Setup: </p>
-                        <p class="outlookRowValue"> {{ schedulesSetupCount | '?' }} </p>
+                        <p class="outlookRowValue"> {{ schedulesSetupCount || '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
@@ -446,10 +449,10 @@ import guildNotSetupCard from './guildNotSetupCard.vue'
 
 
             <!-- Upcoming Sessions - TABLE VIEW -->
-            <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="todaysSessionCount" />
+            <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="Number(todaysSessionCount)" />
 
             <!-- Guild Schedules - TABLE VIEW -->
-            <guildSchedules :guildSelectedData="guildSelectedData" @updateDashboard="(e)=>{reloadUserDashboard(guildId)}" />
+            <guildSchedules :guildSelectedData="guildSelectedData" @updateDashboard="(e)=>{reloadUserDashboard(guildSelectedId)}" />
 
 
         </section>
