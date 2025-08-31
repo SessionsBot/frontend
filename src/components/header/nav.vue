@@ -27,17 +27,17 @@
 </script>
 
 <template>
-	<nav v-show="navMenuVisible" class="text-white flex fixed z-20 w-screen inset-0 flex-1 flex-nowrap flex-row justify-center items-center text-center overflow-clip">
+	<nav v-show="navMenuVisible" class="text-white flex fixed z-20 w-screen inset-0 flex-1 flex-nowrap flex-row justify-end items-center text-center overflow-clip">
 	        
 	        
 	        <!-- Dismiss Area: -->
 	        <Transition name="fade">
-	        <span @click="closeNav" v-show="navMenuVisible" class="relative bg-black/50 flex flex-1 h-full w-full items-center overflow-visible"> </span>
+	        <span @click="closeNav" v-show="navMenuVisible" class="absolute bg-black/50 flex flex-1 h-full w-full items-center overflow-visible"> </span>
 	        </Transition>
 	
 	        <!-- Navigation Menu: -->
 	        <Transition name="navMenu">
-	        <div v-show="navMenuVisible" class="relative flex justify-start flex-col right-0 h-full w-65 max-w-[90%] bg-zinc-800 transition-all overflow-scroll">
+	        <div v-show="navMenuVisible" class="relative self-end flex justify-start flex-col right-0 h-full w-65 max-w-[90%] bg-zinc-800 transition-all overflow-scroll">
 	            
 	            <!-- Nav Header: -->
 	            <header class="bg-zinc-900 h-14 sm:h-17 flex justify-center items-center text-center flex-nowrap">
@@ -143,24 +143,24 @@
 	                        <div class="h-[1.5px] w-[95%] bg-gray-500/50"> </div>
 	                    </li>
 	
-	                    <li @click="defaultWindow.open('https://github.com/SessionsBot')" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+	                    <li @click="defaultWindow.open('https://docs.sessionsbot.fyi')" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
 	                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M21 2.21c-.13 0-.26.05-.35.15l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.79-.79c-.2-.2-.51-.2-.71 0l-.79.79c-.2.2-.51.2-.71 0l-.8-.8c-.2-.2-.51-.2-.71 0l-.79.8c-.2.2-.51.2-.71 0l-.79-.8c-.2-.2-.51-.2-.71 0l-.79.8c-.2.2-.51.2-.71 0l-.79-.8c-.09-.09-.22-.14-.35-.14V21.8c.13 0 .26-.05.35-.15l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.2.2.51.2.71 0l.79-.79c.2-.2.51-.2.71 0l.79.79c.1.1.23.15.35.15V2.21zM17 17H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1zm0-4H7c-.55 0-1-.45-1-1s.45-1 1-1h10c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>
-	                        <p> Credits & About </p>
+	                        <p> Documentation </p>
+	                    </li>
+						<li @click="$router.push('/support'), closeNav()" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
+	                        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><rect fill="none" height="24" width="24"/><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M12.01,18 c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25C13.25,17.43,12.72,18,12.01,18z M15.02,10.6 c-0.76,1.11-1.48,1.46-1.87,2.17c-0.1,0.18-0.16,0.32-0.19,0.63c-0.05,0.45-0.45,0.78-0.9,0.78H12c-0.52,0-0.93-0.44-0.88-0.96 c0.03-0.34,0.11-0.69,0.3-1.03c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-0.71,0-1.18,0.36-1.47,0.79 c-0.25,0.36-0.69,0.53-1.1,0.36l0,0C8.91,8.64,8.72,8,9.04,7.54C9.65,6.65,10.67,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52 C15.44,8.24,15.7,9.59,15.02,10.6z"/></g></svg>
+	                        <p> Get Support </p>
 	                    </li>
 	
 	                    <li @click="$router.push('/privacy'), closeNav()" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
 	                        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><path d="M0,0h24v24H0V0z" fill="none"/></g><g><path d="M11.3,2.26l-6,2.25C4.52,4.81,4,5.55,4,6.39v4.7c0,5.05,3.41,9.76,8,10.91c4.59-1.15,8-5.86,8-10.91v-4.7 c0-0.83-0.52-1.58-1.3-1.87l-6-2.25C12.25,2.09,11.75,2.09,11.3,2.26z M12,16L12,16c-0.55,0-1-0.45-1-1v0c0-0.55,0.45-1,1-1h0 c0.55,0,1,0.45,1,1v0C13,15.55,12.55,16,12,16z M12,12L12,12c-0.55,0-1-0.45-1-1V8c0-0.55,0.45-1,1-1h0c0.55,0,1,0.45,1,1v3 C13,11.55,12.55,12,12,12z"/></g></svg>
 	                        <p> Privacy Policy </p>
 	                    </li>
-	
 	                    <li @click="$router.push('/terms'), closeNav()" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
 	                        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><rect fill="none" height="24" width="24"/><path d="M15.83,10.29l-2.12-2.12c-0.39-0.39-0.39-1.02,0-1.41l0,0c0.39-0.39,1.02-0.39,1.41,0l1.41,1.41l3.54-3.54 c0.39-0.39,1.02-0.39,1.41,0l0,0c0.39,0.39,0.39,1.02,0,1.41l-4.24,4.24C16.85,10.68,16.22,10.68,15.83,10.29z M10,7H3 C2.45,7,2,7.45,2,8v0c0,0.55,0.45,1,1,1h7c0.55,0,1-0.45,1-1v0C11,7.45,10.55,7,10,7z M20.29,12.71L20.29,12.71 c-0.39-0.39-1.02-0.39-1.41,0L17,14.59l-1.88-1.88c-0.39-0.39-1.02-0.39-1.41,0l0,0c-0.39,0.39-0.39,1.02,0,1.41L15.59,16 l-1.88,1.88c-0.39,0.39-0.39,1.02,0,1.41l0,0c0.39,0.39,1.02,0.39,1.41,0L17,17.41l1.88,1.88c0.39,0.39,1.02,0.39,1.41,0l0,0 c0.39-0.39,0.39-1.02,0-1.41L18.41,16l1.88-1.88C20.68,13.73,20.68,13.1,20.29,12.71z M10,15H3c-0.55,0-1,0.45-1,1v0 c0,0.55,0.45,1,1,1h7c0.55,0,1-0.45,1-1v0C11,15.45,10.55,15,10,15z"/></g></svg>
 	                        <p> Terms & Conditions </p>
 	                    </li>
-	                    <li @click="$router.push('/support'), closeNav()" class="w-full p-2 gap-1.5 cursor-pointer hover:bg-gray-500 rounded-sm active:scale-90 transition-all flex flex-nowrap items-center content-center justify-start">
-	                        <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><g><rect fill="none" height="24" width="24"/><path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M12.01,18 c-0.7,0-1.26-0.56-1.26-1.26c0-0.71,0.56-1.25,1.26-1.25c0.71,0,1.25,0.54,1.25,1.25C13.25,17.43,12.72,18,12.01,18z M15.02,10.6 c-0.76,1.11-1.48,1.46-1.87,2.17c-0.1,0.18-0.16,0.32-0.19,0.63c-0.05,0.45-0.45,0.78-0.9,0.78H12c-0.52,0-0.93-0.44-0.88-0.96 c0.03-0.34,0.11-0.69,0.3-1.03c0.49-0.87,1.42-1.39,1.96-2.16c0.57-0.81,0.25-2.33-1.37-2.33c-0.71,0-1.18,0.36-1.47,0.79 c-0.25,0.36-0.69,0.53-1.1,0.36l0,0C8.91,8.64,8.72,8,9.04,7.54C9.65,6.65,10.67,6,11.99,6c1.48,0,2.49,0.67,3.01,1.52 C15.44,8.24,15.7,9.59,15.02,10.6z"/></g></svg>
-	                        <p> Get Support </p>
-	                    </li>
+	                    
 	
 	                    <li class="w-full flex flex-nowrap justify-center content-center items-center">
 	                        <div class="h-[1.5px] w-[95%] bg-gray-500/50"> </div>
