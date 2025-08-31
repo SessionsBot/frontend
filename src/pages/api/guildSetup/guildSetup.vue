@@ -81,8 +81,8 @@
             const convertedHex = rgbToDiscordHex(colorObj)
             
             // Prepare - Daily Post Time:
-            const requestedHours = new Date(guildSetupDraft.value?.postTime).getHours() || 5
-            const requestedMinuets = new Date(guildSetupDraft.value?.postTime).getMinutes() || 30
+            const requestedHours = new Date(guildSetupDraft.value?.postTime).getHours() || 0
+            const requestedMinuets = new Date(guildSetupDraft.value?.postTime).getMinutes() || 0
 
             // Prepare - Full Submission:
             setupSubmissionData['accentColor'] = convertedHex || '0x9b42f5'
