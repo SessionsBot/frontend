@@ -9,7 +9,9 @@ export const useNavStore = defineStore('nav', {
 
     state: () => ({
         navVisible: false,
+
         headerVisible: true,
+
         footerVisible: true
     }),
 
