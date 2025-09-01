@@ -131,9 +131,7 @@
 
         objectEntries(upcomingSessions).forEach((session) => {
 
-            if (!session[1]?.roles) 
-                return
-            else {
+            if (session[1]?.roles?.length) {
                 Array.from(session[1]?.roles).forEach(role => {
                     totalAssigned += role?.users?.length || 0;
                 })
@@ -342,21 +340,21 @@
                     <!-- Todays Sessions Count -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Todays Sessions: </p>
-                        <p class="outlookRowValue"> {{ todaysSessionCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ todaysSessionCount ?? '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Available Roles: </p>
-                        <p class="outlookRowValue"> {{ availableRolesCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ availableRolesCount ?? '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
 
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Roles Assigned: </p>
-                        <p class="outlookRowValue"> {{ rolesAssignedCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ rolesAssignedCount ?? '?' }} </p>
                     </div>
 
                 </div>
@@ -422,7 +420,7 @@
                     <!-- Schedules Setup -->
                     <div class="flex flex-row justify-between p-1.5 gap-3 items-center content-center">
                         <p> Schedules Setup: </p>
-                        <p class="outlookRowValue"> {{ schedulesSetupCount || '?' }} </p>
+                        <p class="outlookRowValue"> {{ schedulesSetupCount ?? '?' }} </p>
                     </div>
 
                     <div class="w-[95%] h-[2px] bg-ring self-center" />
