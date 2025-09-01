@@ -117,7 +117,7 @@
                 <td class="border-2 border-ring p-2.5">
                     <div class="flex flex-col justify-center items-center content-center gap-1.5">
 
-                        <div v-for="role in value[1].roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
+                        <div v-if="value[1]?.roles?.length" v-for="role in value[1].roles" class="flex flex-row gap-1.5 justify-between w-full items-center content-center">
                             
                             <p class="text-sm flex justify-center flex-nowrap items-center content-center gap-0.75"> 
                                 <UserCircleIcon class="inline" :size="15"/>
@@ -128,6 +128,12 @@
                                 {{ role?.users?.length || '0' }}/{{ role?.roleCapacity || '?' }}
                             </p>
 
+                        </div>
+
+                        <div v-else>
+                            <p class="text-sm flex justify-center flex-nowrap items-center content-center gap-0.75"> 
+                                <UserCircleIcon class="inline" :size="15"/> No Roles
+                            </p>
                         </div>
 
                     </div>
@@ -181,7 +187,7 @@
     <div class="flex flex-col flex-wrap gap-5 p-1">
 
         <!-- Session Roles -->
-        <div class="flex gap-3.5 flex-col justify-end items-center">
+        <div v-if="sessionsDetailsData?.roles?.length" class="flex gap-3.5 flex-col justify-end items-center">
             <p class="w-fit font-medium gap-0.75 flex justify-center items-center bg-white/10 px-1.25 py-0.5 rounded-lg self-start">
                 <UserCircleIcon :size="15" />
                 Session Roles:

@@ -326,6 +326,7 @@
         
             <!-- Section 1 -->
             <section class="flex flex-wrap gap-7 p-7 flex-1 h-full w-full justify-center items-center content-start">
+            
             <!-- Todays Outlook: -->
             <div class="flex flex-col overflow-clip justify-between w-75 lg:w-95 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
                 
@@ -361,7 +362,6 @@
                 </div>
 
             </div>
-
 
             <!-- Member Outlook: HIDDEN -->
             <div hidden class="flex relative flex-col overflow-clip justify-between w-75 lg:w-115 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
@@ -406,7 +406,6 @@
                 </div>
 
             </div>
-
 
             <!-- Guild Outlook: -->
             <div class="flex flex-col overflow-clip justify-between w-75 lg:w-95 max-w-[100%] bg-zinc-900 ring-2 ring-ring items-center rounded-md">
