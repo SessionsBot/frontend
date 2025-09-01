@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.2](https://github.com/SessionsBot/frontend/compare/v0.3.1...v0.3.2) (2025-09-01)
+
+### ⚡️ Features
+
+* SEO optimization ([ae6a057](https://github.com/SessionsBot/frontend/commit/ae6a057fafbba59e373662dbaf1dfd22818ab80a))
+
+### 🐞 Bug Fixes
+
+* img paths ([fbb4493](https://github.com/SessionsBot/frontend/commit/fbb449311054305c58a7f898b7ca3f7489d12a37))
+
 ## [0.3.1](https://github.com/SessionsBot/frontend/compare/v0.3.0...v0.3.1) (2025-09-01)
 
 ### ⚡️ Features
