@@ -523,7 +523,7 @@
                     <!-- Guild/Sessions Icons -->
                     <div class="flex h-full justify-center gap-1.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
                         
-                        <img src="../../../assets/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
+                        <img src="/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
 
                         <span class="bg-zinc-700 scale-75 w-fit px-1.5 rounded-2xl">
                             <Link2Icon class="scale-90" />
@@ -714,7 +714,7 @@
                     <!-- Guild/Sessions Icons -->
                     <div class="flex h-full justify-center gap-1.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
                         
-                        <img src="../../../assets/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
+                        <img src="/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
 
                         <span class="bg-zinc-500/80 scale-75 w-fit px-1.5 rounded-2xl">
                             <Link2Icon class="scale-90" />

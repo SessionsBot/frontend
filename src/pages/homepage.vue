@@ -57,7 +57,7 @@
 
         <!-- Img Section -->
         <div class="flex m-5 flex-col gap-2 flex-wrap justify-center items-center content-center">
-            <img class="rounded-4xl hero-img-shadow overflow-clip size-50 sm:size-70 ring-2 ring-ring/40" src="../assets/sessionsBot.png" />
+            <img class="rounded-4xl hero-img-shadow overflow-clip size-50 sm:size-70 ring-2 ring-ring/40" src="/sessionsBot.png" />
         </div>
         
         

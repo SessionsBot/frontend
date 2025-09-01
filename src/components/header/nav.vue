@@ -43,7 +43,7 @@
 	            <header class="bg-zinc-900 h-14 sm:h-17 flex justify-center items-center text-center flex-nowrap">
 	                <!-- Close Button: -->
 	                <div class=" pl-2.75 flex flex-1 gap-1.5 justify-start items-center content-center flex-row">
-	                    <img class="w-9 h-9 rounded-xl shadow-md shadow-modern-purple-discord/60 ring-1 ring-white/15" draggable="false" src="@/assets/sessionsBot.png">
+	                    <img class="w-9 h-9 rounded-xl shadow-md shadow-modern-purple-discord/60 ring-1 ring-white/15" draggable="false" src="/sessionsBot.png">
 	                    <h1 class="text-xl text-nowrap font-stretch-70% font-black text-shadow-md text-shadow-modern-purple-discord/70"> Sessions Bot </h1>
 	                </div>
 	                <button @click="closeNav" class="hover:bg-modern-red-default/50 w-12.5 h-14 sm:h-17 flex flex-wrap justify-center items-center content-center cursor-pointer transition-all">

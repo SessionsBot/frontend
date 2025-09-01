@@ -41,7 +41,7 @@
 
             <!-- Site Icon & Title: -->
             <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
-                <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-modern-purple-discord/80 ring-1 ring-white/15" draggable="false" src="@/assets/sessionsBot.png">
+                <img class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl shadow-md shadow-modern-purple-discord/80 ring-1 ring-white/15" draggable="false" src="/sessionsBot.png">
                 <h1 class="text-white/90 text-2xl sm:text-3xl text-nowrap font-stretch-70% font-black text-shadow-md text-shadow-modern-purple-discord/70"> Sessions Bot </h1>
             </div>
 
