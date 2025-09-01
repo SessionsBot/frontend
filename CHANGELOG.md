@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.3.1](https://github.com/SessionsBot/frontend/compare/v0.3.0...v0.3.1) (2025-09-01)
+
+### ⚡️ Features
+
+* **dashboard:** guild not setup alert ([5e80159](https://github.com/SessionsBot/frontend/commit/5e8015939b83b300a9f10f6d6df4ec1a1c987b2f))
+* **dashboard:** no guilds with bot card ([fe504e9](https://github.com/SessionsBot/frontend/commit/fe504e990acb3249548bef78fb7106e254444e15))
+* **homepage:** add feature content ([fc36f2a](https://github.com/SessionsBot/frontend/commit/fc36f2afbaddb2978a85187df7070f7b095b4e49))
+
+### 🐞 Bug Fixes
+
+* **dashboard:** no roles fixes ([18373f3](https://github.com/SessionsBot/frontend/commit/18373f36d061582739e2238bb851389a2393ed69))
+* **header:** bug fixes / style matching ([25ed849](https://github.com/SessionsBot/frontend/commit/25ed8498280d68996632b654b2941747dc1a4581))
+* **nav:** full bg overlay/modal ([52b2214](https://github.com/SessionsBot/frontend/commit/52b2214f3df82289ec27d695d4d3caede98137c1))
+* post time save ([e147edb](https://github.com/SessionsBot/frontend/commit/e147edbc0ed74653733cb432f8831381b811173b))
+
+### 🎨 Styling
+
+* reapply dark style force ([d71ee39](https://github.com/SessionsBot/frontend/commit/d71ee39dbc9c3232e1719c7e8b9d5cb765e51d47))
+
 ## [0.3.0](https://github.com/SessionsBot/frontend/compare/v0.2.3...v0.3.0) (2025-08-30)
 
 ### ⚡️ Features
