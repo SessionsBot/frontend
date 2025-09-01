@@ -65,15 +65,41 @@
     </section>
 
     <!-- Features -->
-    <section class="bg-black/15 m-10 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
-        <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
-            🤖 Bot Commands
-        </p>
-        <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
-            <img class="w-110 my-3 ring-1 ring-ring" src="../assets/availableCommands.png" />
-            <p class="text-zinc-300"> Use bot commands for features like modifying session assignees, viewing your currently assigned sessions, adjusting notifications, and more! </p>
-        </div>
-    </section>
+    <div class="flex flex-wrap justify-center items-start content-center m-10 gap-6">
+        
+        <!-- Bot Commands -->
+        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+            <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
+                🤖 Bot Commands
+            </p>
+            <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
+                <img class="w-110 my-3 ring-1 rounded-md ring-ring" src="../assets/availableCommands.png" />
+                <p class="text-zinc-300"> Use bot commands for features like modifying session assignees, viewing your currently assigned sessions, adjusting notifications, and more! </p>
+            </div>
+        </section>
+
+        <!-- Sessions Signups -->
+        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+            <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
+                📝 Session Signups
+            </p>
+            <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
+                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/signup-panel-w-roles.png" />
+                <p class="text-zinc-300"> Sessions Bot sends session signup/alert messages according to your configured schedules! Configure roles for your sessions to allow member signups. </p>
+            </div>
+        </section>
+
+        <!-- Adjust Preferences -->
+        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+            <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
+                ⚙️ Fine Tune Preferences
+            </p>
+            <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
+                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/dashboard-modify-schedules.png" />
+                <p class="text-zinc-300"> Adjust your server's bot preferences right from your dashboard. Modify configurations like your schedules sessions, accent color, time zone, etc. </p>
+            </div>
+        </section>
+    </div>
 
 </div> 
 </template>
