@@ -61,7 +61,7 @@ async function refreshUserData(){
             <p class="text-3xl font-bold"> User Account </p>
          </div>
 
-         <div class="bg-zinc-800 ring-1 ring-ring rounded-md px-4 py-2 flex flex-row gap-2">
+         <div class="bg-zinc-800 acc-drop-shadow ring-1 ring-ring rounded-md my-2 px-6 py-2.5 flex flex-row gap-2">
             <!-- Profile Image -->
             <img :src="userData?.Pinia?.avatar || defaultProfileIcon"
                class="size-7 rounded-full self-center ring-1 ring-white/50" alt="Profile Image" draggable="false">
@@ -70,27 +70,42 @@ async function refreshUserData(){
          </div>
 
          <!-- Integration Info -->
-         <p class="text-white/70 max-w-[70%] text-center"> Your user account was created with Discord. </p>
+         <div class="flex flex-col justify-center items-center gap-2 p-2 mx-2 text-white/70">
+            <p class=" text-center"> 
+               Account last synced with Discord: 
+            </p>
+            <p class="bg-white/10 text-xs w-fit px-2 py-1 rounded-md"> 
+               {{ DateTime.fromSeconds(userData?.Pinia?.iat).toRelative({style: 'short'}) }} 
+            </p>
+         </div>
 
-         <Button @click="refreshUserData()" :disabled="accRefreshStatus != 0" :loading="accRefreshStatus == 300" class="px-2.5 py-1.5 gap-1 rounded-md flex flex-row disabled:opacity-60 disabled:cursor-not-allowed flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled
-            :class="{
-               'bg-purple-900/60': accRefreshStatus == 0,
-               'bg-emerald-700/60': accRefreshStatus <= 200,
-               'bg-amber-600/60': accRefreshStatus >= 201,
-               'bg-rose-800/60': accRefreshStatus >= 301,
-            }">
-            <RefreshCcwIcon :class="{'spin': accRefreshStatus >= 201}"/>
-            <p> Refresh Data</p>
-         </Button>
+         <!-- Account Buttons -->
+         <div class="flex flex-row gap-3 mb-4 m-1 items-center justify-center">
 
-         <Button v-if="userData?.Pinia?.id == '252949527143645185'" @click="viewUserData" class="bg-sky-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
+            <!-- Refresh Data -->
+            <Button @click="refreshUserData()" :disabled="accRefreshStatus != 0" :loading="accRefreshStatus == 300" class="px-2.5 py-1.5 gap-1 rounded-md flex flex-row disabled:opacity-60 disabled:cursor-not-allowed flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled
+               :class="{
+                  'bg-zinc-700/60': accRefreshStatus == 0,
+                  'bg-emerald-700/60': accRefreshStatus <= 200,
+                  'bg-amber-600/60': accRefreshStatus >= 201,
+                  'bg-rose-800/60': accRefreshStatus >= 301,
+               }">
+               <RefreshCcwIcon :class="{'spin': accRefreshStatus >= 201}"/>
+               <p> Refresh Data</p>
+            </Button>
+
+            <!-- Sign Out -->
+            <Button @click="auth.signOut" class="bg-orange-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
+               <LogOutIcon/>
+               <p> Sign Out</p>
+            </Button>
+
+         </div>
+
+         <!-- View Data -->
+         <Button hidden v-if="userData?.Pinia?.id=='252949527143645185'" @click="viewUserData" class="bg-sky-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
             <ViewIcon/>
             <p> View Data</p>
-         </Button>
-
-         <Button @click="auth.signOut" class="bg-orange-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
-            <LogOutIcon/>
-            <p> Sign Out</p>
          </Button>
 
       </div>
@@ -100,3 +115,15 @@ async function refreshUserData(){
 
    </main>
 </template>
+
+
+<style scoped>
+
+.acc-drop-shadow{
+   box-shadow: 4px 0px 8px var(--color-indigo-500),
+   -4px 0px 8px var(--color-purple-500),
+   0px 4px 8px var(--color-purple-500),
+   0px -4px 8px var(--color-indigo-500)
+}
+
+</style>
