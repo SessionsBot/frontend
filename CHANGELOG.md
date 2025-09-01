@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/SessionsBot/frontend/compare/v0.3.2...v0.3.3) (2025-09-01)
+
+### 🐞 Bug Fixes
+
+* acc refresh / style ([7cea1d3](https://github.com/SessionsBot/frontend/commit/7cea1d312401ce853b31b63a40ea545014036c0d))
+* **nav:** header sign in button ([f1acf7c](https://github.com/SessionsBot/frontend/commit/f1acf7c2ef0650357a6504f4e41a91f15ac2989b))
+
 ## [0.3.2](https://github.com/SessionsBot/frontend/compare/v0.3.1...v0.3.2) (2025-09-01)
 
 ### ⚡️ Features
