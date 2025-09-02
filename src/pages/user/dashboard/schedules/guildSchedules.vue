@@ -2,12 +2,12 @@
     import { PencilIcon, CalendarClockIcon, PlusIcon } from "lucide-vue-next"
     import { DateTime } from 'luxon';
     import type { GuildData } from "@sessionsbot/api-types";
-    import viewGuildSchedulePanel from './viewGuildSchedule.vue';
     import CreateGuildSchedulePanel from "./createGuildSchedule.vue";
     import { toaster } from "@/utils/defaultExports";
+    import PricingLimits from "@/utils/modules/pricingLimits";
 
     // PRICING PLANS - LIMITS:
-    const maxSchedules = ref(7)
+    const maxSchedules = PricingLimits.FREE_PLAN.MAX_SCHEDULES
 
     const props = defineProps<{
         guildSelectedData: GuildData
@@ -19,17 +19,18 @@
     const totalSchedulesCount = computed(() => props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length)
 
 
-    const viewScheduleDetailsPanel: Ref<boolean> = ref(false); // Controls view/edit schedule panel visibility
-    const selectedScheduleId: Ref<string> = ref(null) // Current sch id in view ^
-
+    const selectedScheduleId: Ref<string> = ref(null) // Current sch id in view/edit
     const viewCreateSchedulePanel: Ref<boolean> = ref(false) // Controls new schedule panel visibility
+    const schedulePanelActionMethod = ref<'CREATE' | 'EDIT'>('CREATE')
     const openCreateSchedule = (e:Event) => {
+        
         // Check pricing plan limits:
-        if(props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length >= maxSchedules.value){
+        if(props.guildSelectedData?.guildDatabaseData?.sessionSchedules?.length >= maxSchedules){
             // Max schedules reached:
-            toaster.warning(`Maximum amount of schedules reached! (limit: ${maxSchedules.value})`)
+            toaster.warning(`Maximum amount of schedules reached! (limit: ${maxSchedules})`)
         }else{
             // Allowed - Open new schedule panel:
+            schedulePanelActionMethod.value = 'CREATE';
             viewCreateSchedulePanel.value = true;
         }
     }
@@ -110,11 +111,14 @@
 
                     <!-- Actions -->
                     <td class="border-2 border-ring p-2.5">
-                            
+                        
+                        <!-- Edit Schedule Button -->
                         <Button unstyled 
                             class="bg-indigo-500/20 rounded-md m-auto px-2 py-1 gap-1.25 flex flex-row justify-center items-center content-center  transition-all cursor-pointer"
-                            @click="()=>{ viewScheduleDetailsPanel = true; selectedScheduleId = schedule?.scheduleId }"
+                            @click="()=>{ viewCreateSchedulePanel = true; schedulePanelActionMethod = 'EDIT'; selectedScheduleId = schedule?.scheduleId}"
                         >
+                            <!-- OLD CLICK E -->
+                            <!-- @click="()=>{ viewScheduleDetailsPanel = true; selectedScheduleId = schedule?.scheduleId } -->
                             <PencilIcon :size="15" />
                             <p class="font-medium text-sm"> Edit </p>
                         </Button>
@@ -146,18 +150,13 @@
 
 </div>
 
-<viewGuildSchedulePanel 
-    :guildSelectedData="guildSelectedData" 
-    :viewScheduleDetailsPanel="viewScheduleDetailsPanel" 
-    :selectedScheduleId="selectedScheduleId" 
-    @close-panel="(e)=>{ viewScheduleDetailsPanel=false; selectedScheduleId = null }"
-    @update-dashboard=" (guildId) => emits('updateDashboard', guildId)"
-/>
-
 <CreateGuildSchedulePanel
     :guildSelectedData="guildSelectedData"
     :view-create-schedule-panel="viewCreateSchedulePanel"
+    :editing-schedule-id="selectedScheduleId"
+    :action-method="schedulePanelActionMethod"
     @close-panel="(e)=>{ viewCreateSchedulePanel=false }"
+    @switchToCreate="(e)=>{schedulePanelActionMethod = 'CREATE'}"
     @update-dashboard=" (guildId) => emits('updateDashboard', guildId)"
 />
 
