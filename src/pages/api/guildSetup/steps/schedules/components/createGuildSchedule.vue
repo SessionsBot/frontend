@@ -3,7 +3,7 @@
     // @ts-ignore
     import { zodResolver } from '@primevue/forms/resolvers/zod';
     import { date, string, z } from 'zod'
-    import { DailySignupPostTime, GuildData, SessionRole, SessionSchedule } from '@sessionsbot/api-types';
+    import { DailySignupPostTime, GuildData, SessionRole, SessionSchedule, UpcomingSession } from '@sessionsbot/api-types';
     import { FormInstance, FormSubmitEvent } from '@primevue/forms';
     import { CalendarClockIcon, Clock4Icon, ExternalLinkIcon, HardHatIcon, Layers2Icon, LetterTextIcon, PlusCircleIcon, Trash2Icon, UserCircleIcon, XIcon } from 'lucide-vue-next';
     import { PopoverMethods, useConfirm } from 'primevue';
@@ -20,13 +20,14 @@
     // Incoming Props:
     const props = defineProps<{
         viewCreateSchedulePanel: boolean, // controls main visibility
-        editingScheduleId: string | null, // determines schedule id to edit/view
-        guildSelectedData: GuildData, // cached guild data modifying
         actionMethod: 'EDIT' | 'CREATE' // current 'action method' (edit or create schedule)
+        currentSchedules: SessionSchedule[],
+        scheduleToDuplicate: SessionSchedule | null
+        // editingScheduleId: string | null, // determines schedule id to edit/view
     }>();
 
     // Outgoing Emits:
-    const emits = defineEmits(['closePanel', 'updateDashboard', 'switchToCreate']);
+    const emits = defineEmits(['closePanel', 'addSchedule', 'switchToCreate']);
 
     // Schedule Form Ref:
     const newScheduleForm : Ref<FormInstance> = ref(null) 
@@ -110,7 +111,7 @@
         })
     }
 
-    // Confirm Delete Schedule:
+    // [EDIT MODE] Confirm Delete Schedule:
     const deletionLoading = ref(false)
     const confirmDeleteSchedule = () => {
         confirm.require({
@@ -119,34 +120,52 @@
             message: 'Are you sure you want to proceed? This cannot be undone!',
         })
     }
-    // Attempt Delete Schedule:
+    // [EDIT MODE] Attempt Delete Schedule:
     const attemptDeleteSchedule = async (closeCallback) => {
         // 0. Prepare
         deletionLoading.value = true
         // 1. Attempt delete
-        const results = await deleteSessionSchedule(props.guildSelectedData?.guildGeneral?.id, props.editingScheduleId)
-        // 2. Read results
-        if(results.success) { // Succeeded:
-            // Alert & Refresh data:
-            toaster.success('Schedule deleted!',{position: POSITION.TOP_CENTER})
-            emits('updateDashboard', true)
-        } else { // Errored:
-            toaster.error('Error deleting schedule, please try again!', {position: POSITION.TOP_CENTER})
-        }
+        
+            toaster.error('Deleting schedules is not enabled during setup!', {position: POSITION.TOP_CENTER})
+
         // 3. Close / mark finished
         deletionLoading.value = false
         closeCallback()
     }
-
-    // Attempt Duplicate Schedule
+    // [EDIT MODE] Attempt Duplicate Schedule
     const createScheduleDuplicate = async () => {
         // Check for max:
-        if(props.guildSelectedData.guildDatabaseData?.sessionSchedules?.length >= PricingLimits.FREE_PLAN.MAX_SCHEDULES){
+        if(props.currentSchedules.length >= PricingLimits.FREE_PLAN.MAX_SCHEDULES){
             return toaster.warning(`Cannot duplicate, Maximum schedules reached! (max: ${PricingLimits.FREE_PLAN.MAX_SCHEDULES})`);
         } else { // allowed:
             emits('switchToCreate');
         }
     }
+
+    // Watch for Duplicating Schedule:
+    watch(() => props.scheduleToDuplicate, (schedule) => {
+        if(schedule){
+            // Get Date from sessionDateDaily:
+            const schDate = new Date()
+            schDate.setHours(schedule?.sessionDateDaily?.hours ?? 0, schedule?.sessionDateDaily?.minutes ?? 0, 0, 0)
+            // Set Form Values:
+            
+            newScheduleForm.value.setValues({
+                sessionTitle: schedule.sessionTitle,
+                sessionUrl: schedule.sessionUrl,
+                // @ts-ignore
+                sessionDays: schedule?.daysOfWeek,
+                sessionRoles: schedule?.roles,
+                sessionTime: schDate,
+            })
+            // Set Sch Roles:
+            scheduleRoles.value = [...(schedule.roles || [])]
+            // Set Sch Days:
+            // @ts-ignore
+            // scheduleDaysSelected.value = schedule?.daysOfWeek || []
+            scheduleDaysSelected.value = JSON.parse(JSON.stringify(schedule?.daysOfWeek))
+        }
+    }, {immediate: true})
     
 
     // Form Resolver:
@@ -172,8 +191,7 @@
             if(props.actionMethod == 'CREATE') {
                 scheduleId = 'shd_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
             } else { 
-                const editingScheduleData = props.guildSelectedData.guildDatabaseData.sessionSchedules.find((shd) => shd.scheduleId == props.editingScheduleId)
-                scheduleId = editingScheduleData.scheduleId;
+                console.warn('Trying to edit a schedule during a new schedule form submit?')
             }
             // Add 'roles' to values:
             f.values['sessionRoles'] = scheduleRoles.value;
@@ -190,23 +208,13 @@
                 scheduleId: scheduleId
             }
 
-            // 2. Attempt save/update:
-            // console.log(finalScheduleData)
-            const guildId = props.guildSelectedData?.guildGeneral?.id
-            const results = props.actionMethod == 'CREATE' ? await createSessionSchedule(guildId, finalScheduleData) : await updateSessionSchedule(guildId, props?.editingScheduleId, finalScheduleData)
-
-            // 3. Finished:
-            if(results.success) { // Succeeded:
-                toaster.success('Saved Schedule!', {position: POSITION.TOP_CENTER});
-                // Close panel & refresh data:
-                emits('closePanel');
-                emits('updateDashboard', true)
-            } else { // Errored:
-                toaster.error('Error updating schedule, please try again!', {position: POSITION.TOP_CENTER})
-            }
+            // 2. Save & close panel:
+            emits('addSchedule', finalScheduleData);
+            emits('closePanel');
             submissionLoading.value=false; 
         } else { // Invalid Submission:
             // console.warn('invalid data:', f?.states)
+            toaster.warning('Invalid input(s), Try again!')
             return // invalid
         }
     }
@@ -217,37 +225,10 @@
         // Reset Sch Roles:
         scheduleRoles.value = [];
         scheduleDaysSelected.value = [];
+        // Select all days of week as default
+        newScheduleForm.value.setFieldValue('sessionDays', ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'])
+        scheduleDaysSelected.value = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
 
-        // Check/load editing schedule:
-        if(props.actionMethod == 'EDIT'){ 
-            // Editing Schedule:
-            // Get / Prepare Data:
-            const scheduleData = props.guildSelectedData.guildDatabaseData.sessionSchedules.find((shd) => shd.scheduleId == props.editingScheduleId)
-            // Shd Time Date:
-            const shdTimeDate = new Date()
-            shdTimeDate.setHours(scheduleData.sessionDateDaily.hours, scheduleData.sessionDateDaily.minutes, 0, 0)
-            // Shd Days of Week:
-            // @ts-ignore
-            const shdDaysOfWeek = scheduleData?.daysOfWeek || ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-            // Set form values:
-            newScheduleForm.value.setValues({
-                sessionTitle: scheduleData?.sessionTitle,
-                sessionUrl: scheduleData?.sessionUrl,
-                sessionTime: shdTimeDate,
-                sessionRoles: scheduleData.roles,
-                sessionDays: shdDaysOfWeek
-            })
-
-            // Update static values:
-            scheduleRoles.value = JSON.parse(JSON.stringify(scheduleData.roles));
-            scheduleDaysSelected.value = JSON.parse(JSON.stringify(shdDaysOfWeek));
-
-        } else { 
-            // Creating schedule:
-            // Select all days of week - default
-            newScheduleForm.value.setFieldValue('sessionDays', ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'])
-            scheduleDaysSelected.value = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
-        }
     }
 
 </script>

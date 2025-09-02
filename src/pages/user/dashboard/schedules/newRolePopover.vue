@@ -58,8 +58,9 @@ import PricingLimits from '@/utils/modules/pricingLimits';
             props.scheduleRoles.push(newRole)
             emits('closePopover')
 
-        } else { // Valid Submission
-            console.warn('INVALID', f)
+        } else { // Invalid Submission
+            // console.warn('INVALID', f)
+            return
         }
     }
 

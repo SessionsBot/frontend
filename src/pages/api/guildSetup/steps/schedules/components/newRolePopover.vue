@@ -6,9 +6,12 @@
     import { FormInstance, FormSubmitEvent } from '@primevue/forms';
     import { SessionRole } from '@sessionsbot/api-types';
     import { LetterTextIcon, SmilePlusIcon, UsersIcon } from 'lucide-vue-next';
+    import { toaster } from '@/utils/defaultExports';
+    import PricingLimits from '@/utils/modules/pricingLimits';
 
     // PRICING PLANS - LIMITS:
-    const maxRoleCapacity = ref(10)
+    const maxSessionRoles = PricingLimits.FREE_PLAN.MAX_ROLES
+    const maxRoleCapacity = PricingLimits.FREE_PLAN.MAX_ROLE_CAPACITY
 
     // Incoming Props:
     const props = defineProps<{
@@ -30,7 +33,7 @@
             roleName: string().trim().min(2).max(14),
             roleDescription: string().trim().min(5).max(60),
             roleEmoji: string().emoji().length(2),
-            roleCapacity: number().min(1).max(maxRoleCapacity.value)
+            roleCapacity: number().min(1).max(maxRoleCapacity)
         }).superRefine((data, ctx) => {
             // Check duplicate role names:
             const roleNameExists = props.scheduleRoles.some(role => role.roleName.toLowerCase() == data.roleName.toLowerCase())
@@ -43,18 +46,21 @@
     )
 
     const newRoleSubmit = (f:FormSubmitEvent) => {
+        if(props.scheduleRoles.length >= maxSessionRoles){
+            return toaster.warning(`Cannot add anymore roles to this schedule! (Max: ${maxSessionRoles} Roles)`);
+        }
         if(f.valid){ // Valid Submission
             // Get compiled role data
             const newRole = f.values
             // Add blank users[] to role
             newRole['users'] = []
             // Add role to static stack:
-            props.scheduleRoles.push(newRole);
+            props.scheduleRoles.push(newRole)
             emits('closePopover')
 
-        } else { // Valid Submission
+        } else { // Invalid Submission
             // console.warn('INVALID', f)
-            return
+            return 
         }
     }
 

@@ -1,11 +1,12 @@
 <script setup>
     // Imports:
-    import { BanIcon, CalendarPlus2Icon, Clock4Icon, ExternalLinkIcon, FileQuestionIcon, Layers2Icon, LetterTextIcon, PencilIcon, PlusIcon, SmilePlusIcon, Trash2Icon, UsersIcon } from 'lucide-vue-next';
-    import { computed, ref, watch } from 'vue';
+    import { BanIcon, CalendarPlus2Icon, Clock4Icon, FileQuestionIcon, Layers2Icon, Trash2Icon, UsersIcon } from 'lucide-vue-next';
+    import { computed, ref, } from 'vue';
 
-    import { zodResolver } from '@primevue/forms/resolvers/zod';
-    import { z } from 'zod'
-    import CreateGuildSchedule from './createGuildSchedule.vue';
+    // import CreateGuildSchedule from './createGuildSchedule.vue';
+    import createGuildSchedule from './components/createGuildSchedule.vue';
+import PricingLimits from '@/utils/modules/pricingLimits';
+import { toaster } from '@/utils/defaultExports';
 
     // Default Session Date:
     let defaultSessionDate = new Date()
@@ -37,14 +38,31 @@
         return date.toLocaleTimeString('en-US', {hour: 'numeric', minute: '2-digit'})
     }
 
-    // Duplicate a schedule
+    // Duplicate schedule fn:
     async function duplicateSchedule(schData){
-        creatingNewSchedule.value = true
-        await nextTick()
-        scheduleToDuplicate.value = { ...schData }
-        
+        if(currentSchedules.value.length >= PricingLimits.FREE_PLAN.MAX_SCHEDULES) { 
+            // Max schedules reached:
+            toaster.warning(`Cannot create schedule! (max: ${PricingLimits.FREE_PLAN.MAX_SCHEDULES})`)
+        } else{
+            // Allowed - open new sch panel:
+            creatingNewSchedule.value = true;
+            showAddScheduleMessage.value = false
+            await nextTick()
+            scheduleToDuplicate.value = { ...schData }
+        }
     }
 
+    // Create/open new schedule fn:
+    function attemptCreateNewSchedule() {
+        if(currentSchedules.value.length >= PricingLimits.FREE_PLAN.MAX_SCHEDULES) { 
+            // Max schedules reached:
+            toaster.warning(`Cannot create schedule! (max: ${PricingLimits.FREE_PLAN.MAX_SCHEDULES})`)
+        } else{
+            // Allowed - open new sch panel:
+            creatingNewSchedule.value = true;
+            showAddScheduleMessage.value = false
+        }
+    }
 
     // Submit ALL Schedules to Draft:
     const submitScheduleStep = () => {
@@ -203,7 +221,7 @@
                     :disabled="!moreSchedulesAllowed"
                     size="small"
                     class="!p-1 cursor-pointer text-white rounded-md disabled:!bg-zinc-600 disabled:!cursor-not-allowed !bg-amber-500/50 !border-amber-600/50 !w-fit !m-0 flex !gap-0.75 !items-center !justify-center !content-center"
-                    @click="creatingNewSchedule = true, showAddScheduleMessage = false"
+                    @click="attemptCreateNewSchedule"
                  >
                     <CalendarPlus2Icon v-if="moreSchedulesAllowed" size="20" strokeWidth="2"/> 
                     <BanIcon v-if="!moreSchedulesAllowed" size="19.5" />
@@ -232,11 +250,13 @@
     </div>
 
     <!-- Create Schedule Panel -->
-    <CreateGuildSchedule 
-        @add-schedule="(newSch) => {currentSchedules.push(newSch)}"
-        @close-panel="() => {creatingNewSchedule = false}"
-        :viewCreateSchedulePanel="creatingNewSchedule"
+    <createGuildSchedule 
+        :view-create-schedule-panel="creatingNewSchedule"
+        :action-method="'CREATE'"
+        :current-schedules="currentSchedules"
         :scheduleToDuplicate="scheduleToDuplicate"
+        @close-panel="(e) => {creatingNewSchedule = false; scheduleToDuplicate = null}"
+        @add-schedule="(newSch) => {currentSchedules.push(newSch)}"
     />
     
 </template>
