@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.4.0](https://github.com/SessionsBot/frontend/compare/v0.3.3...v0.4.0) (2025-09-02)
+
+### ⚡️ Features
+
+* add pricing plan limits helper ([2307996](https://github.com/SessionsBot/frontend/commit/23079963c802255768f89d9fa890e55224d9ca72))
+* **dashboard:** add help docs to setup card ([d48c320](https://github.com/SessionsBot/frontend/commit/d48c320670dfa35bdcbec6d4de621bfe99938f5c))
+* **dashboard:** schedule days of week ([bd7bbd4](https://github.com/SessionsBot/frontend/commit/bd7bbd49d5068b8628cfc7f6da8a0b2064ead0fc))
+
+### 🐞 Bug Fixes
+
+* **dashboard:** falsey operators ([2a727f2](https://github.com/SessionsBot/frontend/commit/2a727f2ca01737c9c127b56d7c754eacae76e3c9))
+* **dashboard:** upgrade schedule create components ([6f6f70a](https://github.com/SessionsBot/frontend/commit/6f6f70a22315203b9e4e8beaa05f638476ad0a16))
+* minor fixes ([a2c8388](https://github.com/SessionsBot/frontend/commit/a2c838834e8d2e031fea6d77165d4fa76bc882f7))
+
+### 🧹 Chores
+
+* prepare for release ([fd58a02](https://github.com/SessionsBot/frontend/commit/fd58a02a5099f9060313a33af207b2fc90f44593))
+
+### ♻️ Refactoring
+
+* **setup:** switch guild to server ([791add4](https://github.com/SessionsBot/frontend/commit/791add401452dbe5598c2576d040fc4ef0f36f4c))
+
 ## [0.3.3](https://github.com/SessionsBot/frontend/compare/v0.3.2...v0.3.3) (2025-09-01)
 
 ### 🐞 Bug Fixes
