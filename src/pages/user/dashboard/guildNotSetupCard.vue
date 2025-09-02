@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LayoutDashboardIcon, Wrench, WrenchIcon } from 'lucide-vue-next';
+import { HelpCircleIcon, LayoutDashboardIcon, Wrench, WrenchIcon } from 'lucide-vue-next';
 
 const props = defineProps<{
     selectedGuildId: string | null
@@ -23,8 +23,13 @@ const props = defineProps<{
             </Button>
 
             <p class="p-2 mb-1 text-[11px] text-zinc-400 max-w-[80%] text-center"> 
-                Before accessing your Bot Dashboard, you'll have to complete your server's setup process. 
+                Before accessing your Bot Dashboard, you'll have to complete your server's setup process!
             </p>
+
+            <a href="https://docs.sessionsbot.fyi/getting-started#setup" target="_blank" class="flex flex-row flex-nowrap gap-0.75 text-zinc-500 hover:text-sky-400/45 cursor-pointer">
+                <HelpCircleIcon :size="16" />
+                <p class="text-xs"> Need Help? </p>
+            </a>
 
         </div>
     </div>
