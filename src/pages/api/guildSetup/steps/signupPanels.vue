@@ -242,7 +242,7 @@
                     <div class="w-full mb-0.5 h-[1.5px] bg-zinc-700 rounded-full" />
 
                     <p>
-                        Sessions Bot can create a <i> brand new </i> text channel to be used for Signup Panels within your Guild.
+                        Sessions Bot can create a <i> brand new </i> text channel in your server to be used for posting Signup Panels.
                     </p>
 
                     <p class="text-sm bg-zinc-800 px-2 py-1 rounded-md">
