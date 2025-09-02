@@ -227,7 +227,6 @@
             const shdTimeDate = new Date()
             shdTimeDate.setHours(scheduleData.sessionDateDaily.hours, scheduleData.sessionDateDaily.minutes, 0, 0)
             // Shd Days of Week:
-            // @ts-ignore
             const shdDaysOfWeek = scheduleData?.daysOfWeek || ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']
             // Set form values:
             newScheduleForm.value.setValues({

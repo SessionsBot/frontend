@@ -8,7 +8,7 @@
     import { CheckCircleIcon, LetterTextIcon } from 'lucide-vue-next';
 
     const props = defineProps<{
-        selectedScheduleData: SessionSchedule
+        selectedScheduleData: any
         selectedRoleIndex: number
     }>()
 

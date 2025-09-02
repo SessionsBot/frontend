@@ -4,7 +4,7 @@
     import supportActionCard from './supportActionCard.vue'
     import { defaultDocument, defaultLocation, defaultWindow } from '@vueuse/core';
     import { useToast } from 'vue-toastification';
-import { useNavStore } from '@/utils/stores/nav';
+    import { useNavStore } from '@/utils/stores/nav';
     
     // Variables:
     const route = useRoute()

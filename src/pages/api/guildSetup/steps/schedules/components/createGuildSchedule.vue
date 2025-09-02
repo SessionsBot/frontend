@@ -153,7 +153,6 @@
             newScheduleForm.value.setValues({
                 sessionTitle: schedule.sessionTitle,
                 sessionUrl: schedule.sessionUrl,
-                // @ts-ignore
                 sessionDays: schedule?.daysOfWeek,
                 sessionRoles: schedule?.roles,
                 sessionTime: schDate,
@@ -161,7 +160,6 @@
             // Set Sch Roles:
             scheduleRoles.value = [...(schedule.roles || [])]
             // Set Sch Days:
-            // @ts-ignore
             // scheduleDaysSelected.value = schedule?.daysOfWeek || []
             scheduleDaysSelected.value = JSON.parse(JSON.stringify(schedule?.daysOfWeek))
         }
