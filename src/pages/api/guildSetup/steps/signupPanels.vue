@@ -387,6 +387,7 @@
             time-only
             :step-minute="5"
             hour-format="12"
+            :manual-input="false"
             />
             <label for="postTime" class="flex gap-0.75 items-center justify-center content-center"> 
                 <Clock4Icon size="14" class="!inline !pt-0.25"/>

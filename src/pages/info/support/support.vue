@@ -125,7 +125,7 @@ import { useNavStore } from '@/utils/stores/nav';
 
         <p class="max-w-[75%]"> Feel free to email our Support Team anytime! </p>
 
-        <Button @click="(e) => {defaultLocation.assign('mailto:support@sessionsbot.fyi')}" unstyled class="bg-amber-600/80 my-2 hover:brightness-115 px-2 py-1.5 rounded-md flex flex-row gap-1 items-center justify-center transition-all">
+        <Button @click="(e) => {defaultLocation.assign('mailto:support@sessionsbot.fyi')}" unstyled class="bg-amber-600/80 my-2 cursor-pointer hover:brightness-115 px-2 py-1.5 rounded-md flex flex-row gap-1 items-center justify-center transition-all">
             <MailIcon size="19" stroke-width="2.5" />
             <p class="font-medium">Contact Support</p>
         </Button>
