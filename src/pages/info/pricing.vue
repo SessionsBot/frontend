@@ -78,7 +78,7 @@
                     <li class="flex items-center gap-2">
                         <i class="pi pi-check-circle !text-lg text-green-500" />
                         <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - All features from :  </span>
-                        <span class="bg-zinc-800 py-1 px-1.5 rounded-md">🪙  BASIC </span>
+                        <span class="bg-zinc-900 py-1 px-1.5 rounded-md">🪙  BASIC </span>
                     </li>
                 </ul>
                 <Button severity="secondary" disabled rounded class="w-full !bg-zinc-900 !cursor-not-allowed">
@@ -116,7 +116,7 @@
                     <li class="flex items-center gap-2">
 
                         <span class="text-zinc-800 dark:text-zinc-100 leading-tight"> - All features from :  </span>
-                        <span class="bg-zinc-800 py-1 px-1.5 rounded-md">💎 Premium </span>
+                        <span class="bg-zinc-900 py-1 px-1.5 rounded-md">💎 Premium </span>
                     </li>
                 </ul>
                 <Button severity="secondary" disabled rounded class="w-full !bg-zinc-900 !cursor-not-allowed">
