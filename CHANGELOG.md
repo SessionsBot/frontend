@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.1](https://github.com/SessionsBot/frontend/compare/v0.4.0...v0.4.1) (2025-09-03)
+
+### ⚡️ Features
+
+* cookie consent ([599ec1f](https://github.com/SessionsBot/frontend/commit/599ec1f9c3d47cef5d83f18a019c96732ae09477))
+
+### 🎨 Styling
+
+* **pricing:** fix style ([54a6ea2](https://github.com/SessionsBot/frontend/commit/54a6ea2f468889cded065307b821ab9ab00b5776))
+
 ## [0.4.0](https://github.com/SessionsBot/frontend/compare/v0.3.3...v0.4.0) (2025-09-02)
 
 ### ⚡️ Features
