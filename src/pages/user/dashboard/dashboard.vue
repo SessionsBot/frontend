@@ -21,7 +21,7 @@
     const auth = useAuthStore()
     const userLoggedIn = computed(() => auth.isAuthenticated)
     const userData = computed(() => auth.userData)
-    const userData_manageableGuilds = computed(() => auth.userData?.Firebase?.claims?.manageableGuilds)
+    const userData_manageableGuilds = computed(() => auth.userData?.Pinia?.guilds?.manageable)
  
     // Router:
     const router = useRouter()
@@ -89,6 +89,7 @@
             // Update static data value:
             manageableGuildsData.value[guildId] = fetchResults?.data
         } catch (err) {
+            if(err?.error?.code == 404) console.info('Guild missing')
             console.warn('[Dashboard] Failed to refresh guild data!', err)
             
         }
@@ -411,7 +412,7 @@
                 <!-- Heading -->
                 <div class="flex bg-white/5 flex-row text-center justify-start items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
                     <Globe2Icon />
-                    <p class="font-medium"> Guild Outlook</p>
+                    <p class="font-medium"> Server Outlook</p>
                 </div>
 
                 <!-- Results -->

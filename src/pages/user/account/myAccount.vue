@@ -23,14 +23,17 @@ const accRefreshStatus = ref(0)
 async function refreshUserData(){
 
    // Check for cooldown - 5 mins:
-   const issuedAt = DateTime.fromSeconds(userData.value?.Pinia?.iat)
-   const minutesAgo = DateTime.now().diff(issuedAt, 'minutes').minutes
-   const cooldownActive = minutesAgo < 5
+   const cooldownInMinuets = 5;
+   const allowedAt = DateTime.fromSeconds(Number(userData.value?.Pinia?.iat) + (cooldownInMinuets * 60))
+   const allowedDif = allowedAt.diffNow(['minutes', 'seconds'])
+
+   const timeLeftString = allowedDif.minutes < 1 ? Math.floor(allowedDif.seconds) + 's' : allowedDif.minutes + ' mins';
+   const cooldownActive = allowedDif.seconds > 0;
 
    accRefreshStatus.value = 300; // set loading
 
    if(cooldownActive){
-      toaster.warning(`Please wait! You cannot refresh your account data for ${(Math.floor(5-minutesAgo))} minuet(s).`)
+      toaster.warning(`Please wait! You cannot refresh your account data for ${timeLeftString}.`)
    }else{
       const result = await auth.refreshAuthToken()
 
@@ -103,7 +106,7 @@ async function refreshUserData(){
          </div>
 
          <!-- View Data -->
-         <Button hidden v-if="userData?.Pinia?.id=='252949527143645185'" @click="viewUserData" class="bg-sky-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
+         <Button v-if="userData?.Pinia?.id=='252949527143645185'" @click="viewUserData" class="bg-sky-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
             <ViewIcon/>
             <p> View Data</p>
          </Button>
