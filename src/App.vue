@@ -5,10 +5,12 @@
   // Components:
   import siteHeader from './components/header/siteHeader.vue';
   import siteFooter from './components/siteFooter.vue';
+  import cookieConsent from './components/cookieConsent/cookieConsent.vue'
 
   import alertPopup from './components/alertPopup.vue'
   import { useNavStore } from './utils/stores/nav';
   import { usePopupSystem } from './utils/stores/popup';
+  
 
   // Variables:
   const nav = useNavStore()
@@ -29,6 +31,11 @@
 
   <!-- Alert System -->
   <alertPopup/>
+
+  <!-- Cookie Consent -->
+  <cookieConsent/>
+
+  
 
   <Transition name="fade" mode="out-in">
     <siteFooter></siteFooter>
