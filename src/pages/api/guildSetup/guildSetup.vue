@@ -421,7 +421,7 @@
                     </p> 
 
                     <p class=" text-md text-zinc-300 text-xs font-light w-full text-left p-0 m-0">  
-                        If you are attempting to setup a server you don't have the 'Manage Server' permission within, you'll have to contact the relative server administrators. 
+                        If you're Discord account has had recent permission changes or joined this server, visit <a @click="$router.push('/account')" class="text-sky-500 cursor-pointer hover:underline"> your account</a> page to refresh your synced data.
                     </p>
 
                     <Button hidden @click=" nav.externalPaths().inviteBotUsingDiscord()" class="mt-10 !bg-sky-600 hover:!bg-sky-800 !text-white !border-0 font-semibold">
