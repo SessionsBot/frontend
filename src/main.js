@@ -132,7 +132,7 @@ function waitForAuthReady() {
   return new Promise((resolve) => {
     // Get auth:
     const authStore = useAuthStore();
-    // Listen for Firebase auth state change
+    // Listen/wait for Firebase auth state change/ready
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       await authStore.initializeAuth();
       unsubscribe(); // Stop listening after first event
@@ -143,6 +143,8 @@ function waitForAuthReady() {
 
 // after auth prepared - mount app:
 waitForAuthReady().then(async () => {
+  // Hide beforeMount Screen:
+  document.getElementById("beforeMount").style.display = "none";
   // Mount App:
   app.use(router);
   app.mount("#app");

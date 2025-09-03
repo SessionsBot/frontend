@@ -29,6 +29,20 @@
     <meta name="twitter:description" content="A powerful Discord application for managing group events/sessions for your server members." />
     <meta name="twitter:image" content="https://sessionsbot.fyi/sessionsBot.png" />
 
+    <style>
+      #beforeMount{
+        top: 0px;
+        left: 0px;
+        position: absolute;
+        display: flex;
+        flex: 1;
+        z-index: 50;
+        height: 100%;
+        width: 100%;
+        background: #18181B;
+      }
+    </style>
+
     <!-- Google Analytics tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9F25FR6QWV"></script>
     <script>
@@ -50,6 +64,7 @@
   </head>
 
   <body class="dark" dark>
+    <main id="beforeMount"></main>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
