@@ -46,7 +46,7 @@
     <div class="flex bg-white/5 flex-row text-center justify-between items-center flex-wrap gap-2 p-3 w-full h-fit border-b-2 rounded-tr-md">
         <div class="flex flex-row gap-2 justify-between items-center content-center">
             <CalendarClockIcon />
-            <p class="font-medium"> Guild Schedules </p>
+            <p class="font-medium"> Session Schedules </p>
         </div>
 
         <div class="flex flex-row gap-2 justify-between items-center content-center">

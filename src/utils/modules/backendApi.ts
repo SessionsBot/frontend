@@ -43,10 +43,11 @@ export async function getSystemStatuses(): Promise<APIResponse<systemStatusObjec
         return responseData;
     }
 }
+
 /** Module function to check and alert for backend system status incidents. */
 export async function checkBackendStatus() {
     // Get all system statuses:
-    const systemStatuses = await getSystemStatuses()
+    const systemStatuses = await getSystemStatuses();
 
     if(systemStatuses.success){
         // Get Backend Status:
