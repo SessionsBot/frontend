@@ -15,6 +15,11 @@ const analyticsPrivacyPolicy = ref('https://policies.google.com/technologies/par
 
 <template>
     <div class="max-w-4xl mx-auto py-12 px-6">
+
+        <div class="fixed right-2 bottom-2">
+            <scrollToTop />
+        </div>
+        
         <div class="w-full flex flex-row gap-3 mb-6 py-5 flex-wrap justify-center items-center content-center">
             <BookKeyIcon :size="33" />
             <h1 class="text-4xl font-extrabold w-fit text-center">

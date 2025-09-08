@@ -1,6 +1,7 @@
 <script lang="ts" setup>
     import { BookMarkedIcon } from 'lucide-vue-next';
     import { ref } from 'vue';
+    import scrollToTop from '@/components/scrollToTop.vue';
 
     // Vars:
     const lastUpdated = ref('8/20/25');
@@ -19,7 +20,12 @@
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto py-12 px-6">
+  <div class="max-w-4xl mx-auto py-12 px-6 relative">
+
+    <div class="fixed right-2 bottom-2">
+      <scrollToTop />
+    </div>
+
     <div class="w-full flex flex-row gap-3 mb-6 py-5 flex-wrap justify-center items-center content-center">
       <BookMarkedIcon :size="33" />
       <h1 class="text-4xl font-extrabold w-fit text-center">
