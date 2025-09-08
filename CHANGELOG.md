@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0](https://github.com/SessionsBot/frontend/compare/v0.4.1...v0.5.0) (2025-09-08)
+
+### ⚡️ Features
+
+* beforeMount style/div ([54d401c](https://github.com/SessionsBot/frontend/commit/54d401c04c37c58f7aab1061508aa85c511383b1))
+* scrollToTop button ([83d7e44](https://github.com/SessionsBot/frontend/commit/83d7e44c7e2fc80df101f301cd145d6b1a4dad44))
+* **setup:** add permission sync details ([dae5d83](https://github.com/SessionsBot/frontend/commit/dae5d83d38ecc859245174a9bdc4f43a74653698))
+
+### 🐞 Bug Fixes
+
+* **data-sync:** minor/sync bugs ([40a3edb](https://github.com/SessionsBot/frontend/commit/40a3edbf7e54b8625d4f83400129f15863a4d8d8))
+* general improvements ([d32eec6](https://github.com/SessionsBot/frontend/commit/d32eec666821dc837d90000ceb74e42b29c9375b))
+* router scroll behavior ([dd648c1](https://github.com/SessionsBot/frontend/commit/dd648c12ccb6bf5964193eb79f20198af8e8e064))
+
+### ♻️ Refactoring
+
+* minor improvements ([1dd8efc](https://github.com/SessionsBot/frontend/commit/1dd8efcf3d50d45f18d05f48188515b5746e2629))
+* pkg file improvements ([162e116](https://github.com/SessionsBot/frontend/commit/162e116e6a8abcc3bdc36e44a4537ae7cc92132c))
+* seo changes ([7adb92d](https://github.com/SessionsBot/frontend/commit/7adb92de69b20275ece3fc19057e5c2a8d302789))
+
 ## [0.4.1](https://github.com/SessionsBot/frontend/compare/v0.4.0...v0.4.1) (2025-09-03)
 
 ### ⚡️ Features
