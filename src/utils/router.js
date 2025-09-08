@@ -162,7 +162,7 @@ router.beforeEach((to, from, next) => {
 
   // Prevent access to Sign-In page if already signed in:
   if (to.path === "/user/sign-in" && auth.isAuthenticated) {
-    next({ path: "/dashboard" });
+    return next({ path: "/dashboard" });
   }
 
   // Re-enable Header if/was hidden:
