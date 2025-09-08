@@ -130,7 +130,7 @@ const router = createRouter({
       return savedPosition;
     }
     // Always scroll to top for new navigation
-    return { top: 0 };
+    return { top: 0, behavior: 'smooth' };
   },
 });
 
