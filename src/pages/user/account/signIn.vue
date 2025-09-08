@@ -23,7 +23,7 @@
         }
         // Check if already signed in:
         if(auth.isAuthenticated){
-            console.info('SIGN IN: Already signed in... redirecting to account page')
+            console.info('/signIn: Already signed in... redirecting to account page')
             return router.push('/account');
         }
     })

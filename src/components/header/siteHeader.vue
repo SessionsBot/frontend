@@ -34,7 +34,7 @@
 
 
 <template>
-    <transition name="fade" mode="out-in">
+    <Transition name="fade" mode="out-in">
     <header v-if="nav.headerVisible">
         <!-- Main Site Header: -->
         <div class="bg-zinc-900 z-10 fixed top-0 right-0 left-0 text-white min-w-full gap-3 p-2.5 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
@@ -58,27 +58,15 @@
                         Invite Bot 
                     </Button>
 
-                    <!-- Login w/ Discord Button: -->
-                     <!-- Invite Discord Bot: -->
-                    <Button unstyled v-if="!userLoggedIn" @click="auth.authWithDiscord($route.path)"
-                        class="bg-indigo-500 my-2 px-2.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:scale-105 hover:brightness-115 transition-all"
-                    > 
-                        <DiscordIcon class="size-4.5 mr-1" />
-                        Continue with Discord
-                    </Button>
-
-
                     <!-- View Dashboard: -->
                     <Transition name="fade">
                     <Button unstyled @click="router.push('/dashboard')"
-                        v-if="userLoggedIn && route.name != 'dashboard'"
+                        v-if="route.name != 'dashboard' && route.name != 'sign-in'"
                         class="bg-indigo-500 my-2 px-2.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:scale-105 hover:brightness-115 transition-all"
                     > 
                         <LayoutDashboardIcon class="size-5 mr-1" />
                         Dashboard
                     </Button>
-                
-                    
                     </Transition>
 
                 </div>
@@ -96,7 +84,7 @@
             <p class="font-black text-shadow-md"> 🛠️ Sessions Bot is still in active development, bugs are expected! </p>
         </div>
     </header>
-    </transition>
+    </Transition>
     
     
     <!-- Nav Menu Screen: -->
