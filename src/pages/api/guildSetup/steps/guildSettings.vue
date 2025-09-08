@@ -35,11 +35,6 @@
     }
 
 
-    // Admin Role Options/Select:
-    const adminRoleOptions = ref([]);
-    const guildRoles = computed(() => props.guildData?.guildGeneral?.roles || [])
-    adminRoleOptions.value = guildRoles.value
-
     // On Mount:
     onMounted(() => {
         guildSettingsForm.value.setFieldValue('accentColor', selectedAccentColor.value)
@@ -169,46 +164,6 @@
             </ul>
         </Message>
 
-
-    </div>
-
-    <Divider />
-
-    <!-- Admin Roles Input -->
-    <div class="flex text-left pr-10 flex-col gap-4.5 w-full"> 
-
-        <!-- Step Heading -->
-        <p class="step-heading font-semibold text-primary"> 
-            Select the roles granted admin permissions
-        </p>
-
-
-        <!-- Admin Role Selection: -->
-        <IftaLabel>
-            <MultiSelect
-            name="adminIds" 
-            fluid filter
-            class="!max-w-65"
-            option-label="name"
-            option-value="id"
-            placeholder="None selected"
-            :options="adminRoleOptions"
-            />
-
-            <label for="adminIds" class="flex gap-0.75 items-center justify-center content-center"> 
-                <UserLockIcon size="14" class="!inline !pt-0.25"/>
-                <p class="!inline"> Admin Roles: </p>
-            </label>
-        </IftaLabel>
-
-
-        <!-- Input Messages:  -->
-        <Message v-if="$form.adminIds?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-            <ul class="flex flex-col gap-1">
-                <li v-for="(error, index) of $form.adminIds.errors" class="text-red-300" :key="index"> {{ error.message }}
-                </li>
-            </ul>
-        </Message>
 
     </div>
 

@@ -36,7 +36,6 @@
     const selectedAccentColor = ref(null) // Default - Purple
 
     // Admin/Mention Role Options/Select:
-    const adminRoleOptions = ref([]);
     const mentionRoleOptions = ref([]);
     
 
@@ -89,9 +88,6 @@
         // Accent Color
         guildConfigurationForm.value.setFieldValue('accentColor', props.guildSelectedData?.guildDatabaseData?.accentColor?.replace('0x', '') || '9b42f5');
         selectedAccentColor.value = props.guildSelectedData?.guildDatabaseData?.accentColor.replace('0x', '') || '9b42f5';
-        // Admin IDs
-        adminRoleOptions.value = props.guildSelectedData?.guildGeneral?.roles || [];
-        guildConfigurationForm.value.setFieldValue('adminIds', props.guildSelectedData?.guildDatabaseData?.adminRoleIds || [])
         // Signup Channel
         guildConfigurationForm.value.setFieldValue('panelChannel', props.guildSelectedData?.guildDatabaseData?.sessionSignup?.panelChannelId || null)
         // Signup Post Time:
@@ -109,7 +105,6 @@
         z.object({
             accentColor: z.string().min(1, {message: 'Accent color is required!'}),
             timeZone: z.object({label: z.string(), value: z.string()}, {message: 'Invalid Message'}),
-            adminIds: z.array(z.string()).default([]),
             panelChannel: z.string().min(1, {message: 'Signup Channel is required!'}),
             postTime: z.coerce.date().refine(val => !isNaN(val.getTime()), {
                 message: 'Post Time is Invalid',
@@ -137,7 +132,6 @@
                 // Prepare - Full Submission:
                 configurationData['accentColor'] = convertedHex || '0x9b42f5'
                 configurationData['timeZone'] = f?.values?.timeZone?.value || 'America/Chicago'
-                configurationData['adminRoleIds'] = f?.values?.adminIds || []
                 configurationData['panelChannelId'] = f?.values?.panelChannel || null
                 configurationData['dailySignupPostTime'] = {hours: requestedHours, minutes: requestedMinuets}
                 configurationData['signupMentionIds'] = f?.values?.mentionRoles || []
@@ -274,39 +268,6 @@
             <Message v-if="$form.timeZone?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
                 <ul class="flex flex-col gap-1">
                     <li v-for="(error, index) of $form.timeZone.errors" class="text-red-300" :key="index"> {{ error.message }}
-                    </li>
-                </ul>
-            </Message>
-
-        </section>
-        
-        <!-- Admin Ids -->
-        <section class="flex flex-col gap-1">
-
-            <p class="step-heading required-step font-semibold text-primary"> 
-                Admin Roles:
-            </p>
-
-            <IftaLabel>
-                <MultiSelect
-                name="adminIds" 
-                fluid filter
-                class="!max-w-64"
-                option-label="name"
-                option-value="id"
-                placeholder="None selected"
-                :options="adminRoleOptions"
-                />
-
-                <label for="adminIds" class="flex gap-0.75 items-center justify-center content-center"> 
-                    <UserLockIcon :size="14" class="!inline !pt-0.25"/>
-                    <p class="!inline"> Admin Roles: </p>
-                </label>
-            </IftaLabel>
-
-            <Message v-if="$form.adminIds?.invalid" severity="error" class="opacity-75" size="small" variant="simple">
-                <ul class="flex flex-col gap-1">
-                    <li v-for="(error, index) of $form.adminIds.errors" class="text-red-300" :key="index"> {{ error.message }}
                     </li>
                 </ul>
             </Message>
