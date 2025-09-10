@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.1](https://github.com/SessionsBot/frontend/compare/v0.5.0...v0.5.1) (2025-09-10)
+
+### 🐞 Bug Fixes
+
+* remove old `adminIds` prop ([783297e](https://github.com/SessionsBot/frontend/commit/783297e776f55208f10f2a3dba8633e87295789f))
+* router nav guard ([5328e13](https://github.com/SessionsBot/frontend/commit/5328e134e591d72c61f1209f8fce324766ca97e3))
+* **sign-in:** discord redirect uri ([5fbd614](https://github.com/SessionsBot/frontend/commit/5fbd61476c4bb71b96161bf1f95abcc30478a73c))
+
+### ♻️ Refactoring
+
+* minor improvements ([5cbf294](https://github.com/SessionsBot/frontend/commit/5cbf2947d0831cee90ff8ef20af1f7ff7d2d52cf))
+
 ## [0.5.0](https://github.com/SessionsBot/frontend/compare/v0.4.1...v0.5.0) (2025-09-08)
 
 ### ⚡️ Features
