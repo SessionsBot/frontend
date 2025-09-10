@@ -156,7 +156,7 @@ router.beforeEach((to, from, next) => {
     console.info("[Router-Guard] Not authenticated, redirecting to sign in...");
     return next({
       path: "/user/sign-in",
-      query: { message: `Please sign in to access ${to.meta || 'this page'}.` },
+      query: { message: `Please sign in to access ${to.name || 'this page'}.` },
     });
   }
 
