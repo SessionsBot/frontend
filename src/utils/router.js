@@ -22,7 +22,7 @@ import guildSetup from "@/pages/api/guildSetup/guildSetup.vue";
 import { usePopupSystem } from "./stores/popup";
 
 
-// All Routes:
+// Router/App Routes:
 const routes = [
   // ROOT/Homepage:
   {
@@ -33,10 +33,10 @@ const routes = [
   			
   // Info Routes:
   {
-    path: "/info/pricing",
+    path: "/pricing",
     name: "pricing-plans",
     component: pricingPlans,
-    alias: ["/pricing-plans", "/solutions", "/pricing"],
+    alias: ["/pricing-plans", "/solutions", "/info/pricing"],
   },
   {
     path: "/support",
@@ -153,10 +153,10 @@ router.beforeEach((to, from, next) => {
   // 'Account Restricted' navigation guard:
   if (to.meta?.requiresAuth && !auth.isAuthenticated) {
     // Not authenticated, redirect to Sign-In
-    console.info("[Router-Guard] Not authed, redirecting to sign in...");
+    console.info("[Router-Guard] Not authenticated, redirecting to sign in...");
     return next({
       path: "/user/sign-in",
-      query: { message: `Please sign in to access ${to.name}` },
+      query: { message: `Please sign in to access ${to.meta || 'this page'}.` },
     });
   }
 
