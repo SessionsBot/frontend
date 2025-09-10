@@ -55,6 +55,7 @@
             // Add blank users[] to role
             newRole['users'] = []
             // Add role to static stack:
+            // @ts-ignore
             props.scheduleRoles.push(newRole)
             emits('closePopover')
 

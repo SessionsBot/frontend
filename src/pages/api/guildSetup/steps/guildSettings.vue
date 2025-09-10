@@ -8,7 +8,7 @@
     import { onMounted, ref } from 'vue';
     
 
-    // Incomming Props:
+    // Incoming Props:
     const props = defineProps({
         changeStep: Function,
         guildData: Object
