@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.6.0](https://github.com/SessionsBot/frontend/compare/v0.5.1...v0.6.0) (2025-09-12)
+
+### ⚡️ Features
+
+* **setup:** add help links to input fields ([dbf6529](https://github.com/SessionsBot/frontend/commit/dbf652910a8d1dd1bff55a9b32dd1ca1bfffb59f))
+* **setup:** post shds early after setup ([804d71b](https://github.com/SessionsBot/frontend/commit/804d71bc8146bb245f0331e96c0f9b5cf85aca0a))
+
+### 🐞 Bug Fixes
+
+* router guard query ([bca4c1c](https://github.com/SessionsBot/frontend/commit/bca4c1c33d2d624db41d4771fb4904ab98df5353))
+
+### 🎨 Styling
+
+* **setup:** help resources ([e289552](https://github.com/SessionsBot/frontend/commit/e2895526cf7274dc839c01f58e393172696d08c0))
+
+### ♻️ Refactoring
+
+* comments ([1950127](https://github.com/SessionsBot/frontend/commit/1950127357d433507935e98c7d2279f73bbdbef1))
+
 ## [0.5.1](https://github.com/SessionsBot/frontend/compare/v0.5.0...v0.5.1) (2025-09-10)
 
 ### 🐞 Bug Fixes
