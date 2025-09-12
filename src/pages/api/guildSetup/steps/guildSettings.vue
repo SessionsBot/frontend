@@ -1,7 +1,9 @@
 <script setup>
     // Imports:
+    import { zodResolver } from '@primevue/forms/resolvers/zod';
+    import { z } from 'zod'
     import { Form } from '@primevue/forms';
-    import { CalendarCogIcon, UserLockIcon } from 'lucide-vue-next';
+    import { CalendarCogIcon, HelpCircleIcon } from 'lucide-vue-next';
     import { Button } from 'primevue';
 
     import { friendlyTimezones } from '@/utils/modules/friendlyTimezones';
@@ -46,24 +48,19 @@
 
 
     // Form Validation:
-    const resolver = ({values}) => {
-        const errors = {};
-
-        // Confirm timezone:
-        if (!values.timeZone || String(values.timeZone).trim().length <= 0) {
-            errors.timeZone = [{ message: 'Timezone is required!' }];
-        }
-
-        // Confirm accent color:
-        if (!values.accentColor){
-            errors.accentColor = [{ message: 'Accent Color is Invalid!' }]
-        }
-
-        return {
-            values,
-            errors
-        };
-    }
+    const resolver = zodResolver(
+        z.object({
+            timeZone: z.object({
+                label: z.string(),
+                value: z.string()
+            }, {message: 'Time Zone is required!'}),
+            accentColor: z.object({
+                r: z.number(),
+                g: z.number(),
+                b: z.number()
+            }, {message: 'Accent Color is required!'})
+        })
+    )
 
 
     // Form Submission:
@@ -92,9 +89,13 @@
     <!-- Timezone Input -->
     <div class="flex text-left pr-10 flex-col gap-4.5 w-full"> 
 
-        <p class="step-heading required-step font-semibold text-primary"> 
-            Choose your guild’s preferred timezone
-        </p>
+        <span class="step-heading required-step font-semibold text-primary items-center gap-1.5 flex"> 
+            Select your server's timezone 
+            <!-- Help Icon -->
+            <a href="https://docs.sessionsbot.fyi/server-config#time-zone" target="_blank" title="More info">
+                <HelpCircleIcon class="text-zinc-500 hover:fill-indigo-300/10 cursor-pointer transition-all" :size="18" />
+            </a>
+        </span>
 
         
         <IftaLabel class="inline max-w-65 h-auto">
@@ -130,9 +131,13 @@
     <div class="flex text-left pr-10 flex-col gap-4.5 w-full"> 
         
         <!-- Step Heading: -->
-        <p class="step-heading font-semibold text-primary"> 
-            Choose your guild’s accent color
-        </p>
+        <span class="step-heading font-semibold text-primary items-center gap-1.5 flex"> 
+            Choose your preferred accent color
+            <!-- Help Icon -->
+            <a href="https://docs.sessionsbot.fyi/server-config#accent-color" target="_blank" title="More info">
+                <HelpCircleIcon class="text-zinc-500 hover:fill-indigo-300/10 cursor-pointer transition-all" :size="18" />
+            </a>
+        </span>
 
         <!-- Color pick/preview -->
         <div class="flex flex-col gap-4 flex-nowrap">

@@ -1,6 +1,6 @@
 <script setup>
     // Imports:
-    import { BanIcon, CalendarPlus2Icon, Clock4Icon, FileQuestionIcon, Layers2Icon, Trash2Icon, UsersIcon } from 'lucide-vue-next';
+    import { BanIcon, CalendarPlus2Icon, Clock4Icon, FileQuestionIcon, HelpCircleIcon, Layers2Icon, Trash2Icon, UsersIcon } from 'lucide-vue-next';
     import { computed, ref, } from 'vue';
     import createGuildSchedule from './components/createGuildSchedule.vue';
     import PricingLimits from '@/utils/modules/pricingLimits';
@@ -81,13 +81,16 @@
 <template>
 
     <!-- Guild Schedules -->
-    <div class="flex text-left pr-15 py-6 flex-col gap-4.5 w-full"> 
+    <div class="flex text-left pr-15 py-6 pb-0 flex-col gap-4.5 w-full"> 
 
         <!-- Step Heading/Star -->
-        <p class="hidden step-heading absolute required-step"> </p>
+        <p class="step-heading absolute required-step"> 
+            Create your Server's Session Schedules
+        </p>
 
         <!-- Schedules View -->
         <DataView
+         class="mt-1"
          paginator
          :rows="5"
          :value="currentSchedules"
@@ -96,10 +99,9 @@
             <template #header>
             <div class="w-full text-white/70 flex flex-row justify-center items-center">
                 
-                <p class="font-bold flex italic gap-1.5 items-center">
-                    <Clock4Icon size="18" />
-                    SESSION SCHEDULES:
-                </p>
+                <span class="font-bold italic flex items-center gap-1">
+                    <p> SESSION SCHEDULES </p>
+                </span>
                 
             </div>
             </template>
@@ -228,6 +230,9 @@
 
         </DataView>
 
+        <a href="https://docs.sessionsbot.fyi/session-schedules" target="_blank" class="w-full py-2.5 text-sm text-zinc-400 text-center hover:underline transition-all"> 
+            Learn about <i>Session Schedules</i> here.
+        </a>
 
        <!-- Schedule Input Messages: -->
         <Message v-if="showAddScheduleMessage" severity="error" class="opacity-75" size="small" variant="simple">
@@ -242,7 +247,7 @@
     <Divider />
 
     <!-- Last/Next Step Buttons -->
-    <div class="flex flex-row gap-3 flex-wrap pb-6 pt-3">
+    <div class="flex flex-row gap-3 relative flex-wrap pb-6 pt-3 w-full">
         <Button class="w-fit" label="Back" severity="secondary" @click="changeStep('2')" />
         <Button class="w-fit" label="Submit" severity="success" type="submit" @click="submitScheduleStep" />
     </div>

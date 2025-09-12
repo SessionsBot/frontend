@@ -1,6 +1,6 @@
 <script setup>
     // Imports:
-    import { BellRingIcon, ChevronDown, Clock4Icon, FileCheck, FilePlus2, FileWarning, LayersIcon, ListStartIcon, Loader2, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
+    import { BellRingIcon, ChevronDown, Clock4Icon, FileCheck, FilePlus2, FileWarning, HelpCircleIcon, LayersIcon, ListStartIcon, Loader2, MessageSquareTextIcon, SparklesIcon } from 'lucide-vue-next';
     import { ref, computed, onMounted, warn, watch } from 'vue';
     import { useAuthStore } from '@/utils/stores/auth';
     import { Select } from 'primevue';
@@ -200,9 +200,17 @@
 
     <!-- Signup Channel Create/Select -->
     <div class="flex text-left pr-10 flex-col gap-4.5 w-full">
-        <p class="step-heading required-step"> 
-            Assign the Text Channel used for <i>Session Signup Panels</i>
-        </p>
+
+        <!-- Input Heading -->
+        <span class="step-heading required-step font-semibold text-primary"> 
+            <!-- Input Desc -->
+            Designate a 'Text Channel' used for posting <i>Session Signup Panels</i>.
+            <!-- Help Icon -->
+            <a href="https://docs.sessionsbot.fyi/server-config#signup-channel" target="_blank" title="More info" class="ml-1">
+                <HelpCircleIcon class="text-zinc-500 relative bottom-0.25 inline-block hover:fill-indigo-300/10 cursor-pointer transition-all" :size="18" />
+            </a>
+        </span>
+        
 
         <!-- Create Automatic Signup Channel -->
         <Panel :collapsed="channelSelectType != 'create'" class="!max-w-125">
@@ -307,7 +315,7 @@
                     class="flex flex-nowrap flex-row gap-1.5 items-center justify-center"
                     >
                         <ListStartIcon class=" mb-auto mt-0.5" size="17" />
-                        <p class="text-sm font-semibold"> Select Existing Signup Channel </p>
+                        <p class="text-sm font-semibold"> Select Existing Channel </p>
                     </div>
 
 
@@ -376,9 +384,17 @@
 
     <!-- Signup Post Time -->
     <div class="flex text-left pr-10 flex-col gap-4.5 w-full">
-        <p class="step-heading required-step"> 
-            Choose the time the <i>Signup Panels</i> will be posted each day if applicable
-        </p>
+        
+        <!-- Input Heading -->
+        <span class="step-heading required-step font-semibold text-primary"> 
+            <!-- Input Desc -->
+            Choose the time of day you want sessions to be posted to your Signup Channel.
+            <!-- Help Icon -->
+            <a href="https://docs.sessionsbot.fyi/server-config#post-time" target="_blank" title="More info">
+                <HelpCircleIcon class="text-zinc-500 relative bottom-0.25 inline-block hover:fill-indigo-300/10 cursor-pointer transition-all" :size="18" />
+            </a>
+        </span>
+    
         <IftaLabel>
             <DatePicker
             name="postTime" 
@@ -408,10 +424,16 @@
 
     <!-- Signup Post Mentions -->
     <div class="flex text-left pr-10 flex-col gap-4.5 w-full">
-        
-        <p class="step-heading"> 
-            Choose the roles that will be mentioned on each new <i>Signup Panel</i> post
-        </p>
+
+        <!-- Input Heading -->
+        <span class="step-heading font-semibold text-primary"> 
+            <!-- Input Desc -->
+            Select the roles that will be mentioned on each new <i>Signup Panel</i> post.
+            <!-- Help Icon -->
+            <a href="https://docs.sessionsbot.fyi/session-schedules#signup-panels" target="_blank" title="More info">
+                <HelpCircleIcon class="text-zinc-500 relative bottom-0.25 inline-block hover:fill-indigo-300/10 cursor-pointer transition-all" :size="18" />
+            </a>
+        </span>
 
         <IftaLabel>
             <MultiSelect
