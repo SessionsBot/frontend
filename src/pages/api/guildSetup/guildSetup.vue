@@ -749,7 +749,6 @@ import { toaster } from '@/utils/defaultExports';
             <template #footer>
             <div class="flex justify-center items-center gap-5 mt-2 ">
 
-                <!-- ! FINISH THIS ! -->
                 <!-- Wait for Sch Button -->
                 <Button
                     @click="() => { router.push({name: 'dashboard'}) } " unstyled :disabled="postingEarlyLoading"
