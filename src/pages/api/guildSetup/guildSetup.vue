@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 
     // ------------------------- [ App Imports ] ------------------------- \\
     import { onMounted, ref, watch } from 'vue';
@@ -8,7 +8,7 @@
 
     
     // UI:
-    import { BadgeQuestionMarkIcon, CableIcon, EarthIcon, LayoutDashboardIcon, Link2Icon, LockIcon, MailIcon, MessageCircleQuestionIcon, PartyPopperIcon, ShieldQuestionIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
+    import { AlarmClockCheckIcon, AlarmClockMinusIcon, BadgeQuestionMarkIcon, CableIcon, ClockIcon, EarthIcon, LayoutDashboardIcon, Link2Icon, LoaderCircleIcon, LoaderIcon, LockIcon, MailIcon, MessageCircleQuestionIcon, PartyPopperIcon, ShieldQuestionIcon, Trash2, TriangleAlert, WrenchIcon } from 'lucide-vue-next';
     import Card from 'primevue/card';
     import Step from 'primevue/step';
     import StepItem from 'primevue/stepitem';
@@ -24,7 +24,9 @@
     import TimezoneSetup from './steps/guildSettings.vue'
     import DailySignupSetup from './steps/signupPanels.vue'
     import SessionSchedules from './steps/schedules/sessionSchedules.vue'
-    import { getGuildData } from '@/utils/modules/backendApi';
+    import { getGuildData, postGuildSchedulesEarly } from '@/utils/modules/backendApi';
+    import { defaultWindow } from '@vueuse/core';
+import { toaster } from '@/utils/defaultExports';
 
 
     // ------------------------- [ Variables ] ------------------------- \\
@@ -35,9 +37,10 @@
     const userLoggedIn = computed(() => auth.isAuthenticated)
     const userWebToken = computed(() => auth.authToken)
     const guildId = ref('GUILD_ID')
+
     // Watch Authentication:
-    watch(userLoggedIn, (newVal, oldVal) => {
-        if(!newVal){ // Signed out - force sign in...
+    watch(userLoggedIn, (isAuthed) => {
+        if(!isAuthed){ // Signed out - force sign in...
             currentCard.value = 'signIn';
         }
     })
@@ -53,12 +56,12 @@
     const guildName = computed(() => {
         return guildData.value?.guildGeneral.name 
         ? guildData.value.guildGeneral.name 
-        : 'GUILD'
+        : 'SERVER'
     });
 
 
     // ------------------------- [ FULL Setup Draft ] ------------------------- \\
-    const guildSetupDraft = ref({})
+    const guildSetupDraft = ref<any>({})
     // Debugging:
     // watch(guildSetupDraft, (newVal, oldVal) => {
     //     console.info('GUILD DRAFT UPDATE', newVal)
@@ -133,6 +136,23 @@
         
     }
 
+    // Attempt post today's schedules early:
+    const postingEarlyLoading = ref(false);
+    const postSchedulesEarly = async () => {
+
+        postingEarlyLoading.value = true; // mark loading
+        const result = await postGuildSchedulesEarly(guildId.value)
+
+        if(result?.success) { // succeeded:
+            toaster.success(`Posted Today's Sessions!`);
+            router.push('/dashboard');
+        } else{ // failed:
+            toaster.error(`Uh oh! Posted Today's Sessions Failed... <br> Wait a few seconds and try again!`);
+            console.warn('Failed to post session schedules early - See Details:', {guildId, result});
+        }
+
+        postingEarlyLoading.value = false; // mark completed
+    }
 
     // ------------------------- [ Guild Setup Steps: ] ------------------------- \\
     const currentCard = ref('null') // Controls active visible content
@@ -178,7 +198,7 @@
 
         // Get query:
         const query = useRoute().query
-        const G_ID = query.guildId
+        const G_ID = String(query?.guildId);
 
         // Fetch Guild Data:
         const getGuildAttempt = await getGuildData(G_ID);
@@ -206,8 +226,7 @@
         if(guildData.value?.guildDatabaseData?.setupCompleted) return currentCard.value = 'alreadySetup';
      
         // Show setup if no issue:
-        currentCard.value = 'startSetup'
-
+        currentCard.value = 'startSetup';
     })
 
 
@@ -216,7 +235,7 @@
 <template> <main class="text-white w-full bg-black/30 text-center flex gap-2 flex-1 flex-col flex-wrap justify-start items-center content-center">
 
     <!-- Custom Header: -->
-    <Transition name="fade" duration="1"> <header v-show="!deferSetupContent" class="bg-zinc-900 ring-2 h-15 ring-zinc-700/70 w-full flex justify-between">
+    <Transition name="fade" :duration="1"> <header v-show="!deferSetupContent" class="bg-zinc-900 ring-2 h-15 ring-zinc-700/70 w-full flex justify-between">
         <!-- Site Title -->
         <section class="w-fit p-2 px-4 flex flex-row gap-2.5 justify-start items-center content-center">
             <img class="h-8 w-8 rounded-full ring-border ring-2" :src="guildIconImg">
@@ -295,7 +314,7 @@
                     <div class="flex w-full rounded-md flex-row items-center content-center justify-start">
 
                         <p class="inline-flex text-zinc-300 bg-zinc-800 p-1 rounded-md rounded-tr-none rounded-br-none border-inset border-2 ring-ring font-semibold content-center items-center w-fit h-fit">
-                            <EarthIcon size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
+                            <EarthIcon :size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
                             Guild:
                         </p>
 
@@ -348,7 +367,7 @@
                     <div class="flex w-full rounded-md flex-row items-center content-center justify-start">
 
                         <p class="inline-flex text-zinc-300 bg-zinc-800 p-1 rounded-md rounded-tr-none rounded-br-none border-inset border-2 ring-ring font-semibold content-center items-center w-fit h-fit">
-                            <EarthIcon size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
+                            <EarthIcon :size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
                             Server:
                         </p>
 
@@ -403,7 +422,7 @@
                     <!-- Guild info -->
                     <div class="flex w-full rounded-md flex-row items-center content-center justify-start">
                         <p class="inline-flex text-zinc-300 bg-zinc-800 p-1 rounded-md rounded-tr-none rounded-br-none border-inset border-2 ring-ring font-semibold content-center items-center w-fit h-fit">
-                            <EarthIcon size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
+                            <EarthIcon :size="22" stroke-width="2.5" class=" rounded-md p-0.75 m-0 mr-0.5 inline" />
                             Server:
                         </p>
                         <p class="p-1 px-2 font-semibold ring-2 ring-ring ring-offset rounded-md rounded-tl-none rounded-bl-none inline-flex justify-center items-center gap-1 flex-nowrap">
@@ -457,8 +476,8 @@
                 <div class="gap-2.5 !w-full flex-col flex justify-center items-center content-center">
 
                     <!-- Information Text -->
-                    <p class=" text-md font-light w-full text-left p-0 m-0"> 
-                        It appears this Discord Server has <b> been previously configured</b>! <br> <br> You can visit your dashboard to further modify settings for this server and Sessions Bot if you have the necessary permissions.
+                    <p class=" text-md w-full text-left p-0 m-0"> 
+                        It appears this Discord Server has <b>been previously configured</b>! <br> <br> You can visit your dashboard to further modify settings for Sessions Bot and this server if you have the necessary permissions.
                     </p> 
 
                     <Button @click=" router.push('/dashboard')" class="mt-10 !bg-yellow-600 hover:!bg-yellow-700 !text-white !border-0 font-semibold">
@@ -488,7 +507,7 @@
         >
 
             <template #header>
-                <div class="bg-zinc-900 border-b-2 border-b-ring p-2 !w-full !flex !flex-wrap !justify-between !items-center !content-center flex-row !text-nowrap">
+                <div class="bg-zinc-900 border-b-2 border-b-ring p-2 !w-full gap-2 !flex !flex-wrap !justify-between !items-center !content-center flex-row !text-nowrap">
                     
                     <!-- Card Title -->
                     <p class="inline-flex font-bold content-center items-center w-fit h-fit">
@@ -500,7 +519,7 @@
                     <div class="flex w-fit rounded-md flex-row items-center content-center justify-center" title="Guild">
 
                         <div class="inline-flex text-zinc-300 bg-zinc-800 p-1 rounded-md rounded-tr-none rounded-br-none border-2 ring-ring font-semibold justify-center content-center items-center w-fit h-fit">
-                            <EarthIcon size="20" stroke-width="2.5" class=" rounded-md p-0.75 m-0 inline" />
+                            <EarthIcon :size="20" stroke-width="2.5" class=" rounded-md p-0.75 m-0 inline" />
                         </div>
 
                         <p class="p-1 text-sm px-1.5 font-semibold ring-2 ring-ring ring-offset rounded-md rounded-tl-none rounded-bl-none inline-flex justify-center items-center gap-1 flex-nowrap">
@@ -553,7 +572,7 @@
                     class="!gap-1"
                     severity=""
                 >
-                    <CableIcon size="26" stroke-width="2.25" />
+                    <CableIcon :size="26" stroke-width="2.25" />
                     <p>Begin Setup</p>
                 </Button>
 
@@ -576,7 +595,7 @@
             <StepItem value="1">
 
                 <Step class="!ring-2 !ring-offset ring-zinc-700">
-                    <p :class="{'!text-emerald-500': currentStep > 1}">
+                    <p :class="{'!text-emerald-500': Number(currentStep) > 1}">
                          Set Server Preferences
                     </p>
                 </Step>
@@ -632,25 +651,6 @@
 
                 </StepPanel>
             </StepItem>
-
-
-            <!-- SUBMIT BUTTONS TEMPLATE -->
-            <template>
-                <div class="hidden flex-col gap-2.5 py-6">
-
-                    <p class="text-zinc-300/50 text-left"> Coming Soon </p>
-
-                    <div class="flex flex-row gap-3 flex-wrap">
-                        <Button class="w-fit" label="Back" severity="secondary"
-                            @click="activateCallback('2')" />
-                        <Button class="w-fit text-shadow-2xs text-accent" raised label="Submit"
-                            severity="success" @click="activateCallback('4')">
-                        </Button>
-                    </div>
-
-
-                </div>
-            </template>
 
 
             <!-- HIDDEN - COMPLETE -->
@@ -709,14 +709,14 @@
                 <div class="flex flex-col justify-center items-center gap-5 ">
 
                     <!-- Heading -->
-                    <p class="font-semibold text-2xl"> Congratulations! </p>
+                    <p class="bg-zinc-800 mt-1 text-2xl ring-ring ring-2 rounded-lg font-bold py-0.75 px-2.5"> 🥳 Congratulations! </p>
 
                     <!-- Guild/Sessions Icons -->
-                    <div class="flex h-full justify-center gap-1.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
+                    <div hidden class="flex h-full justify-center gap-1.5 items-center content-center flex-row" id="guild-sessions-img-wrapper">
                         
                         <img src="/sessionsBotWithText.png" class="bg-zinc-400 rounded-full ring-2 ring-ring w-15 h-15">
 
-                        <span class="bg-zinc-500/80 scale-75 w-fit px-1.5 rounded-2xl">
+                        <span class="bg-emerald-500/80 scale-75 w-fit px-1.5 rounded-2xl">
                             <Link2Icon class="scale-90" />
                         </span>
 
@@ -724,12 +724,21 @@
 
                     </div>
 
-                    <!-- Description -->
-                     <p class="font-light px-10 text-sm"> 
-                        You have successfully completed all of the setup steps to start using Sessions Bot within your Discord Server!
-                    </p>
-                    
 
+                    <!-- Description/Text -->
+                    <div class="flex flex-col px-0 flex-wrap items-center gap-1">
+                        
+                        <p class="font-medium"> 
+                            You have completed the setup process for this Discord Server!
+                        </p>
+
+                        <div class="h-[2px] w-[85%] my-3 rounded-md bg-ring" />
+                        
+                        <p class="font-bold italic underline underline-offset-2"> Just one last question:</p>
+
+                        <p class="mx-5 my-2 opacity-85"> Would you like to post todays sessions immediately instead of waiting for your next scheduled post time? </p>
+
+                    </div>
                 </div>
                 
                 
@@ -738,15 +747,40 @@
 
 
             <template #footer>
-            <div class="flex flex-col justify-center items-center gap-5 mt-5 ">
+            <div class="flex justify-center items-center gap-5 mt-2 ">
 
+                <!-- ! FINISH THIS ! -->
+                <!-- Wait for Sch Button -->
                 <Button
-                    @click="() => { router.push({name: 'dashboard'}) } "
-                    class="!gap-1 !bg-emerald-400/80 !border-0 mb-1 hover:brightness-125 !transition-all duration-400"
-                    severity="success"
+                    @click="() => { router.push({name: 'dashboard'}) } " unstyled :disabled="postingEarlyLoading"
+                    class="bg-zinc-700 p-1.75 gap-0.75 flex items-center rounded-md transition-all"
+                    :class="{
+                        'opacity-50 cursor-not-allowed': postingEarlyLoading,
+                        'hover:bg-zinc-600 cursor-pointer': !postingEarlyLoading
+
+                    }"
                 >
-                    <LayoutDashboardIcon size="22" stroke-width="2.25" />
-                    <p>My Dashboard</p>
+                    <AlarmClockMinusIcon :size="18" stroke-width="2.25" />
+                    <p class="font-medium text-wrap text-center"> Wait for Schedule </p>
+                </Button>
+
+
+                <!-- Post Sch Early Button -->
+                <Button
+                    @click="postSchedulesEarly" unstyled :disabled="postingEarlyLoading"
+                    class="bg-indigo-500/90 p-1.75 gap-0.75 flex items-center rounded-md transition-all"
+                    :class="{
+                        'opacity-50 cursor-not-allowed': postingEarlyLoading,
+                        'hover:bg-indigo-400/80 cursor-pointer': !postingEarlyLoading
+
+                    }"
+                >
+                    <AlarmClockCheckIcon v-if="!postingEarlyLoading" :size="20" stroke-width="2.25" />
+                    <div class="size-5.5 flex items-center justify-center content-center" v-else>
+                        <LoaderIcon :size="20" class="!animate-spin !m-auto !p-auto !h-fit !w-fit" />
+                    </div>
+                    
+                    <p class="font-medium text-wrap text-center"> Post Early </p>
                 </Button>
 
             </div>
@@ -818,7 +852,7 @@
         background-color: var(--color-indigo-400);
         filter: grayscale(.35);
         z-index: -1;
-        content: '?';
+        content: '/';
         font-size: 12px;
         font-weight: 800;
         color: rgba(0, 0, 0, 0.7);

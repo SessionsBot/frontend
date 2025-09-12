@@ -22,7 +22,9 @@ import guildSetup from "@/pages/api/guildSetup/guildSetup.vue";
 import { usePopupSystem } from "./stores/popup";
 
 
-// Router/App Routes:
+/** Router/App Routes: 
+ * @type {import("vue-router").RouteRecordRaw[]}
+*/
 const routes = [
   // ROOT/Homepage:
   {
@@ -99,6 +101,7 @@ const routes = [
   {
     path: "/api/guild-setup",
     name: "guild-setup",
+    alias: ['/guild-setup'],
     component: guildSetup,
   },
   {

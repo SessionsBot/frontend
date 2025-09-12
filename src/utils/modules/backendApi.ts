@@ -165,3 +165,26 @@ export async function deleteSessionSchedule(guildId:string, scheduleId:string) {
         return originResponseData || {success: false, data: null, error: err};
     }
 }
+
+
+/** Utility API call to post guilds sessions eely instead of waiting for next post time */
+export async function postGuildSchedulesEarly(guildId:string) {
+    const authToken = useAuthStore().authToken || 'null';
+    const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/guilds/${guildId}/sessions/post-early`;
+
+    // Attempt request:
+    try {
+        // Make request:
+        const results = await axios.patch(requestUrl, null, {
+            headers: {
+                Authorization: `Bearer ${authToken}`
+            }
+        })
+        // Return response
+        return {success: true, data: results?.data}
+    } catch (err) {
+        // Error occurred:
+        console.warn('API ERROR', 'Post Guild Sessions Early', err?.response ? err?.response : err);
+        return {success: false, data: err?.response ? err?.response : 'Unknown Error Occurred' + err}
+    }
+}
