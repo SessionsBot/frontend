@@ -230,9 +230,15 @@
 
         </DataView>
 
-        <a href="https://docs.sessionsbot.fyi/session-schedules" target="_blank" class="w-full py-2.5 text-sm text-zinc-400 text-center hover:underline transition-all"> 
-            Learn about <i>Session Schedules</i> here.
+        <a href="https://docs.sessionsbot.fyi/session-schedules" target="_blank" class=""> 
+        <div class="!block w-full py-2.5 text-[13px] text-zinc-400 text-center hover:underline transition-all">
+            
+            <HelpCircleIcon class="!inline" :size="12" />
+            <p class="ml-1 !inline">Learn more about <i>Session Schedules</i> here. </p>
+            
+        </div>
         </a>
+        
 
        <!-- Schedule Input Messages: -->
         <Message v-if="showAddScheduleMessage" severity="error" class="opacity-75" size="small" variant="simple">
