@@ -2,7 +2,7 @@
     import { defaultWindow } from '@vueuse/core';
     import discordIcon from '@/assets/svgs/discord-icon.vue'
     import { auth, nav } from '@/utils/defaultExports';
-    import { WrenchIcon } from 'lucide-vue-next';
+    import { ArrowBigRightIcon, MoveRightIcon, WrenchIcon } from 'lucide-vue-next';
 
 </script>
 
@@ -65,7 +65,7 @@
     </section>
 
     <!-- Features -->
-    <div class="flex flex-wrap justify-center items-start content-center m-10 gap-6">
+    <section class="flex flex-wrap justify-center items-start content-center m-10 gap-6">
         
         <!-- Bot Commands -->
         <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
@@ -76,6 +76,33 @@
                 <img class="w-110 my-3 ring-1 rounded-md ring-ring" src="../assets/availableCommands.png" />
                 <p class="text-zinc-300"> Use bot commands for features like modifying session assignees, viewing your currently assigned sessions, adjusting notifications, and more! </p>
             </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/commands" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
+        </section>
+
+        <!-- Session Schedules -->
+        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+            <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
+                ⏰ Reoccurring Sessions
+            </p>
+            <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
+                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/dashboard-modify-schedules.png" />
+                <p class="text-zinc-300"> Configure reoccurring sessions to be posted within your Discord Server. Sessions can be scheduled to repeat on specific days of the week at their specified times.  </p>
+            </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/session-schedules" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
         </section>
 
         <!-- Sessions Signups -->
@@ -87,19 +114,36 @@
                 <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/signup-panel-w-roles.png" />
                 <p class="text-zinc-300"> Sessions Bot sends session signup/alert messages according to your configured schedules! Configure roles for your sessions to allow member signups. </p>
             </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/session-schedules" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
         </section>
 
         <!-- Adjust Preferences -->
-        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+        <section class="bg-black/15 max-w-110 p-4 border-2 border-ring/70 rounded-sm">
+
             <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
                 ⚙️ Fine Tune Preferences
             </p>
             <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
-                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/dashboard-modify-schedules.png" />
+                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/guild-config.png" />
                 <p class="text-zinc-300"> Adjust your server's bot preferences right from your dashboard. Modify configurations like your schedules sessions, accent color, time zone, etc. </p>
             </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/server-config" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
         </section>
-    </div>
+    </section>
 
 </div> 
 </template>
