@@ -2,13 +2,19 @@
     import { defaultWindow } from '@vueuse/core';
     import discordIcon from '@/assets/svgs/discord-icon.vue'
     import { auth, nav } from '@/utils/defaultExports';
-    import { WrenchIcon } from 'lucide-vue-next';
+    import { ArrowBigRightIcon, MoveRightIcon, WrenchIcon } from 'lucide-vue-next';
+    import { VueElement, defineComponent, h } from 'vue';
+
+    const customBullet = defineComponent({
+        name: 'CustomBullet',
+        setup() {return()=> h('div', {class: 'h-[2px] w-2 bg-zinc-500/80 rounded-md relative top-3'}); }
+    })
 
 </script>
 
 
 <template> 
-<div class="flex justify-start items-center flex-col w-full h-full flex-1 ">
+<div class="flex justify-start items-center flex-col w-full h-full flex-1 mb-15 ">
     
     <!-- Hero/Landing Section -->
     <section class="flex gap-4 bg-black/30 overflow-clip w-full py-10 justify-evenly items-center content-center flex-wrap text-center">
@@ -65,7 +71,8 @@
     </section>
 
     <!-- Features -->
-    <div class="flex flex-wrap justify-center items-start content-center m-10 gap-6">
+    <h1 class="text-2xl font-black text-shadow-md text-shadow-modern-purple-discord/70 my-7 mb-4"> Main Features </h1>
+    <section class="flex flex-wrap justify-center items-start content-center m-10 mt-0 gap-6">
         
         <!-- Bot Commands -->
         <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
@@ -76,6 +83,33 @@
                 <img class="w-110 my-3 ring-1 rounded-md ring-ring" src="../assets/availableCommands.png" />
                 <p class="text-zinc-300"> Use bot commands for features like modifying session assignees, viewing your currently assigned sessions, adjusting notifications, and more! </p>
             </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/commands" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
+        </section>
+
+        <!-- Session Schedules -->
+        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+            <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
+                ⏰ Reoccurring Sessions
+            </p>
+            <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
+                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/dashboard-modify-schedules.png" />
+                <p class="text-zinc-300"> Configure reoccurring sessions to be posted within your Discord Server. Sessions can be scheduled to repeat on specific days of the week at their specified times.  </p>
+            </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/session-schedules" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
         </section>
 
         <!-- Sessions Signups -->
@@ -87,19 +121,72 @@
                 <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/signup-panel-w-roles.png" />
                 <p class="text-zinc-300"> Sessions Bot sends session signup/alert messages according to your configured schedules! Configure roles for your sessions to allow member signups. </p>
             </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/session-schedules" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
         </section>
 
         <!-- Adjust Preferences -->
-        <section class="bg-black/15 p-4 max-w-110 border-2 border-ring/70 rounded-sm">
+        <section class="bg-black/15 max-w-110 p-4 border-2 border-ring/70 rounded-sm">
+
             <p class="font-black self-start p-2 pb-3 border-b-2 border-ring">
                 ⚙️ Fine Tune Preferences
             </p>
             <div class="p-2 ml-1 font-normal gap-2 flex flex-col flex-wrap justify-start items-center">
-                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/dashboard-modify-schedules.png" />
+                <img class="max-h-50 h-fit my-3 ring-1 rounded-md ring-ring" src="../assets/guild-config.png" />
                 <p class="text-zinc-300"> Adjust your server's bot preferences right from your dashboard. Modify configurations like your schedules sessions, accent color, time zone, etc. </p>
             </div>
+            <!-- More info -->
+            <a 
+             class="flex gap-1.25 items-center justify-end pl-4 text-zinc-500 text-sm px-1.5 py-0.75"
+             href="https://docs.sessionsbot.fyi/server-config" target="_blank"
+            >
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md" />
+                <p class="cursor-pointer hover:underline"> Read More </p>
+            </a>
         </section>
-    </div>
+    </section>
+
+    <!-- Solutions -->
+    <h1 class="text-2xl font-black text-shadow-md text-shadow-modern-purple-discord/70 my-7 mb-4"> Flexible Solutions </h1>
+    <section class="bg-black/15 px-3 py-1.5 gap-2.5 border-2 border-ring/70 rounded-sm flex max-w-205 text-center flex-wrap justify-center items-center content-center mx-5">
+
+        <!-- Text/Info -->
+        <div class="flex flex-col flex-wrap p-2 gap-1">
+            <!-- Free use info -->
+            <span class="bg-black/15 px-3 py-1.5 mt-1 max-w-full border-2 border-ring/70 rounded-sm font-semibold italic text-lg text-shadow-lg"> 
+                Sessions Bot is available to use for <p class="inline text-emerald-500">absolutely no cost!</p> 
+            </span>
+
+            <!-- Premium purchase info -->
+            <div class="flex w-fit gap-1.5 px-3 py-1.5">
+                
+                <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md self-start relative top-2.5" />
+                <span class="text-left w-full text-[15px] opacity-80"> 
+                    Premium plans and features also available for purchase.  
+                    <span class="mt-0.5 ml-1.5 text-sm italic text-start flex flex-wrap text-zinc-400/85"> 
+                        <div class="h-[2px] w-2 inline bg-zinc-500/80 rounded-md self-start relative top-2.5"/> 
+                        See more on our <a class="inline underline-offset-2 cursor-pointer underline ml-1" @click="$router.push('pricing')">pricing page</a> 
+                    </span> 
+                </span>
+
+            </div>
+        </div>
+
+        <!-- Invite Button -->
+        <Button unstyled @click="nav().externalPaths().inviteBotUsingDiscord()"
+            class="bg-zinc-800 scale-90 m-2 px-3.25 py-2 font-semibold rounded-md cursor-pointer flex justify-center items-center content-center hover:brightness-115 transition-all"
+        > 
+            <discordIcon class="size-4.5 mr-1" />
+            Get Started for Free
+        </Button>
+        
+    </section>
 
 </div> 
 </template>
