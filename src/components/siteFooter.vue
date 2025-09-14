@@ -18,10 +18,10 @@ import { InfoIcon, SendIcon } from 'lucide-vue-next';
         <!-- Site/Running Version: -->
         <div class="flex flex-wrap w-full pt-2 justify-between items-center content-center text-center gap-1 p-1">
             
-            <a class="flex items-center gap-1 hover:underline underline-offset-2" href="https://github.com/sessionsbot/frontend/blob/main/CHANGELOG.md" target="_blank">
+            <p class="flex items-center gap-1 hover:underline underline-offset-2">
                 <InfoIcon :size="12" />
                 <p class="text-[11px] relative bottom-[0.45px]"> {{ 'Running Version: ' + appVersion }} </p>
-            </a>
+            </p>
 
             <a class="flex items-center gap-1 hover:underline underline-offset-2" href="https://forms.gle/Ajei7RUhvEfEaJBK8" target="_blank">
                 <SendIcon :size="12" />
