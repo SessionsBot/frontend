@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.0](https://github.com/SessionsBot/frontend/compare/v0.6.0...v0.7.0) (2025-09-14)
+
+### ⚡️ Features
+
+* **footer:** add basic links ([875970e](https://github.com/SessionsBot/frontend/commit/875970edb70aa4168a233bdd659bc2e9896177e0))
+* **homepage:** add price info ([dce10fc](https://github.com/SessionsBot/frontend/commit/dce10fcb87fd90e5d87e8d00a4180e61029cccf1))
+
+### 🐞 Bug Fixes
+
+* improve homepage ([d6f0afe](https://github.com/SessionsBot/frontend/commit/d6f0afe842ee1400ca8c912a5785f7fd31c0f476))
+
 ## [0.6.0](https://github.com/SessionsBot/frontend/compare/v0.5.1...v0.6.0) (2025-09-12)
 
 ### ⚡️ Features
