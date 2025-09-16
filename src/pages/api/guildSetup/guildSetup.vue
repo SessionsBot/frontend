@@ -147,7 +147,7 @@ import { toaster } from '@/utils/defaultExports';
             toaster.success(`Posted Today's Sessions!`);
             router.push('/dashboard');
         } else{ // failed:
-            toaster.error(`Uh oh! Posted Today's Sessions Failed... <br> Wait a few seconds and try again!`);
+            toaster.error(`Uh oh! Posted Today's Sessions Failed... <br> Wait a few seconds and try again! <br> Also make sure Sessions Bot has the necessary permissions within your "Signup Channel".`);
             console.warn('Failed to post session schedules early - See Details:', {guildId, result});
         }
 
