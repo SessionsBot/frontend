@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.7.1](https://github.com/SessionsBot/frontend/compare/v0.7.0...v0.7.1) (2025-09-16)
+
+### 🐞 Bug Fixes
+
+* **footer:** remove link ([da99d7c](https://github.com/SessionsBot/frontend/commit/da99d7c26f88efe409f74d8dc5647a5448b7f521))
+* **setup:** improve error api call ([62ba2d2](https://github.com/SessionsBot/frontend/commit/62ba2d2e4123f193278ed20490beae7c86f14a85))
+
+### 🧹 Chores
+
+* **deps-dev:** bump vite from 7.1.3 to 7.1.5 ([3e9d47d](https://github.com/SessionsBot/frontend/commit/3e9d47d1aba00bb9decee2ddcadff9a1a29c90cd))
+* **deps:** bump axios from 1.11.0 to 1.12.0 ([58307b4](https://github.com/SessionsBot/frontend/commit/58307b4b148d93ab8015a386f3be99f8151e0c53))
+* **deps:** bump the npm-dependencies group across 1 directory with 99 updates ([a3de4c9](https://github.com/SessionsBot/frontend/commit/a3de4c92fe8932621102515282f867b42ced3034))
+
 ## [0.7.0](https://github.com/SessionsBot/frontend/compare/v0.6.0...v0.7.0) (2025-09-14)
 
 ### ⚡️ Features
