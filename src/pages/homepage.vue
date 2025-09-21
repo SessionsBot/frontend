@@ -169,9 +169,9 @@
                 <div class="h-[2px] w-2 bg-zinc-500/80 rounded-md self-start relative top-2.5" />
                 <span class="text-left w-full text-[15px] opacity-80"> 
                     Premium plans and features also available for purchase.  
-                    <span class="mt-0.5 ml-1.5 text-sm italic text-start flex flex-wrap text-zinc-400/85"> 
+                    <span class="mt-0.5 ml-1.5 gap-1 text-sm italic text-start flex flex-wrap text-zinc-400/85"> 
                         <div class="h-[2px] w-2 inline bg-zinc-500/80 rounded-md self-start relative top-2.5"/> 
-                        See more on our <a class="inline underline-offset-2 cursor-pointer underline ml-1" @click="$router.push('pricing')">pricing page</a> 
+                        See more on our <a class="inline underline-offset-2 cursor-pointer underline" @click="$router.push('pricing')">pricing page</a> 
                     </span> 
                 </span>
 
