@@ -9,6 +9,7 @@ import notFound from "@/pages/notFound.vue";
 // Info Page Imports:
 import pricingPlans from "@/pages/info/pricing.vue";
 import support from "@/pages/info/support/support.vue";
+import feedback from "@/pages/info/feedback/feedback.vue";
 import privacyPolicy from "@/pages/info/privacy.vue";
 import termsAndConditions from "@/pages/info/terms.vue";
 import backendOffline from "@/pages/info/backendOffline.vue";
@@ -45,6 +46,16 @@ const routes = [
     name: "support",
     component: support,
     alias: ["/help", "/faq"],
+  },
+  {
+    path: "/feedback",
+    name: "feedback",
+    component: feedback,
+    alias: ["/survey"],
+    beforeEnter() {
+      const nav = useNavStore();
+      nav.headerVisible = false;
+    }
   },
   {
     path: "/privacy",
