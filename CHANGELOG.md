@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.2](https://github.com/SessionsBot/frontend/compare/v0.7.1...v0.7.2) (2025-09-22)
+
+### ⚡️ Features
+
+* feedback form ([dc59d69](https://github.com/SessionsBot/frontend/commit/dc59d69198265c7fa322a370297e8785b26afd25))
+
+### 🎨 Styling
+
+* minor fix ([de9e8da](https://github.com/SessionsBot/frontend/commit/de9e8da80066cfc64a90b3870fdee2ab102ffe63))
+
 ## [0.7.1](https://github.com/SessionsBot/frontend/compare/v0.7.0...v0.7.1) (2025-09-16)
 
 ### 🐞 Bug Fixes
