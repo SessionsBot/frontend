@@ -4,12 +4,6 @@
     import { auth, nav } from '@/utils/defaultExports';
     import { ArrowBigRightIcon, MoveRightIcon, WrenchIcon } from 'lucide-vue-next';
     import { VueElement, defineComponent, h } from 'vue';
-
-    const customBullet = defineComponent({
-        name: 'CustomBullet',
-        setup() {return()=> h('div', {class: 'h-[2px] w-2 bg-zinc-500/80 rounded-md relative top-3'}); }
-    })
-
 </script>
 
 

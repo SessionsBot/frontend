@@ -7,7 +7,13 @@
     import { SessionRole } from '@sessionsbot/api-types';
     import { LetterTextIcon, SmilePlusIcon, UsersIcon } from 'lucide-vue-next';
     import { toaster } from '@/utils/defaultExports';
-import PricingLimits from '@/utils/modules/pricingLimits';
+    import PricingLimits from '@/utils/modules/pricingLimits';
+    import EmojiPicker from 'vue3-emoji-picker'
+    import 'vue3-emoji-picker/css'
+
+    // Emoji Picker - Ref
+    import { PopoverMethods } from 'primevue';
+    const emojiPickerPORef = ref<PopoverMethods>(null)
 
     // PRICING PLANS - LIMITS:
     const maxSessionRoles = PricingLimits.FREE_PLAN.MAX_ROLES
@@ -32,7 +38,7 @@ import PricingLimits from '@/utils/modules/pricingLimits';
         z.object({
             roleName: string().trim().min(2).max(14),
             roleDescription: string().trim().min(5).max(60),
-            roleEmoji: string().emoji().length(2),
+            roleEmoji: string().emoji(),
             roleCapacity: number().min(1).max(maxRoleCapacity)
         }).superRefine((data, ctx) => {
             // Check duplicate role names:
@@ -55,6 +61,7 @@ import PricingLimits from '@/utils/modules/pricingLimits';
             // Add blank users[] to role
             newRole['users'] = []
             // Add role to static stack:
+            // @ts-ignore
             props.scheduleRoles.push(newRole)
             emits('closePopover')
 
@@ -135,8 +142,18 @@ import PricingLimits from '@/utils/modules/pricingLimits';
             title="Default Emoji"
             unstyled
             class="!absolute right-2 top-4.5 grayscale-75"
-            @click="(e) => {newRoleFormRef.states['roleEmoji'].value = '💼'}"
+            @click="(e) => emojiPickerPORef.show(e)"
+            
         />
+
+        <!-- Emoji Picker -->
+        <Popover ref="emojiPickerPORef">
+            <EmojiPicker 
+                disable-skin-tones 
+                native theme="dark"
+                @select="(e) => {newRoleFormRef.states['roleEmoji'].value = e.i}"
+            />
+        </Popover>
 
     </IftaLabel>
     <Message v-if="$form.roleEmoji?.invalid" severity="error" class="opacity-75 px-4" size="small" variant="simple">
@@ -189,3 +206,11 @@ import PricingLimits from '@/utils/modules/pricingLimits';
 
 </Form>
 </template>
+
+<style scoped>
+
+    .v3-emoji-picker, .v3-emoji-picker.v3-color-theme-dark{
+        --v3-picker-bg: #18181b !important;
+    }
+
+</style>
