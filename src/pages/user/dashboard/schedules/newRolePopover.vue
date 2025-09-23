@@ -7,7 +7,7 @@
     import { SessionRole } from '@sessionsbot/api-types';
     import { LetterTextIcon, SmilePlusIcon, UsersIcon } from 'lucide-vue-next';
     import { toaster } from '@/utils/defaultExports';
-import PricingLimits from '@/utils/modules/pricingLimits';
+    import PricingLimits from '@/utils/modules/pricingLimits';
 
     // PRICING PLANS - LIMITS:
     const maxSessionRoles = PricingLimits.FREE_PLAN.MAX_ROLES
@@ -55,6 +55,7 @@ import PricingLimits from '@/utils/modules/pricingLimits';
             // Add blank users[] to role
             newRole['users'] = []
             // Add role to static stack:
+            // @ts-ignore
             props.scheduleRoles.push(newRole)
             emits('closePopover')
 
