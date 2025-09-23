@@ -2,7 +2,7 @@
   "name": "sessions-bot-web-app",
   "description": "The main website/dashboard for the Sessions Bot Discord application.",
   "private": true,
-  "version": "0.7.2",
+  "version": "0.8.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

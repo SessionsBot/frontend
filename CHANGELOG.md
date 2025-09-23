@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.8.0](https://github.com/SessionsBot/frontend/compare/v0.7.2...v0.8.0) (2025-09-23)
+
+### ⚡️ Features
+
+* emoji picker - roles ([a184d05](https://github.com/SessionsBot/frontend/commit/a184d05df512bcc19feb730d1f2838ebb655346d))
+
+### 🐞 Bug Fixes
+
+* ts improvements / dep ([44078dd](https://github.com/SessionsBot/frontend/commit/44078dd9a41a10fecd9178e981756fea0820e2df))
+
+### 🧹 Chores
+
+* **deps:** bump the npm-dependencies group across 1 directory with 48 updates ([e05e6bb](https://github.com/SessionsBot/frontend/commit/e05e6bb5036e9319ce9717b4ddf37bddee56626f))
+
+### ♻️ Refactoring
+
+* improvements ([556eb49](https://github.com/SessionsBot/frontend/commit/556eb49c0e05de85d45e09f930e7fc6a7ada972e))
+
 ## [0.7.2](https://github.com/SessionsBot/frontend/compare/v0.7.1...v0.7.2) (2025-09-22)
 
 ### ⚡️ Features
