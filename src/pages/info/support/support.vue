@@ -90,7 +90,7 @@
 
             <AccordionPanel value="0">
                 <AccordionHeader>
-                     How do I get started? 
+                     How do I get started with Sessions Bot? 
                 </AccordionHeader>
 
                 <AccordionContent><div class="text-white/60 leading-loose">
@@ -103,13 +103,13 @@
 
             <AccordionPanel value="1">
                 <AccordionHeader>
-                     How do I modify my guild's settings? 
+                     How do I modify my server's bot settings? 
                 </AccordionHeader>
 
                 <AccordionContent><div class="text-white/60 leading-loose">
-                    <p> - Visit the Sessions Bot web dashboard at <i class="text-blue-300/80">sessionsbot.fyi</i> (you're here now) </p>
+                    <p> - Visit <i class="text-blue-300/80">sessionsbot.fyi</i> (you're here now) </p>
                     <p> - Sign in using your Discord account </p>
-                    <p> - View your <i class="text-blue-300/80 cursor-pointer underline-offset-3 hover:underline" @click="$router.push('/dashboard')">Guild Dashboard</i> </p>
+                    <p> - View your <i class="text-blue-300/80 cursor-pointer underline-offset-3 hover:underline" @click="$router.push('/dashboard')">Server Dashboard</i> </p>
                     <p> - Modify configurations as you wish! </p>
                 </div></AccordionContent>
             </AccordionPanel>
