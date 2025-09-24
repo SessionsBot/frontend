@@ -11,7 +11,7 @@ import { InfoIcon, SendIcon } from 'lucide-vue-next';
 <template>
     <footer 
         v-if="nav.footerVisible"
-        class="bg-black/30 text-white/40 fill-white/45 text-xs flex flex-col justify-center items-center content-center flex-wrap gap-1 p-2 w-full h-fit z-10">
+        class="bg-black/30 text-white/40 fill-white/45 text-xs flex flex-col justify-center items-center content-center flex-wrap gap-1 p-2.5 w-full h-fit z-10">
 
         <!-- <div class="w-[95%] h-[1.5px] bg-white"></div> -->
 

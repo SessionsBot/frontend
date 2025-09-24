@@ -37,7 +37,7 @@
     <Transition name="fade" mode="out-in">
     <header v-if="nav.headerVisible">
         <!-- Main Site Header: -->
-        <div class="bg-zinc-900 z-10 fixed top-0 right-0 left-0 text-white min-w-full gap-3 p-2.5 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
+        <div class="bg-zinc-900 ring-2 ring-ring/70 z-10 fixed top-0 right-0 left-0 text-white min-w-full gap-3 p-2.5 pr-3 flex flex-nowrap flex-row justify-between items-center text-center overflow-clip">
 
             <!-- Site Icon & Title: -->
             <div id="header_siteTitle" @click="homepage" class="!cursor-pointer flex justify-center items-center flex-row gap-2" title="Sessions Discord Bot">
