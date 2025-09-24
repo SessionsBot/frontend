@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.8.1](https://github.com/SessionsBot/frontend/compare/v0.8.0...v0.8.1) (2025-09-24)
+
+### ⚡️ Features
+
+* small nested nav links ([54d33a9](https://github.com/SessionsBot/frontend/commit/54d33a9a0c4d4f717c0e2e580b3864ee34243d4e))
+
+### 🐞 Bug Fixes
+
+* footer z-index ([327e48a](https://github.com/SessionsBot/frontend/commit/327e48a8ed64ee036cec00b27990cb8bd4e03211))
+* support wording ([955e04e](https://github.com/SessionsBot/frontend/commit/955e04e993859b19e505d73e18cc2871b0b1537d))
+
+### 🎨 Styling
+
+* minor improvements ([c425fa5](https://github.com/SessionsBot/frontend/commit/c425fa58b8be212bf651f17c7a311c5cedeab6c9))
+
 ## [0.8.0](https://github.com/SessionsBot/frontend/compare/v0.7.2...v0.8.0) (2025-09-23)
 
 ### ⚡️ Features
