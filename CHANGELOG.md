@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.0](https://github.com/SessionsBot/frontend/compare/v0.8.1...v0.9.0) (2025-09-29)
+
+### 🐞 Bug Fixes
+
+* body padding ([196717c](https://github.com/SessionsBot/frontend/commit/196717cea76486feea015b2da9b69bee9b074db2))
+* z-index scroll assister ([3cf0d21](https://github.com/SessionsBot/frontend/commit/3cf0d21efec5b512347e76775c0c9af3fa5f16a3))
+
+### 🎨 Styling
+
+* styling improvements ([611173c](https://github.com/SessionsBot/frontend/commit/611173c90764b8b70b7d79cd2a30b62f1930b89f))
+
 ## [0.8.1](https://github.com/SessionsBot/frontend/compare/v0.8.0...v0.8.1) (2025-09-24)
 
 ### ⚡️ Features
