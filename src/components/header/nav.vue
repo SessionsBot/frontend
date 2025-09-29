@@ -3,6 +3,7 @@
     import { useAuthStore } from '@/utils/stores/auth';
     import { useNavStore } from '@/utils/stores/nav';
     import { defaultWindow } from '@vueuse/core';
+import { ExternalLinkIcon } from 'lucide-vue-next';
 
     // Auth:
     const auth = useAuthStore()
@@ -167,7 +168,7 @@
 					<div class="flex flex-col gap-0.5 opacity-80">
 						<p @click="$router.push('/privacy'), closeNav()" class="m-0.5 hover:underline underline-offset-2 text-xs cursor-pointer"> Privacy Policy </p>
 						<p @click="$router.push('/terms'), closeNav()" class="m-0.5 hover:underline underline-offset-2 text-xs cursor-pointer"> Terms & Conditions </p>
-						<a href="https://github.com/SessionsBot" target="_blank" class="m-0.5 hover:underline underline-offset-2 text-xs cursor-pointer"> Source Code </a>
+						<a href="https://github.com/SessionsBot" target="_blank" class="m-0.5 hover:underline underline-offset-2 text-[10px] opacity-70 cursor-pointer"> <ExternalLinkIcon class="!inline mr-0.5 mb-0.5" :size="10" />Source Code </a>
 					</div>
 				</ol>
 

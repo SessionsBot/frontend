@@ -553,8 +553,8 @@ import { toaster } from '@/utils/defaultExports';
                     </div>
 
                     <!-- Description -->
-                     <p class="font-light px-10 text-sm"> 
-                        Click below to get started on setting up Sessions Bot for your Discord Server! 
+                     <p class="px-10 text-sm font-medium"> 
+                        Click below to start setting up Sessions Bot for your Discord Server! 
                     </p>
 
                 </div>
@@ -569,8 +569,8 @@ import { toaster } from '@/utils/defaultExports';
 
                 <Button
                     @click="() => { if(Number(currentStep) <= 0) currentStep='1'; currentCard='guildSetup' } "
-                    class="!gap-1"
-                    severity=""
+                    class="!gap-1 flex flex-row bg-indigo-500 hover:bg-indigo-400 p-2 px-3.5 text-black rounded-lg font-bold cursor-pointer transition-all"
+                    unstyled
                 >
                     <CableIcon :size="26" stroke-width="2.25" />
                     <p>Begin Setup</p>
@@ -588,7 +588,7 @@ import { toaster } from '@/utils/defaultExports';
             :value="currentStep" 
             @update:value="onStepChange" 
             linear
-            class="w-[90%] sm:w-[80%] !rounded-2xl overflow-clip border-2 border-zinc-700"
+            class="w-[90%] sm:w-[80%] max-w-175 !rounded-2xl overflow-clip border-2 border-zinc-700"
         >
 
             <!-- Timezone: -->
