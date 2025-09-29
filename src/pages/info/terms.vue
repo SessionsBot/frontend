@@ -22,7 +22,7 @@
 <template>
   <div class="max-w-4xl mx-auto py-12 px-6 relative">
 
-    <div class="fixed right-2 bottom-2">
+    <div class="fixed right-2 bottom-2 z-[100]">
       <scrollToTop />
     </div>
 
