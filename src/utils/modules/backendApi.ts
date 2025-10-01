@@ -51,7 +51,7 @@ export async function checkBackendStatus() {
 
     if(systemStatuses.success){
         // Get Backend Status:
-        const backendStatus = systemStatuses.data.find(sys => sys.name.includes('Backend'));
+        const backendStatus = systemStatuses.data?.['statuses'].find(sys => sys.name.includes('Backend'));
         if(!backendStatus || backendStatus?.status != 'operational'){ // Backend degraded/offline:
             const popupSystem = usePopupSystem()
             console.warn('Backend server is not fully operational! Please see status page at https://status.sessiosnbot.fyi.', backendStatus)
