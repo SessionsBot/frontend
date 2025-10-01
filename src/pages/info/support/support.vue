@@ -74,7 +74,7 @@
 
         <supportActionCard :title="'View Documentation'" :emoji="'📙'" :action="(e) => { defaultWindow.open('https://docs.sessionsbot.fyi', '_blank') }" />
         <supportActionCard :title="'FAQs'" :emoji="'❓'" :action="(e) => { defaultDocument.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) }"/>
-        <supportActionCard :title="'Feature Requests'" :emoji="'🙏'" :action="(e) => {defaultWindow.open('https://github.com/orgs/SessionsBot/discussions/categories/ideas', '_blank')}"/>
+        <supportActionCard :title="'Feature Requests'" :emoji="'🙏'" :action="(e) => { $router.push('/feedback') }"/>
         <supportActionCard :title="'Report a Bug'" :emoji="'🐛'" :action="(e) => {defaultWindow.open('https://github.com/SessionsBot/backend/issues', '_blank')}"/>
         <supportActionCard :title="'Contact Support'" :emoji="'📧'" :action="(e) => {defaultLocation.href = 'mailto:support@sessionsbot.fyi'}"/>
         <supportActionCard :title="'Status Page'" :emoji="'📡'" :action="(e) => {defaultWindow.open('https://status.sessionsbot.fyi', '_blank')}"/>
