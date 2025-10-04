@@ -215,7 +215,7 @@
             <template #paginatorend>
                 <!-- Create Schedule Button: -->
                 <Button
-                    title="Duplicate Schedule"
+                    title="Create Schedule"
                     unstyled
                     @click="attemptCreateNewSchedule"
                     class="bg-zinc-600 hover:bg-zinc-500 transition-all ring-1 ring-ring flex justify-center items-center gap-0.75 p-2 py-0.75 rounded-xl cursor-pointer"
