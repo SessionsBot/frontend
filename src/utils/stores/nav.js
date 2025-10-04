@@ -38,6 +38,11 @@ export const useNavStore = defineStore('nav', {
             /** Open new email to `support@sessionsbot.fyi` - New Email Window */
             emailSupport: () => {
                 window.open('mailto:support@sessionsbot.fyi')
+            },
+
+            /** Open new email to `support@sessionsbot.fyi` - New Email Window */
+            joinSupportServer: () => {
+                window.open('https://discord.gg/dKp5HZPjCg', '_blank')
             }
 
         }}
