@@ -54,7 +54,7 @@
 
                 <div class="w-full h-px bg-zinc-200 dark:bg-zinc-700" />
                 <div class="flex items-center gap-2">
-                    <span class="font-bold text-3xl text-primary dark:text-zinc-0 leading-tight">$7</span>
+                    <span class="font-bold text-3xl text-primary dark:text-zinc-0 leading-tight">$2</span>
                     <span class="font-medium text-zinc-500 dark:text-zinc-400 leading-tight">per month</span>
                 </div>
                 <div class="w-full h-px bg-zinc-200 dark:bg-zinc-600" />
@@ -96,7 +96,7 @@
 
                 <div class="w-full h-px bg-zinc-200 dark:bg-zinc-700" />
                 <div class="flex items-center gap-2">
-                    <span class="font-bold text-3xl text-primary dark:text-zinc-0 leading-tight">$15</span>
+                    <span class="font-bold text-3xl text-primary dark:text-zinc-0 leading-tight">$7</span>
                     <span class="font-medium text-zinc-500 dark:text-zinc-400 leading-tight">per month</span>
                 </div>
                 <div class="w-full h-px bg-zinc-200 dark:bg-zinc-600" />
