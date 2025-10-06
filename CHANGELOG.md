@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3](https://github.com/SessionsBot/frontend/compare/v0.9.2...v0.9.3) (2025-10-06)
+
+### 🐞 Bug Fixes
+
+* add https redirect ([90c5d24](https://github.com/SessionsBot/frontend/commit/90c5d24dfeb69df884b37783fb5ae172720d0526))
+* switch pricing ([1d26811](https://github.com/SessionsBot/frontend/commit/1d268112e5d1678904019fd191bf239837c0399d))
+
 ## [0.9.2](https://github.com/SessionsBot/frontend/compare/v0.9.1...v0.9.2) (2025-10-06)
 
 ### ⚡️ Features
