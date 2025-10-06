@@ -76,49 +76,12 @@
         <section class="flex flex-wrap justify-center px-15 items-center gap-3 p-3.5 h-fit w-full">
 
             <supportActionCard :title="'View Documentation'" :emoji="'📙'" :action="(e) => { defaultWindow.open('https://docs.sessionsbot.fyi', '_blank') }" />
-            <supportActionCard hidden :title="'FAQs'" :emoji="'❓'" :action="(e) => { defaultDocument.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) }"/>
+            <supportActionCard :title="'FAQs'" :emoji="'❓'" :action="(e) => {  defaultWindow.open('https://docs.sessionsbot.fyi/faqs', '_blank') }" />
             <supportActionCard :title="'Feature Requests'" :emoji="'🙏'" :action="(e) => { $router.push('/feedback') }"/>
             <supportActionCard :title="'Report a Bug'" :emoji="'🐛'" :action="(e) => {defaultWindow.open('https://github.com/SessionsBot/backend/issues', '_blank')}"/>
             <supportActionCard :title="'Give Feedback'" :emoji="'📊'" :action="(e) => { $router.push('/feedback') }"/>
             <supportActionCard :title="'Contact Support'" :emoji="'📧'" :action="(e) => { defaultDocument.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }) }"/>
             <supportActionCard :title="'Status Page'" :emoji="'📡'" :action="(e) => {defaultWindow.open('https://status.sessionsbot.fyi', '_blank')}"/>
-
-        </section>
-
-
-        <!-- FAQs -->
-        <h1 hidden id="faqs" class="p-3.5 py-4 font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/40 text-xl w-full"> FAQs </h1>
-        <section hidden class="bg-zinc-900 mb-2 flex flex-wrap justify-start items-start gap-3 h-fit w-full">
-
-            <Accordion class="w-full">
-
-                <AccordionPanel value="0">
-                    <AccordionHeader>
-                        How do I get started with Sessions Bot? 
-                    </AccordionHeader>
-
-                    <AccordionContent><div class="text-white/60 leading-loose">
-                        <p> - <i class="text-blue-300/80 cursor-pointer underline-offset-3 hover:underline" @click="useNavStore().externalPaths().inviteBotUsingDiscord()">Invite Sessions Bot</i> to your Discord Server (or any server you manage) </p>
-                        <p> - Follow the setup link Session Bot will send to any available text channel within your server </p>
-                        <p> - Follow the guild configuration process through the web dashboard </p>
-                        <p> - Setup complete! </p>
-                    </div></AccordionContent>
-                </AccordionPanel>
-
-                <AccordionPanel value="1">
-                    <AccordionHeader>
-                        How do I modify my server's bot settings? 
-                    </AccordionHeader>
-
-                    <AccordionContent><div class="text-white/60 leading-loose">
-                        <p> - Visit <i class="text-blue-300/80">sessionsbot.fyi</i> (you're here now) </p>
-                        <p> - Sign in using your Discord account </p>
-                        <p> - View your <i class="text-blue-300/80 cursor-pointer underline-offset-3 hover:underline" @click="$router.push('/dashboard')">Server Dashboard</i> </p>
-                        <p> - Modify configurations as you wish! </p>
-                    </div></AccordionContent>
-                </AccordionPanel>
-
-            </Accordion>
 
         </section>
 
