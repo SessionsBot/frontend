@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.2](https://github.com/SessionsBot/frontend/compare/v0.9.1...v0.9.2) (2025-10-06)
+
+### ⚡️ Features
+
+* update support page ([8969c0c](https://github.com/SessionsBot/frontend/commit/8969c0c23a86306a15781721970ad40d0dc48dd4))
+
+### 🐞 Bug Fixes
+
+* acc page ([38a41c7](https://github.com/SessionsBot/frontend/commit/38a41c79c2c1f03b57e47c053593175d59ee3670))
+* btn title ([7fff73e](https://github.com/SessionsBot/frontend/commit/7fff73e386d6d34cb1463a1893bd33aec6c9c85a))
+
+### 🎨 Styling
+
+* support page styles ([f2a31b4](https://github.com/SessionsBot/frontend/commit/f2a31b49a13f5f6a2cf69da9b149e56565d2d3d5))
+
 ## [0.9.1](https://github.com/SessionsBot/frontend/compare/v0.9.0...v0.9.1) (2025-10-01)
 
 ### 🐞 Bug Fixes
