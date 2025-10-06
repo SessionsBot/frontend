@@ -54,10 +54,10 @@
             <section class="flex flex-col justify-center items-center p-3.5 pt-2.5 w-full h-fit ">
 
                 <!-- Page Heading -->
-                <div class="flex w-full pb-2 pt-0 mb-3 gap-1.5 items-center justify-center content-center flex-row">
-                    <BadgeHelpIcon size="38" stroke-width="2.5" class="drop-shadow-md drop-shadow-black/50" />
-                    <h1 class="w-fit max-w-fit font-bold text-center text-shadow-md text-shadow-black/30 text-4xl"> Support Center </h1>
-                </div>
+                <span class="pb-2 pt-0 mb-3 inline-block !w-fit !min-h-fit">
+                    <BadgeHelpIcon size="38" stroke-width="2.5" class="!inline drop-shadow-md drop-shadow-black/50" />
+                    <h1 class="w-fit !inline pt-10 relative top-2 font-bold text-center text-shadow-md text-shadow-black/30 text-4xl"> Support Center </h1>
+                </span>
 
                 <i>
                 <h1 class="font-stretch-95% font-bold text-center text-shadow-md text-shadow-black/30 text-xl"> Need help with Sessions Bot? </h1>
@@ -76,7 +76,7 @@
         <section class="flex flex-wrap justify-center px-15 items-center gap-3 p-3.5 h-fit w-full">
 
             <supportActionCard :title="'View Documentation'" :emoji="'📙'" :action="(e) => { defaultWindow.open('https://docs.sessionsbot.fyi', '_blank') }" />
-            <supportActionCard :title="'FAQs'" :emoji="'❓'" :action="(e) => { defaultDocument.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) }"/>
+            <supportActionCard hidden :title="'FAQs'" :emoji="'❓'" :action="(e) => { defaultDocument.getElementById('faqs')?.scrollIntoView({ behavior: 'smooth' }) }"/>
             <supportActionCard :title="'Feature Requests'" :emoji="'🙏'" :action="(e) => { $router.push('/feedback') }"/>
             <supportActionCard :title="'Report a Bug'" :emoji="'🐛'" :action="(e) => {defaultWindow.open('https://github.com/SessionsBot/backend/issues', '_blank')}"/>
             <supportActionCard :title="'Give Feedback'" :emoji="'📊'" :action="(e) => { $router.push('/feedback') }"/>
@@ -130,7 +130,7 @@
             <p class="max-w-[75%]"> Feel free to get in touch with our Support Team anytime! </p>
 
             <!-- Contact Options -->
-            <div class="flex flex-row gap-3.5 mx-4 justify-center items-center contain-content flex-wrap">
+            <div class="flex sm:flex-row flex-col gap-1.5 sm:gap-3.5 mx-4 justify-center items-center contain-content flex-wrap">
                 <!-- Support Server -->
                 <Button @click="(e) => {nav.externalPaths().joinSupportServer()}" unstyled class="bg-indigo-500/80 hover:bg-indigo-500 active:scale-95 my-2 cursor-pointer px-2 py-1.5 rounded-md flex flex-row gap-1 items-center justify-center transition-all">
                     <DiscordIcon class="w-5 h-5 m-auto inline" />
