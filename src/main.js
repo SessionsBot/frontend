@@ -127,6 +127,11 @@ app.use(createPinia());
 app.use(ConfirmationService);
 
 
+if (location.protocol != 'https:' && location.port != 5173) {
+  // Redirect to https://
+  location.assign(`https://sessionsbot.fyi${location.pathname}${location.search}`)
+}
+
 // wait for auth - promise:
 function waitForAuthReady() {
   return new Promise((resolve) => {
