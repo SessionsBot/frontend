@@ -54,79 +54,99 @@ async function refreshUserData(){
 </script>
 
 <template>
-   <main v-if="isAuthenticated"
-      class="flex flex-1 !max-w-screen w-full flex-col justify-center items-center gap-3 p-3 text-wrap flex-wrap">
 
-      <div class="p-4 bg-black/20 rounded-md ring-2 ring-ring text-white font-medium flex flex-col gap-4 max-w-250 justify-center items-center flex-wrap">
-         <!-- Heading -->
-         <div class="flex flex-row gap-1 items-center self-start content-center">
-            <UserCircleIcon size="25" />
-            <p class="text-3xl font-bold"> User Account </p>
+   <main v-if="isAuthenticated" class="flex flex-1 !max-w-screen w-full flex-col justify-center items-center gap-3 p-3 text-wrap flex-wrap">
+
+      <section class="flex gap-0 flex-col justify-center items-center max-w-115 bg-black/20 rounded-md ring-2 ring-ring">
+
+         <!-- Subheader -->
+         <div class="p-4 flex w-full bg-white/2 border-b-2 border-ring">
+            <span class="flex flex-row gap-1 justify-start items-center">
+               <UserCircleIcon />
+               <p class="text-2xl font-semibold"> User Account </p>
+            </span>
          </div>
 
-         <div class="bg-zinc-800 acc-drop-shadow ring-1 ring-ring rounded-md my-2 px-6 py-2.5 flex flex-row gap-2">
-            <!-- Profile Image -->
-            <img :src="userData?.Pinia?.avatar || defaultProfileIcon"
-               class="size-7 rounded-full self-center ring-1 ring-white/50" alt="Profile Image" draggable="false">
-            <!-- Display Name -->
-            <p class="text-2xl font-bold"> {{ userData?.Pinia?.displayName }} </p>
-         </div>
+         <!-- Account Details -->
+         <div class="p-4 my-2 flex flex-col justify-center items-center gap-2">
 
-         <!-- Integration Info -->
-         <div class="flex flex-col justify-center items-center gap-2 p-2 mx-2 text-white/70">
-            <p class=" text-center"> 
-               Account last synced with Discord: 
-            </p>
-            <p class="bg-white/10 text-xs w-fit px-2 py-1 rounded-md"> 
-               {{ DateTime.fromSeconds(userData?.Pinia?.iat).toRelative({style: 'short'}) }} 
-            </p>
-         </div>
-
-         <!-- Account Buttons -->
-         <div class="flex flex-row gap-3 mb-4 m-1 items-center justify-center">
-
-            <!-- Refresh Data -->
-            <Button @click="refreshUserData()" :disabled="accRefreshStatus != 0" :loading="accRefreshStatus == 300" class="px-2.5 py-1.5 gap-1 rounded-md flex flex-row disabled:opacity-60 disabled:cursor-not-allowed flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled
-               :class="{
-                  'bg-zinc-700/60': accRefreshStatus == 0,
-                  'bg-emerald-700/60': accRefreshStatus <= 200,
-                  'bg-amber-600/60': accRefreshStatus >= 201,
-                  'bg-rose-800/60': accRefreshStatus >= 301,
-               }">
-               <RefreshCcwIcon :class="{'spin': accRefreshStatus >= 201}"/>
-               <p> Refresh Data</p>
-            </Button>
-
-            <!-- Sign Out -->
-            <Button @click="auth.signOut" class="bg-orange-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
-               <LogOutIcon/>
-               <p> Sign Out</p>
-            </Button>
+            <!-- User Profile -->
+            <div class="bg-zinc-800 acc-drop-shadow ring-1 ring-ring rounded-md my-2 px-6 py-2.5 flex flex-row gap-2 items-center justify-center">
+               <!-- Profile Image -->
+               <img :src="userData?.Pinia?.avatar || defaultProfileIcon"
+                  class="size-7 rounded-full self-center ring-1 ring-white/50" alt="Profile Image" draggable="false">
+               <!-- Display Name -->
+               <p class="text-2xl font-bold text-wrap"> {{ userData?.Pinia?.displayName }} </p>
+            </div>
+            
+            <!-- Integration Info -->
+            <div class="flex flex-wrap justify-center items-center gap-2 p-2 mx-2 mt-1 text-white/70">
+               <p class="text-sm text-center"> 
+                  Last synced with Discord: 
+               </p>
+               <p class="bg-white/10 ring-1 ring-ring text-xs w-fit px-2 py-1 rounded-md"> 
+                  {{ DateTime.fromSeconds(userData?.Pinia?.iat).toRelative({style: 'short'}) }} 
+               </p>
+            </div>
 
          </div>
 
-         <!-- View Data -->
-         <Button v-if="userData?.Pinia?.id=='252949527143645185'" @click="viewUserData" class="bg-sky-700/50 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer hover:brightness-115 transition-all" unstyled>
-            <ViewIcon/>
-            <p> View Data</p>
-         </Button>
+         <!-- Account Actions -->
+         <div class="p-4 w-full bg-white/2 border-t-2 border-ring">
+            
+            <div class="flex flex-row flex-wrap gap-2.5 justify-center items-center">
 
-      </div>
+               <!-- Refresh Data -->
+               <Button 
+                  @click="refreshUserData()" :disabled="accRefreshStatus != 0" :loading="accRefreshStatus == 300"
+                  class="hover:bg-zinc-700/90 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer active:scale-95 transition-all" unstyled
+                  :class="{
+                     'bg-zinc-700/60': accRefreshStatus == 0,
+                     'bg-emerald-700/60': accRefreshStatus <= 200,
+                     '!bg-amber-600/60': accRefreshStatus >= 201,
+                     '!bg-rose-800/60': accRefreshStatus >= 301,
+                  }"
+               >
+                  <RefreshCcwIcon :class="{'spin': accRefreshStatus >= 201}"/>
+                  <p class="font-semibold" > Refresh Data </p>
+               </Button>
+
+               <!-- Sign Out -->
+               <Button @click="auth.signOut" class="bg-orange-700/50 hover:bg-orange-700/60 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer active:scale-95 transition-all" unstyled>
+                  <LogOutIcon/>
+                  <p class="font-semibold" > Sign Out </p>
+               </Button>
+
+               <!-- View Data -->
+               <Button v-if="userData?.Pinia?.id=='252949527143645185'" @click="viewUserData" class="bg-cyan-700/50 hover:bg-cyan-700/60 px-2.5 py-1.5 gap-1 rounded-md flex flex-row  flex-nowrap justify-center items-center content-center cursor-pointer active:scale-95 transition-all" unstyled>
+                  <LogOutIcon/>
+                  <p class="font-semibold" > View Data </p>
+               </Button>
 
 
+            </div>
+
+         </div>
+
+      </section>
 
 
    </main>
+
 </template>
 
 
 <style scoped>
 
 .acc-drop-shadow{
-   box-shadow: 4px 0px 8px var(--color-indigo-500),
-   -4px 0px 8px var(--color-purple-500),
-   0px 4px 8px var(--color-purple-500),
-   0px -4px 8px var(--color-indigo-500)
+   box-shadow: 4px 0px 7px var(--color-indigo-500),
+   -4px 0px 7px var(--color-purple-500),
+   0px 4px 7px var(--color-purple-500),
+   0px -4px 7px var(--color-indigo-500)
+}
+
+#lastSyncedTime{
+   box-shadow: 0px 0px 2.5px 1.75px var(--color-slate-700);
 }
 
 </style>
