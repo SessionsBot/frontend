@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import { signInWithCustomToken, onAuthStateChanged, signOut as firebaseSignOut } from "firebase/auth";
 import { auth as firebaseAuth } from "../firebase";
 import { DateTime } from "luxon";
-import type { APIResponse, FullUserData } from "@sessionsbot/api-types";
+import type { APIResponse, DecodedUserData, FullUserData } from "@sessionsbot/api-types";
 import axios, { AxiosResponse } from "axios";
 import { defaultLocation } from "@vueuse/core";
 import LzString from 'lz-string'
@@ -50,19 +50,26 @@ export const useAuthStore = defineStore('auth', {
             if (this.authToken) {
                 if(debugAuth) console.log('Auth token found - Initializing!')
                 try {
-                    // Check Token Expiration:
-                    const payload = JSON.parse(atob(this.authToken.split('.')[1]));
-                    if (!payload.exp || DateTime.fromSeconds(payload.exp).diffNow().valueOf() <= 0) {
-                        // If token expired:
-                        console.log('Authorization Token EXPIRED! - Signed Out!')
+                    const payload:DecodedUserData = JSON.parse(atob(this.authToken.split('.')[1]));
+                    const untilExpiredMs = DateTime.fromSeconds(payload.exp).diffNow().valueOf() || 0
+                    const untilExpiredDays = DateTime.fromSeconds(payload.exp).diffNow("days").days || null             
+
+                    console.info(`Your user auth token will expire in ${Math.floor(untilExpiredDays)} days.`);
+
+                    // Check token expiration:
+                    if (!payload.exp || untilExpiredMs <= 0) { // Token Expired:
+                        console.info('Your user auth token has expired! Please re-authenticate yourself to access all features within this website...');
                         this.signOut();
                         return;
+                    }else if(untilExpiredDays <= 2) { // Expires Soon:
+                        console.info('Your user auth token will expire soon. Re-freshing user/auth data to extend session...');
+                        this.refreshAuthToken()
                     }
                     // Confirm Login:
                     if(debugAuth) console.log('Token VALID!')
                     
                 } catch(e) {
-                    console.warn('Failed to initialize authentication', e)
+                    console.warn('[!] Failed to initialize authentication:', e)
                     this.signOut();
                     return;
                 }
@@ -98,7 +105,7 @@ export const useAuthStore = defineStore('auth', {
          * 
          * @param { string } stickyRoute Router path to redirect to after a successful sign in *(optional)*
          */
-        async authWithDiscord(stickyRoute?){
+        async authWithDiscord(stickyRoute?:string){
             if(stickyRoute){ localStorage.setItem('stickySignIn', stickyRoute) }
             location.href = 'https://discord.com/oauth2/authorize?client_id=1137768181604302848&response_type=code&redirect_uri=https%3A%2F%2Fapi.sessionsbot.fyi%2Fapi%2Fv2%2Fusers%2Fauth%2Fdiscord&scope=identify+guilds';
         },
@@ -109,7 +116,7 @@ export const useAuthStore = defineStore('auth', {
          * @param {string} authToken JSON Web Token used for authentication
          * @param {string} firebaseToken Custom firebase token for signing into Firebase
          */ 
-        async signInWithToken(authToken, firebaseToken) { try {
+        async signInWithToken(authToken:string, firebaseToken:string) { try {
             // Get JSON Data from Token:
             const base64Payload = authToken.split('.')[1];
             const userData = JSON.parse(atob(base64Payload));
@@ -194,15 +201,21 @@ export const useAuthStore = defineStore('auth', {
             return null;
         }},
 
-        async refreshAuthToken(skipDev:boolean) { try {
-            if(skipDev && defaultLocation.host == 'localhost:5173') return // don't refresh in dev env
-            
+        /** Refresh/update users auth token and data - **Extends Session**
+         * @param {boolean} manuallyCalled Indicates weather this auth refresh was triggered manually by the user.
+        */
+        async refreshAuthToken(manuallyCalled?:boolean) { try {
             // Make backend call to refresh users auth token:
             if(debugAuth) console.log('Refreshing user auth token/data...', {fromHost: defaultLocation.host});
             const requestUrl = `https://brilliant-austina-sessions-bot-discord-5fa4fab2.koyeb.app/api/v2/users/auth/refresh`;
             const authToken = useAuthStore().authToken
             if(!authToken) throw 'Cannot refresh token - Token undefined';
-            const refreshResults:AxiosResponse<APIResponse<any>> = await axios.get(requestUrl, {headers: { Authorization: `Bearer ${authToken}` }})
+            const refreshResults:AxiosResponse<APIResponse<any>> = await axios.get(requestUrl, {
+                headers: { 
+                    Authorization: `Bearer ${authToken}`,
+                    'manual-call': manuallyCalled ? 'true' : 'false'
+                }
+            })
 
             if(refreshResults.data.success){ // Success!
                 if(debugAuth) console.log('Refresh success!', {result: refreshResults.data.data});

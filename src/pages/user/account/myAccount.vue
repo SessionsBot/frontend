@@ -35,7 +35,7 @@ async function refreshUserData(){
    if(cooldownActive){
       toaster.warning(`Please wait! You cannot refresh your account data for ${timeLeftString}.`)
    }else{
-      const result = await auth.refreshAuthToken()
+      const result = await auth.refreshAuthToken(true)
 
       if(result.success){
          accRefreshStatus.value = 200; // set success
