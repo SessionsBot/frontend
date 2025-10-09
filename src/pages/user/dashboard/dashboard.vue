@@ -12,10 +12,14 @@
     import guildSchedules from './schedules/guildSchedules.vue'
     import guildNotSetupCard from './guildNotSetupCard.vue'
     import noManageableGuild from './noManageableGuild.vue'
+    import postSessionsEarlyDialog from './sessions/postEarlyDialog.vue'
     import { GuildData, UpcomingSession } from '@sessionsbot/api-types';
 
     // Guild Config Panel:
     const viewGuildConfigurationPanel = ref(false)
+
+    // Post Early/Refresh Sessions Panel
+    const viewPostSessionsEarlyDialog = ref(false)
 
     // Auth:
     const auth = useAuthStore()
@@ -437,7 +441,7 @@
 
 
             <!-- Upcoming Sessions - TABLE VIEW -->
-            <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="Number(todaysSessionCount)" />
+            <upcomingSessionsTable :guildSelectedData="guildSelectedData" :upcomingSessionsObj="upcomingSessionsObj" :todaysSessionCount="Number(todaysSessionCount)" @toggle-post-sessions-early-dialog="viewPostSessionsEarlyDialog = !viewPostSessionsEarlyDialog" />
 
             <!-- Guild Schedules - TABLE VIEW -->
             <guildSchedules :guildSelectedData="guildSelectedData" @updateDashboard="(e)=>{reloadUserDashboard(guildSelectedId)}" />
@@ -449,7 +453,9 @@
         <!-- GUILD CONFIG DIALOG -->
         <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" @updateDashboard="(e)=>{reloadUserDashboard(true)}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
 
-        
+        <!-- POST SESSIONS EARLY/REFRESH DIALOG -->
+        <postSessionsEarlyDialog @closePanel="viewPostSessionsEarlyDialog=false"  @updateDashboard="reloadUserDashboard(true)" :selected-guild-id="guildSelectedId" :viewPostSessionsEarlyDialog />
+
     </div>
 </template>
 

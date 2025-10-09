@@ -57,7 +57,7 @@
         
     </div>
 
-    <div class="flex flex-col text-white/65 gap-3 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-scroll">
+    <div class="flex flex-col text-white/65 gap-3 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-auto">
         
         <!-- Schedules table -->
         <table v-if="totalSchedulesCount">

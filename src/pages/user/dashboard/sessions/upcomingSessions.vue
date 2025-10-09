@@ -11,6 +11,8 @@
         guildSelectedData: GuildData
     }>()
 
+    const emits = defineEmits(['togglePostSessionsEarlyDialog']);
+
     // SORTED array of upcoming sessions:
     // Sorted entries
     const sortedUpcomingSessions = computed(() => {
@@ -75,7 +77,7 @@
     </div>
 
     <!-- Upcoming Sessions -->
-    <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-scroll">
+    <div class="flex flex-col text-white/65 gap-2 p-3 ring-ring w-full h-fit flex-1 overflow-y-hidden overflow-x-auto">
         
         <!-- Sessions Tables -->
         <table v-if="todaysSessionCount >= 1" class="inline-table  ">
@@ -164,6 +166,11 @@
         </p>
 
     </div>
+
+    <!-- Refresh/Post Sessions Early -->
+     <p @click="$emit('togglePostSessionsEarlyDialog')" class="text-xs italic font-semibold hover:underline active:scale-95 cursor-pointer text-zinc-400 pt-0 p-3 select-none transition all">
+        Want to refresh/post sessions early?
+     </p>
 
 </div>
 
