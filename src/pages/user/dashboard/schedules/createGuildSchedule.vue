@@ -152,9 +152,9 @@
     // Form Resolver:
     const resolver = zodResolver(
         z.object({
-            sessionTitle: string({message: 'Please enter a Title'}).trim().min(5).max(26),
-            sessionUrl: string({message: 'Please enter a URL'}).trim().url().min(5),
-            sessionTime: date({message: 'Invalid Date'}),
+            sessionTitle: string({message: 'Please enter a Title'}).trim().min(3, 'Title is too short (min: 3)').max(26, 'Title is too long (max: 26)'),
+            sessionUrl: string({message: 'Please enter a URL'}).trim().url().min(5, 'Url is too short (min: 5)').startsWith('https://', 'Url must start with https://'),
+            sessionTime: date({message: 'Invalid Time'}),
             sessionDays: z.array(z.string()).min(1, "Select at least one day")
         })
     )
@@ -333,6 +333,7 @@
                 fluid
                 class="!max-w-64"
                 time-only
+                :manual-input=false
                 :step-minute="5"
                 hour-format="12"
                 placeholder="5:30 pm"
@@ -372,6 +373,7 @@
                         unstyled
                         class="p-1 m-0.5 size-6 text-[14px] rounded-md bg-white/15 flex items-center justify-center text-center"
                         v-for="(value, index) in scheduleDaysOptions"
+                        :title="value[1]"
                         :key="index"
                         @click="(e)=>toggleDaySelection(value[1])"
                         :class="scheduleDaysSelected.includes(value[1]) 

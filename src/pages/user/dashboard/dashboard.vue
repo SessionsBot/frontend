@@ -293,19 +293,11 @@
 
         <!-- Loading - Page not Ready -->
         <section v-if="!pageReady" class="flex flex-col flex-1 h-full w-full justify-center items-center">
-        
-            
             <div class="flex gap-4 p-12 m-5 flex-col justify-center items-center bg-zinc-900 italic  rounded-lg ring-2 ring-ring">
-                
                 <ProgressSpinner stroke-width="3" />
-
                 <p class="text-md text-center"> Please wait...</p>
-                
                 <p class="text-sm text-neutral-400 text-center"> Fetching your Dashboard!</p>
-
             </div>
-
-
         </section>
 
         <!-- No Manageable Guild Screen: -->
@@ -315,9 +307,7 @@
 
         <!-- Guild NOT Setup Screen: -->
         <section v-else-if="pageReady && !guildSetupComplete" class="flex flex-col justify-center items-center flex-1 h-full w-full">
-
             <guildNotSetupCard :selected-guild-id="guildSelectedId" />
-
         </section>
 
         <!-- Dashboard View -->
@@ -451,7 +441,6 @@
 
             <!-- Guild Schedules - TABLE VIEW -->
             <guildSchedules :guildSelectedData="guildSelectedData" @updateDashboard="(e)=>{reloadUserDashboard(guildSelectedId)}" />
-
 
         </section>
 
