@@ -1,7 +1,9 @@
 <script setup lang="ts">
     // Imports
     import { postGuildSchedulesEarly } from '@/utils/modules/backendApi';
+    import { GuildData } from '@sessionsbot/api-types';
     import { AlertTriangleIcon, ArrowBigLeftDashIcon, ClockArrowDownIcon, ClockArrowUpIcon, DiamondMinusIcon, LoaderIcon, SquircleDashedIcon, XCircleIcon } from 'lucide-vue-next';
+    import { DateTime } from 'luxon';
     import { useToast } from 'vue-toastification';
     
     const toaster = useToast()
@@ -9,11 +11,18 @@
     // Incoming Props
     let props = defineProps<{
         selectedGuildId: string
+        guildSelectedData: GuildData
         viewPostSessionsEarlyDialog: boolean
     }>()
 
     // Outgoing Emits
     const emits = defineEmits(['closePanel', 'updateDashboard'])
+
+    // Guild Data:
+    const timeZone = props.guildSelectedData?.guildDatabaseData?.timeZone;
+    const dailySignupPostTime = props.guildSelectedData?.guildDatabaseData?.sessionSignup?.dailySignupPostTime
+    const todaysOrgPostDate = DateTime.fromObject({hour: dailySignupPostTime?.hours, minute: dailySignupPostTime?.minutes, second: 0}, {zone: timeZone});
+    const orgPostAlreadyOccurred = (Math.floor(todaysOrgPostDate.diffNow('second').seconds) < 0);
 
     /** Weather user has checked the 'I understand the warnings' checkbox */
     const understandsWarningsChecked = ref<boolean>(false)
@@ -88,11 +97,14 @@
             <span>
                 <SquircleDashedIcon :size="19" class="mb-0.5 inline" />
                 <p class="inline opacity-90"> Performing this action will <b class="font-semibold">RESET</b> any current session role assignments for todays sessions. </p>
-                <p class="opacity-70 text-xs italic inline"> (if already posted) </p>
+                <p v-if="orgPostAlreadyOccurred" class="opacity-70 text-xs italic inline"> (if already posted) </p>
             </span>
-            <span>
+            <span v-if="!orgPostAlreadyOccurred">
                 <SquircleDashedIcon :size="19" class="mb-0.5 inline" />
-                <p class="inline opacity-90"> This <b class="font-semibold">WILL</b> prevent/cancel your daily posting schedule for today if it has not already occurred.</p>
+                <p class="inline opacity-90"> This <b class="font-semibold">WILL</b>  prevent/cancel your </p> 
+                <p class="inline"> daily posting schedule </p> 
+                <p class="inline bg-amber-600/30 px-0.75 py-0.25 relative top-0.5 rounded-lg"> @ {{ todaysOrgPostDate.toLocaleString(DateTime.TIME_SIMPLE) }} TODAY</p>  
+                <p class="inline"> as it has not already occurred!</p>
             </span>
         </div>
 
