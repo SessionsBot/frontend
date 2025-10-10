@@ -6,6 +6,7 @@ import defaultProfileIcon from '@/assets/profile-icon-default.jpg'
 import router from '@/utils/router';
 import { toaster } from '@/utils/defaultExports';
 import { DateTime } from 'luxon';
+import DiscordIcon from '@/assets/svgs/discord-icon.vue';
 
 
 const auth = useAuthStore()
@@ -81,9 +82,10 @@ async function refreshUserData(){
             
             <!-- Integration Info -->
             <div class="flex flex-wrap justify-center items-center gap-2 p-2 mx-2 mt-1 text-white/70">
-               <p class="text-sm text-center"> 
-                  Last synced with Discord: 
-               </p>
+               <span class="text-sm text-center block"> 
+                  <DiscordIcon class="h-3.5 w-3.5 mb-0.5 mr-0.25 inline"/>
+                  <p class="inline"> Last synced with Discord: </p>
+               </span>
                <p class="bg-white/10 ring-1 ring-ring text-xs w-fit px-2 py-1 rounded-md"> 
                   {{ DateTime.fromSeconds(userData?.Pinia?.iat).toRelative({style: 'short'}) }} 
                </p>
