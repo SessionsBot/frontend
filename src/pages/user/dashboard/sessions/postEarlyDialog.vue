@@ -54,7 +54,7 @@
 </script>
 
 <template>
-<Dialog :visible="viewPostSessionsEarlyDialog" :modal="true" class="w-[90%] max-w-130">
+<Dialog :visible="viewPostSessionsEarlyDialog" :modal="true" class="w-[90%] max-w-130" @hide="understandsWarningsChecked=false">
     <!-- Header & CloseBtn -->
     
     <template #closebutton="buttonProps">
@@ -92,7 +92,7 @@
             </span>
             <span>
                 <SquircleDashedIcon :size="19" class="mb-0.5 inline" />
-                <p class="inline opacity-90"> This will <b class="font-semibold">NOT</b> prevent/cancel your daily sessions posting schedule if it has not already occurred today.</p>
+                <p class="inline opacity-90"> This <b class="font-semibold">WILL</b> prevent/cancel your daily posting schedule for today if it has not already occurred.</p>
             </span>
         </div>
 
