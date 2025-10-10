@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.9.4](https://github.com/SessionsBot/frontend/compare/v0.9.3...v0.9.4) (2025-10-10)
+
+### ⚡️ Features
+
+* auto extend auth sessions ([79329ef](https://github.com/SessionsBot/frontend/commit/79329ef539299b2bdaf7ddb4767f2713e2686e67))
+* **dashboard:** post sessions early ([03a1bba](https://github.com/SessionsBot/frontend/commit/03a1bba3bbd3324979d421dddd813383b4746a0d))
+* new faqs ([de604e5](https://github.com/SessionsBot/frontend/commit/de604e5d1f4ba8527639d015313c80b176029650))
+
+### 🐞 Bug Fixes
+
+* session/sch form validation ([6b334f3](https://github.com/SessionsBot/frontend/commit/6b334f35d09a55f9941ed0a2f7db6e9ecb01bfe4))
+
+### 🎨 Styling
+
+* add discord icon to acc pg ([91634cb](https://github.com/SessionsBot/frontend/commit/91634cb69d292ad886c9d893aae6bbc6112e16d5))
+* minor improvements ([c96d718](https://github.com/SessionsBot/frontend/commit/c96d71848e9d96a033c86ecbe8889cc6efc963f8))
+
 ## [0.9.3](https://github.com/SessionsBot/frontend/compare/v0.9.2...v0.9.3) (2025-10-06)
 
 ### 🐞 Bug Fixes
