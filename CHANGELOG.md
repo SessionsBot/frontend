@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.5](https://github.com/SessionsBot/frontend/compare/v0.9.4...v0.9.5) (2025-10-11)
+
+### 🐞 Bug Fixes
+
+* improve session post early panel ([eabcfa8](https://github.com/SessionsBot/frontend/commit/eabcfa8c249896a382fa7d592b3ac56e74d65f4b))
+* minor improvements ([bc835f1](https://github.com/SessionsBot/frontend/commit/bc835f13be950bcdd969d00d5f36325ead91bbb6))
+
 ## [0.9.4](https://github.com/SessionsBot/frontend/compare/v0.9.3...v0.9.4) (2025-10-10)
 
 ### ⚡️ Features
