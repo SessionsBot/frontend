@@ -224,7 +224,7 @@
             // Get / Prepare Data:
             const scheduleData = props.guildSelectedData.guildDatabaseData.sessionSchedules.find((shd) => shd.scheduleId == props.editingScheduleId)
             // Shd Time Date:
-            const shdTimeDate = new Date()
+            let shdTimeDate = new Date()
             shdTimeDate.setHours(scheduleData.sessionDateDaily.hours, scheduleData.sessionDateDaily.minutes, 0, 0)
             // Shd Days of Week:
             const shdDaysOfWeek = scheduleData?.daysOfWeek || ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']

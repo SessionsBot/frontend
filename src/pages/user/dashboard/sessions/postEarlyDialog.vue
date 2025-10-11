@@ -11,7 +11,7 @@
     // Incoming Props
     let props = defineProps<{
         selectedGuildId: string
-        guildSelectedData: GuildData
+        guildSelectedData: GuildData | undefined
         viewPostSessionsEarlyDialog: boolean
     }>()
 
@@ -22,7 +22,7 @@
     const timeZone = props.guildSelectedData?.guildDatabaseData?.timeZone;
     const dailySignupPostTime = props.guildSelectedData?.guildDatabaseData?.sessionSignup?.dailySignupPostTime
     const todaysOrgPostDate = DateTime.fromObject({hour: dailySignupPostTime?.hours, minute: dailySignupPostTime?.minutes, second: 0}, {zone: timeZone});
-    const orgPostAlreadyOccurred = (Math.floor(todaysOrgPostDate.diffNow('second').seconds) < 0);
+    const orgPostAlreadyOccurred = (Math.floor(todaysOrgPostDate.diffNow('second').seconds) < 0)                    ;
 
     /** Weather user has checked the 'I understand the warnings' checkbox */
     const understandsWarningsChecked = ref<boolean>(false)

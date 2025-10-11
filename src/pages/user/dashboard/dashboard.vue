@@ -454,7 +454,7 @@
         <guildConfigPanel @closePanel="(e)=>{viewGuildConfigurationPanel=false}" @updateDashboard="(e)=>{reloadUserDashboard(true)}" :viewGuildConfigurationPanel="viewGuildConfigurationPanel" :guildSelectedData="guildSelectedData" />
 
         <!-- POST SESSIONS EARLY/REFRESH DIALOG -->
-        <postSessionsEarlyDialog @closePanel="viewPostSessionsEarlyDialog=false"  @updateDashboard="reloadUserDashboard(true)" :selected-guild-id="guildSelectedId" :guildSelectedData :guildTimezone="guildSelectedData?.guildDatabaseData?.timeZone" :viewPostSessionsEarlyDialog />
+        <postSessionsEarlyDialog v-if="pageReady && guildSelectedData" @closePanel="viewPostSessionsEarlyDialog=false"  @updateDashboard="reloadUserDashboard(true)" :selected-guild-id="guildSelectedId" :guildSelectedData="guildSelectedData" :viewPostSessionsEarlyDialog />
 
     </div>
 </template>
