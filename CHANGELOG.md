@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.7](https://github.com/SessionsBot/frontend/compare/v0.9.6...v0.9.7) (2025-12-11)
+
+### 🐞 Bug Fixes
+
+* auth ([b78ef32](https://github.com/SessionsBot/frontend/commit/b78ef32f8a1efae01b29d5f5f278958f07a471fd))
+
 ## [0.9.6](https://github.com/SessionsBot/frontend/compare/v0.9.5...v0.9.6) (2025-11-06)
 
 ### 🐞 Bug Fixes
