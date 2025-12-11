@@ -18,7 +18,7 @@ const titleSubHeading = ref('Loading')
 // On Page Load Event:
 onMounted(async () => {
     // JSON WEB TOKEN -- AUTH ATTEMPTS:
-    const {token, failed} = route?.query
+    const {token, failed, message} = route?.query
     const statusFooterText = document.getElementById('statusFooterText')
 
     if (failed) {
@@ -26,7 +26,7 @@ onMounted(async () => {
         console.warn(`{!} Sign in attempt failed! - from: 'Backend'`)
         statusMessage.value = 'Sign In - Failed';
         auth.signOut()
-        return router.push({path:'/sign-in', query: {discordAuthError: 'true'}})
+        return router.push({path:'/sign-in', query: {discordAuthError: 'true', message: message}})
     }
     
 
@@ -44,7 +44,7 @@ onMounted(async () => {
             console.warn('{!} Sign in attempt failed! - Invalid Token?')
             statusMessage.value = 'Sign In - Failed';
             auth.signOut()
-            return router.push({path:'/api/sign-in', query: {discordAuthError: 'true'}})
+            return router.push({path:'/sign-in', query: {discordAuthError: 'true', message: 'Failed Local Sign In - See Developer Console'}})
         }else{
             // Sign in attempt succeeded:
             statusMessage.value = 'Sign In - Success';
@@ -69,8 +69,8 @@ onMounted(async () => {
         auth.signOut()
         // Redirect:
         if(redirect) {router.push({
-            path: '/user/sign-in',
-            query: { discordAuthError: 'true' }
+            path: '/sign-in',
+            query: { discordAuthError: 'true', message: 'No access token was received from Discord!' }
         })}
     }
 
