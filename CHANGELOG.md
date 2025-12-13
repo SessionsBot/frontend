@@ -1,5 +1,11 @@
 # Changelog
 
+## [9.7.8](https://github.com/SessionsBot/frontend/compare/v0.9.71...v9.7.8) (2025-12-13)
+
+### 🐞 Bug Fixes
+
+* auth encryption ([2cbb0f6](https://github.com/SessionsBot/frontend/commit/2cbb0f6b633ef46844d83f51c9cd2d5ce09c9a60))
+
 ## [0.9.71](https://github.com/SessionsBot/frontend/compare/v0.9.7...v0.9.71) (2025-12-13)
 
 ## [0.9.7](https://github.com/SessionsBot/frontend/compare/v0.9.6...v0.9.7) (2025-12-11)
