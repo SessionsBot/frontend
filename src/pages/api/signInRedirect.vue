@@ -29,8 +29,6 @@ onMounted(async () => {
     const {failed, message} = route?.query
     const statusFooterText = document.getElementById('statusFooterText')
 
-    console.info('Loaded Signin Query/Hash', {query: route.query, hash, hashParams, token});
-
     if (failed) {
         // Sign in attempt failed:
         console.warn(`{!} Sign in attempt failed! - from: 'Backend'`)
@@ -50,8 +48,6 @@ onMounted(async () => {
         )
         const decodedTokenString = decoder.decode(plaintext);
         const { jwt, firebase } = JSON.parse(decodedTokenString);
-
-        console.info('DECRYPTION RESULTS', {jwt, firebase});
         
         // Login user:
         const signInResults = await auth.signInWithToken(jwt, firebase);

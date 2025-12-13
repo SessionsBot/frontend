@@ -46,6 +46,7 @@ export async function getSystemStatuses(): Promise<APIResponse<systemStatusObjec
 
 /** Module function to check and alert for backend system status incidents. */
 export async function checkBackendStatus() {
+    if(window.location.hostname.includes('local')) return console.info('Backend status check skipped')
     // Get all system statuses:
     const systemStatuses = await getSystemStatuses();
 
