@@ -58,7 +58,7 @@ export async function checkBackendStatus() {
             if(backendStatus?.status == 'downgraded') { 
                 popupSystem.backendDegraded = true; 
             }
-            if(backendStatus?.status == 'downtime') { 
+            if(backendStatus?.status == 'downtime' || 'maintenance') { 
                 popupSystem.backendOffline = true; 
                 router.push('/offline');
             }

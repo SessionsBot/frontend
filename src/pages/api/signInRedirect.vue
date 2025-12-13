@@ -3,7 +3,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../../utils/stores/auth'
-import LzString from 'lz-string'
+import * as jose from 'jose';
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
@@ -14,12 +14,22 @@ const redirect = true; // <-- DEVELOPMENT ENVIRONMENTS
 const statusMessage = ref('{ ! }')
 const titleSubHeading = ref('Loading')
 
+// En/Decryption:
+const decoder = new TextDecoder();
+const encoder = new TextEncoder();
+const AUTH_DECRYPTION_KEY = 'SESSIONSBOT-AUTH-DECODING-KEY123'; // 32 bytes
+
 
 // On Page Load Event:
 onMounted(async () => {
-    // JSON WEB TOKEN -- AUTH ATTEMPTS:
-    const {token, failed, message} = route?.query
+    // Read Query/Hash for Token or Errors
+    const hash = window.location.hash;
+    const hashParams = new URLSearchParams(hash.replace('#', ''));
+    const token = hashParams.get('token');
+    const {failed, message} = route?.query
     const statusFooterText = document.getElementById('statusFooterText')
+
+    console.info('Loaded Signin Query/Hash', {query: route.query, hash, hashParams, token});
 
     if (failed) {
         // Sign in attempt failed:
@@ -34,9 +44,15 @@ onMounted(async () => {
         // Token provided:
         statusMessage.value = 'Validating Token';
         // Decode Token:
-        // @ts-expect-error
-        const decodedTokenString = LzString.decompressFromEncodedURIComponent(token);
-        const {jwt, firebase} = JSON.parse(decodedTokenString);
+        const { plaintext } = await jose.compactDecrypt(
+            token,
+            encoder.encode(AUTH_DECRYPTION_KEY)
+        )
+        const decodedTokenString = decoder.decode(plaintext);
+        const { jwt, firebase } = JSON.parse(decodedTokenString);
+
+        console.info('DECRYPTION RESULTS', {jwt, firebase});
+        
         // Login user:
         const signInResults = await auth.signInWithToken(jwt, firebase);
         if(!signInResults.success) {
