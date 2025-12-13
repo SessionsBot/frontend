@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.9.71](https://github.com/SessionsBot/frontend/compare/v0.9.7...v0.9.71) (2025-12-13)
+
 ## [0.9.7](https://github.com/SessionsBot/frontend/compare/v0.9.6...v0.9.7) (2025-12-11)
 
 ### 🐞 Bug Fixes
