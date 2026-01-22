@@ -18,8 +18,13 @@
 
   onMounted(() => {
     // Show upgrade coming alert:
+    const silenceChoice = localStorage.getItem("UPDATE-ALERT-SILENCE");
     setTimeout(() => {
-      showUpgradeComingAlert.value = true;
+      if(silenceChoice && silenceChoice == 'true'){
+        console.info('Silenced Upcoming Update Alert.')
+      } else {
+        showUpgradeComingAlert.value = true;
+      }
     }, 777)
   })
 

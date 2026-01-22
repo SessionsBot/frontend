@@ -49,3 +49,11 @@ export const useNavStore = defineStore('nav', {
     }
 
 });
+
+
+export const EXTERNAL_URLS = {
+    communityServer: {
+        generalInvite: new URL(`https://discord.gg/dKp5HZPjCg`),
+        supportInvite: new URL(`https://discord.gg/49gNbwA8t6`)
+    }
+}
