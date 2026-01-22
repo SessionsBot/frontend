@@ -6,12 +6,22 @@
   import siteHeader from './components/header/siteHeader.vue';
   import siteFooter from './components/siteFooter.vue';
   import cookieConsent from './components/cookieConsent/cookieConsent.vue'
+  import UpgradeAlert from './components/UpgradeAlert.vue';
 
   import alertPopup from './components/alertPopup.vue'
   import { useNavStore } from './utils/stores/nav';
   
   // Variables:
   const nav = useNavStore()
+
+  const showUpgradeComingAlert = ref(false)
+
+  onMounted(() => {
+    // Show upgrade coming alert:
+    setTimeout(() => {
+      showUpgradeComingAlert.value = true;
+    }, 777)
+  })
 
 </script>
 
@@ -29,6 +39,9 @@
 
   <!-- Alert System -->
   <alertPopup/>
+
+  <!-- Upgrade Alert -->
+  <UpgradeAlert v-model:visible="showUpgradeComingAlert" />
 
   <!-- Cookie Consent -->
   <cookieConsent/>
