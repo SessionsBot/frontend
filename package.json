@@ -44,7 +44,7 @@
     "@vitejs/plugin-vue": "^6.0.1",
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
-    "release-it": "^19.0.5",
+    "release-it": "^19.2.4",
     "serve": "^14.2.5",
     "shadcn-vue": "^2.2.0",
     "tailwindcss": "^4.1.7",
