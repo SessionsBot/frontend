@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.7.9](https://github.com/SessionsBot/frontend/compare/v9.7.8...v0.7.9) (2026-01-22)
+
+### ⚡️ Features
+
+* upcoming release alert ([ecd691c](https://github.com/SessionsBot/frontend/commit/ecd691c63d90af5527e8f0ef9f0ebf6b38b4f772))
+
 ## [9.7.8](https://github.com/SessionsBot/frontend/compare/v0.9.71...v9.7.8) (2025-12-13)
 
 ### 🐞 Bug Fixes
